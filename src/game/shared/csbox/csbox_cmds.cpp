@@ -4,8 +4,6 @@
 //
 // For my Linux Homies
 //=============================================================================//
-
-// This code is from Combine Sandbox: https://www.moddb.com/mods/combine-sandbox
 #include "cbase.h"
 
 CON_COMMAND(neofetch, "Combine Sandbox Neofetch Implementation") {
