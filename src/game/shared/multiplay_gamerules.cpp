@@ -616,22 +616,21 @@ ConVarRef suitcharger( "sk_suitcharger" );
 
 	//=========================================================
 	//=========================================================
-	float CMultiplayRules::FlPlayerFallDamage( CBasePlayer *pPlayer )
+	float CMultiplayRules::FlPlayerFallDamage(CBasePlayer *pPlayer)
 	{
-		int iFallDamage = (int)falldamage.GetFloat();
-
+		/*		int iFallDamage = (int)falldamage.GetFloat();
 		switch ( iFallDamage )
 		{
 		case 1://progressive
-			pPlayer->m_Local.m_flFallVelocity -= PLAYER_MAX_SAFE_FALL_SPEED;
-			return pPlayer->m_Local.m_flFallVelocity * DAMAGE_FOR_FALL_SPEED;
-			break;
-		default:
-		case 0:// fixed
-			return 10;
-			break;
-		}
-	} 
+		*/			pPlayer->m_Local.m_flFallVelocity -= PLAYER_MAX_SAFE_FALL_SPEED;
+	return pPlayer->m_Local.m_flFallVelocity * DAMAGE_FOR_FALL_SPEED;
+	/*			break;
+	default:
+	case 0:// fixed
+	return 10;
+	break;
+	}*/
+	}
 
 	//=========================================================
 	//=========================================================

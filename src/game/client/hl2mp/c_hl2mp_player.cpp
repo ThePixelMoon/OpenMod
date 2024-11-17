@@ -15,10 +15,6 @@
 #include "r_efx.h"
 #include "dlight.h"
 
-#ifdef OMOD
-#include "iclientmode.h"
-#endif
-
 // Don't alias here
 #if defined( CHL2MP_Player )
 #undef CHL2MP_Player	

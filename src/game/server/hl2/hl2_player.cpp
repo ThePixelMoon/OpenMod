@@ -77,6 +77,7 @@ extern ConVar autoaim_max_dist;
 
 extern int gEvilImpulse101;
 
+ConVar sv_autojump( "sv_autojump", "0" );
 
 ConVar hl2_walkspeed( "hl2_walkspeed", "150" );
 ConVar hl2_normspeed( "hl2_normspeed", "190" );
@@ -84,7 +85,7 @@ ConVar hl2_sprintspeed( "hl2_sprintspeed", "320" );
 
 ConVar hl2_darkness_flashlight_factor ( "hl2_darkness_flashlight_factor", "1" );
 
-#ifndef OMOD
+#ifdef HL2MP
 	#define	HL2_WALK_SPEED 150
 	#define	HL2_NORM_SPEED 190
 	#define	HL2_SPRINT_SPEED 320
@@ -100,7 +101,7 @@ ConVar player_showpredictedposition_timestep( "player_showpredictedposition_time
 ConVar player_squad_transient_commands( "player_squad_transient_commands", "1", FCVAR_REPLICATED );
 ConVar player_squad_double_tap_time( "player_squad_double_tap_time", "0.25" );
 
-ConVar sv_infinite_aux_power( "sv_infinite_aux_power", "1", FCVAR_CHEAT );
+ConVar sv_infinite_aux_power( "sv_infinite_aux_power", "0", FCVAR_CHEAT );
 
 ConVar autoaim_unlock_target( "autoaim_unlock_target", "0.8666" );
 
@@ -597,6 +598,49 @@ void CHL2_Player::PreThink(void)
 
 		WaterMove();	
 		return;
+	}
+
+	// This is an experiment of mine- autojumping! 
+	// only affects you if sv_autojump is nonzero.
+	if( (GetFlags() & FL_ONGROUND) && sv_autojump.GetFloat() != 0 )
+	{
+		VPROF( "CHL2_Player::PreThink-Autojump" );
+		// check autojump
+		Vector vecCheckDir;
+
+		vecCheckDir = GetAbsVelocity();
+
+		float flVelocity = VectorNormalize( vecCheckDir );
+
+		if( flVelocity > 200 )
+		{
+			// Going fast enough to autojump
+			vecCheckDir = WorldSpaceCenter() + vecCheckDir * 34 - Vector( 0, 0, 16 );
+
+			trace_t tr;
+
+			UTIL_TraceHull( WorldSpaceCenter() - Vector( 0, 0, 16 ), vecCheckDir, NAI_Hull::Mins(HULL_TINY_CENTERED),NAI_Hull::Maxs(HULL_TINY_CENTERED), MASK_PLAYERSOLID, this, COLLISION_GROUP_PLAYER, &tr );
+			
+			//NDebugOverlay::Line( tr.startpos, tr.endpos, 0,255,0, true, 10 );
+
+			if( tr.fraction == 1.0 && !tr.startsolid )
+			{
+				// Now trace down!
+				UTIL_TraceLine( vecCheckDir, vecCheckDir - Vector( 0, 0, 64 ), MASK_PLAYERSOLID, this, COLLISION_GROUP_NONE, &tr );
+
+				//NDebugOverlay::Line( tr.startpos, tr.endpos, 0,255,0, true, 10 );
+
+				if( tr.fraction == 1.0 && !tr.startsolid )
+				{
+					// !!!HACKHACK
+					// I KNOW, I KNOW, this is definitely not the right way to do this,
+					// but I'm prototyping! (sjb)
+					Vector vecNewVelocity = GetAbsVelocity();
+					vecNewVelocity.z += 250;
+					SetAbsVelocity( vecNewVelocity );
+				}
+			}
+		}
 	}
 
 	VPROF_SCOPE_BEGIN( "CHL2_Player::PreThink-Speed" );
@@ -3751,7 +3795,7 @@ void CLogicPlayerProxy::Activate( void )
 
 	if ( m_hPlayer == NULL )
 	{
-		m_hPlayer = AI_GetSinglePlayer();
+		m_hPlayer = UTIL_GetLocalPlayer();
 	}
 }
 

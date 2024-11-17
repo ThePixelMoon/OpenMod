@@ -63,7 +63,6 @@ void FinishClientPutInServer( CHL2MP_Player *pPlayer )
 		ClientPrint( pPlayer, HUD_PRINTTALK, "You are on team %s1\n", pPlayer->GetTeam()->GetName() );
 	}
 
-#ifndef OMOD
 	const ConVar *hostname = cvar->FindVar( "hostname" );
 	const char *title = (hostname) ? hostname->GetString() : "MESSAGE OF THE DAY";
 
@@ -76,7 +75,6 @@ void FinishClientPutInServer( CHL2MP_Player *pPlayer )
 	pPlayer->ShowViewPortPanel( PANEL_INFO, true, data );
 
 	data->deleteThis();
-#endif
 }
 
 /*
@@ -113,14 +111,10 @@ Returns the descriptive name of this .dll.  E.g., Half-Life, or Team Fortress 2
 */
 const char *GetGameDescription()
 {
-#ifndef OMOD
 	if ( g_pGameRules ) // this function may be called before the world has spawned, and the game rules initialized
 		return g_pGameRules->GetGameDescription();
 	else
 		return "Half-Life 2 Deathmatch";
-#else
-	return "OpenMod";
-#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -190,8 +184,10 @@ void GameStartFrame( void )
 
 	gpGlobals->teamplay = (teamplay.GetInt() != 0);
 
+#ifdef DEBUG
 	extern void Bot_RunAll();
 	Bot_RunAll();
+#endif
 }
 
 //=========================================================

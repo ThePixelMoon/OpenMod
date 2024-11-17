@@ -282,7 +282,7 @@ public:
 	// Returns true if this player wants pPlayer to be moved back in time when this player runs usercmds.
 	// Saves a lot of overhead on the server if we can cull out entities that don't need to lag compensate
 	// (like team members, entities out of our PVS, etc).
-	virtual bool			WantsLagCompensationOnEntity( const CBasePlayer	*pPlayer, const CUserCmd *pCmd, const CBitVec<MAX_EDICTS> *pEntityTransmitBits ) const;
+	virtual bool			WantsLagCompensationOnEntity( const CBaseEntity	*pEntity, const CUserCmd *pCmd, const CBitVec<MAX_EDICTS> *pEntityTransmitBits ) const;
 
 	virtual void			Spawn( void );
 	virtual void			Activate( void );
@@ -1125,17 +1125,6 @@ private:
 
 	EHANDLE					m_hViewEntity;
 
-#ifdef OMOD
-public:
-	// adnan
-	// send the use angles for the current player... set when they press use
-	// UPDATE: this could be improved somehow by only storing these on the server side
-	//  - set a flag on the client and send that, stating that the viewangles shouldnt change
-	//  - ... maybe not
-	CNetworkQAngle( m_vecUseAngles );
-	// end adnan
-private:
-#endif
 	// Movement constraints
 	CNetworkHandle( CBaseEntity, m_hConstraintEntity );
 	CNetworkVector( m_vecConstraintCenter );
