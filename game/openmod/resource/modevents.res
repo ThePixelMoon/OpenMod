@@ -31,7 +31,9 @@
 	{
 		"userid"	"short"   	// user ID who died				
 		"attacker"	"short"	 	// user ID who killed
+		"attackername"	"string"	 	// attacker class name who killed
 		"weapon"	"string" 	// weapon name killed used 
+		"weaponname"	"string" 	// weapon class name killed used 
 	}
 	
 	"teamplay_round_start"			// round restart
