@@ -9,6 +9,7 @@
 #include <vgui/ISurface.h>
 #include <vgui/IScheme.h>
 #include <vgui/IVGui.h>
+
 #include <vgui_controls/Label.h>
 #include <vgui_controls/Slider.h>
 #include <vgui_controls/Frame.h>
@@ -19,6 +20,7 @@
 #include <vgui_controls/PropertySheet.h>
 #include <vgui_controls/PropertyDialog.h>
 #include <vgui_controls/Controls.h>
+#include <vgui_controls/ScrollBar.h>
 
 #include "matsys_controls/mdlpanel.h"
 #include "filesystem.h"
@@ -184,6 +186,21 @@ public:
 
 		vgui::ivgui()->AddTickSignal(GetVPanel(), 100);
 
+		m_pScrollBar = new vgui::ScrollBar(this, "ScrollBar", false);
+		m_pButtonContainer = new vgui::Panel(this, "ButtonContainer");
+
+		int screenWidth, screenHeight;
+		engine->GetScreenSize(screenWidth, screenHeight);
+
+		m_pButtonContainer->SetSize(screenWidth - 20, screenHeight);
+		m_pButtonContainer->SetPos(0, 0);
+		m_pButtonContainer->SetVisible(true);
+
+		m_pScrollBar->SetVisible(true);
+		m_pScrollBar->SetSize(16, screenHeight);
+		m_pScrollBar->SetPos(screenWidth - 16, 0);
+		m_pScrollBar->AddActionSignalTarget(this);
+
 		loadButtons();
 
 		GetPropertySheet()->SetTabWidth(72);
@@ -223,10 +240,31 @@ public:
 				btn->SetBounds(xPos, yPos, buttonWidth, buttonHeight);
 				btn->LookAtMDL();
 
+				m_Buttons.AddToTail(btn);
+
 				i++;
 			} while ((modelFile = g_pFullFileSystem->FindNext(handle)) != nullptr);
 
 			g_pFullFileSystem->FindClose(handle);
+		}
+
+		int totalHeight = (buttonHeight + gap) * ((m_Buttons.Count() / buttonsPerRow) + 1);
+		int scrollRange = totalHeight - GetTall();
+		if (scrollRange > 0) {
+			m_pScrollBar->SetRange(0, scrollRange);
+		}
+		else {
+			m_pScrollBar->SetRange(0, 0);
+		}
+	}
+
+	void OnScrollBarMoved() {
+		int scrollPos = m_pScrollBar->GetValue();
+
+		for (int i = 0; i < m_Buttons.Count(); i++) {
+			vgui::Panel* btn = m_Buttons[i];
+			int yOffset = btn->GetYPos() - scrollPos;
+			btn->SetPos(btn->GetXPos(), yOffset);
 		}
 	}
 
@@ -236,12 +274,21 @@ public:
 	{
 		BaseClass::OnTick();
 		SetVisible(spawn.GetBool());
+
+		m_pScrollBar->InvalidateLayout(true);
+		m_pButtonContainer->InvalidateLayout(true);
+		OnScrollBarMoved();
 	}
 
 	void OnCommand(const char* command)
 	{
 		BaseClass::OnCommand(command);
 	}
+
+private:
+	vgui::Panel* m_pButtonContainer;
+	vgui::ScrollBar* m_pScrollBar;
+	CUtlVector<vgui::Panel*> m_Buttons;
 
 };
 
