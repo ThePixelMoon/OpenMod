@@ -197,6 +197,7 @@ void VGui_CreateGlobalPanels( void )
 {
 	VPANEL gameToolParent = enginevgui->GetPanel( PANEL_CLIENTDLL_TOOLS );
 	VPANEL toolParent = enginevgui->GetPanel( PANEL_TOOLS );
+	VPANEL gameParent = enginevgui->GetPanel(PANEL_CLIENTDLL);
 #if defined( TRACK_BLOCKING_IO )
 	VPANEL gameDLLPanel = enginevgui->GetPanel( PANEL_GAMEDLL );
 #endif
@@ -212,6 +213,10 @@ void VGui_CreateGlobalPanels( void )
 #endif
 	netgraphpanel->Create( toolParent );
 	debugoverlaypanel->Create( gameToolParent );
+
+#ifdef OMOD
+	smlmenu->Create(gameParent);
+#endif
 
 #ifndef _X360
 	// Create mp3 player off of tool parent panel
@@ -240,6 +245,9 @@ void VGui_Shutdown()
 	messagechars->Destroy();
 	loadingdisc->Destroy();
 	internalCenterPrint->Destroy();
+#ifdef OMOD
+	smlmenu->Destroy();
+#endif
 
 	if ( g_pClientMode )
 	{

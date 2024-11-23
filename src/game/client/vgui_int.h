@@ -19,6 +19,16 @@ namespace vgui
 	class Panel;
 }
 
+class SMLPanel
+{
+public:
+	virtual void		Create(vgui::VPANEL parent) = 0;
+	virtual void		Destroy(void) = 0;
+	virtual void		Activate(void) = 0;
+};
+
+extern SMLPanel* smlmenu;
+
 bool VGui_Startup( CreateInterfaceFn appSystemFactory );
 void VGui_Shutdown( void );
 void VGui_CreateGlobalPanels( void );

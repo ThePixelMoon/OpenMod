@@ -49,6 +49,7 @@ $Project "Client (OpenMod)"
 			{
 				$File	"openmod\basemenu.cpp"
 				$File	"openmod\basemenu.h"
+				$File	"openmod\spawnmenu.cpp"
 			}
 			
 			$File	"openmod\mountsteamcontent.cpp"
