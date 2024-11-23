@@ -258,14 +258,30 @@ public:
 		}
 	}
 
-	void OnScrollBarMoved() {
+	void OnScrollBarMoved()
+	{
 		int scrollPos = m_pScrollBar->GetValue();
 
-		for (int i = 0; i < m_Buttons.Count(); i++) {
+		for (int i = 0; i < m_Buttons.Count(); i++)
+		{
 			vgui::Panel* btn = m_Buttons[i];
 			int yOffset = btn->GetYPos() - scrollPos;
 			btn->SetPos(btn->GetXPos(), yOffset);
 		}
+	}
+
+	void OnMouseWheeled(int delta) override
+	{
+		if (!m_pScrollBar)
+			return;
+
+		int currentScroll = m_pScrollBar->GetValue();
+		int scrollIncrement = 30;
+		int newScroll = currentScroll - delta * scrollIncrement;
+
+		m_pScrollBar->SetValue(newScroll);
+
+		OnScrollBarMoved();
 	}
 
 	void Init(KeyValues* kv);
