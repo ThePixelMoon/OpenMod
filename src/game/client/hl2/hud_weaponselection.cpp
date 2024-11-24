@@ -21,6 +21,12 @@
 
 #include "vgui/ILocalize.h"
 
+#ifdef LUA_SDK
+#include "luamanager.h"
+#include "lbasecombatweapon_shared.h"
+#include "lColor.h"
+#endif
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -902,6 +908,19 @@ void CHudWeaponSelection::DrawLargeWeaponBox( C_BaseCombatWeapon *pWeapon, bool 
 		// No text in plus bucket method
 		return;
 	}
+
+#if defined ( LUA_SDK )
+	BEGIN_LUA_CALL_WEAPON_HOOK("DrawLargeWeaponBox", pWeapon);
+	lua_pushboolean(L, bSelected);
+	lua_pushinteger(L, xpos);
+	lua_pushinteger(L, ypos);
+	lua_pushinteger(L, boxWide);
+	lua_pushinteger(L, boxTall);
+	lua_pushcolor(L, selectedColor);
+	lua_pushnumber(L, alpha);
+	lua_pushinteger(L, number);
+	END_LUA_CALL_WEAPON_HOOK(8, 0);
+#endif
 
 	// draw text
 	col = m_TextColor;
