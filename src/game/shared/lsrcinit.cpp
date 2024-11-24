@@ -30,8 +30,10 @@ static const luaL_Reg luasrclibs[] = {
   {LUA_CONCOMMANDLIBNAME, luaopen_ConCommand},
   {LUA_CONTENTSLIBNAME, luaopen_CONTENTS},
   {LUA_CONVARLIBNAME, luaopen_ConVar},
-//  {LUA_PASFILTERLIBNAME, luaopen_CPASFilter},
-//  {LUA_RECIPIENTFILTERLIBNAME, luaopen_CRecipientFilter},
+#ifndef CLIENT_DLL
+  {LUA_PASFILTERLIBNAME, luaopen_CPASFilter},
+  {LUA_RECIPIENTFILTERLIBNAME, luaopen_CRecipientFilter},
+#endif
   {LUA_TAKEDAMAGEINFOLIBNAME, luaopen_CTakeDamageInfo},
   {LUA_CVARLIBNAME, luaopen_cvar},
   {LUA_DBGLIBNAME, luaopen_dbg},
