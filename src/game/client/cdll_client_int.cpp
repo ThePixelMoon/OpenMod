@@ -171,6 +171,12 @@ extern vgui::IInputInternal *g_InputInternal;
 #ifdef OMOD
 #include "basemenu.h"
 #include "mountsteamcontent.h"
+#ifdef _WIN32
+#pragma warning( ignore:4005,4701,4703 )
+#include <Windows.h>
+#include <dwmapi.h>
+#pragma comment( lib, "Dwmapi.lib" )
+#endif
 #endif
 
 #ifdef LUA_SDK
@@ -380,20 +386,24 @@ public:
 
 	void OnGameUIActivated( void )
 	{
+#ifndef OMOD
 		IGameEvent *event = gameeventmanager->CreateEvent( "gameui_activated" );
 		if ( event )
 		{
 			gameeventmanager->FireEventClientSide( event );
 		}
+#endif
 	}
 
 	void OnGameUIHidden( void )
 	{
+#ifndef OMOD
 		IGameEvent *event = gameeventmanager->CreateEvent( "gameui_hidden" );
 		if ( event )
 		{
 			gameeventmanager->FireEventClientSide( event );
 		}
+#endif
 	}
 
     //=============================================================================
@@ -885,6 +895,21 @@ CHLClient::CHLClient()
 
 extern IGameSystem *ViewportClientSystem();
 
+#ifdef _WIN32
+void windowDarkMode(HWND hwnd)
+{
+	BOOL useDarkMode = TRUE;
+	LONG style = GetWindowLong(hwnd, GWL_EXSTYLE);
+	SetWindowLong(hwnd, GWL_EXSTYLE, style | WS_EX_TOOLWINDOW);
+	if (SUCCEEDED(DwmSetWindowAttribute(hwnd, 20, &useDarkMode, sizeof(useDarkMode))))
+	{
+		ShowWindow(hwnd, SW_MINIMIZE);
+		ShowWindow(hwnd, SW_RESTORE);
+	}
+	SetWindowLong(hwnd, GWL_EXSTYLE, style);
+	ShowWindow(hwnd, SW_SHOW);
+}
+#endif
 
 //-----------------------------------------------------------------------------
 ISourceVirtualReality *g_pSourceVR = NULL;
@@ -895,6 +920,28 @@ ISourceVirtualReality *g_pSourceVR = NULL;
 //-----------------------------------------------------------------------------
 int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physicsFactory, CGlobalVarsBase *pGlobals )
 {
+#if defined( OMOD ) && defined( _WIN32 )
+	const char* baseTitle = "OpenMod"; // who is going to change it?
+	const char* suffixes[] = {
+		"",
+		" - Direct3D 6", " - Direct3D 7", " - Direct3D 8", " - Direct3D 9",
+		" - OpenGL"
+		" - Direct3D" };
+
+	HWND hwnd = nullptr;
+
+	for (int i = 0; i < sizeof(suffixes) / sizeof(suffixes[0]); ++i)
+	{
+		char windowTitle[256];
+		sprintf_s(windowTitle, sizeof(windowTitle), "%s%s", baseTitle, suffixes[i]);
+
+		hwnd = FindWindow(NULL, windowTitle);
+		if (hwnd)  {
+			windowDarkMode(hwnd);
+			break; }
+	}
+#endif
+
 	InitCRTMemDebug();
 	MathLib_Init( 2.2f, 2.2f, 0.0f, 2.0f );
 

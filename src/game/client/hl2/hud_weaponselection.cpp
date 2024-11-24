@@ -4,7 +4,6 @@
 //
 //=============================================================================//
 
-
 #include "cbase.h"
 #include "weapon_selection.h"
 #include "iclientmode.h"
