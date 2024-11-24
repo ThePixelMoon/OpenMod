@@ -1189,6 +1189,9 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 
 	C_BaseAnimating::InitBoneSetupThreadPool();
 
+	if (CommandLine()->FindParm("-nosrgb"))
+		gpGlobals = NULL;
+
 #if defined( WIN32 ) && !defined( _X360 )
 	// NVNT connect haptics sytem
 	ConnectHaptics(appSystemFactory);
