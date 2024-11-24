@@ -154,6 +154,12 @@ $Project "Client (OpenMod)"
 			$File	"$SRCDIR\game\shared\hl2mp\hl2mp_weapon_parse.cpp"
 			$File	"$SRCDIR\game\shared\hl2mp\hl2mp_weapon_parse.h"
 
+			$Folder "Lua"
+			{
+				$File	"$SRCDIR\game\shared\hl2mp\lhl2mp_player_shared.cpp"
+				$File	"$SRCDIR\game\shared\hl2mp\lhl2mp_player_shared.h"
+			}
+
 			$Folder	"Weapons"
 			{
 				$File	"$SRCDIR\game\shared\hl2mp\weapon_357.cpp"
@@ -167,8 +173,11 @@ $Project "Client (OpenMod)"
 				$File	"$SRCDIR\game\shared\hl2mp\weapon_hl2mpbase_machinegun.cpp"
 				$File	"$SRCDIR\game\shared\hl2mp\weapon_hl2mpbase_machinegun.h"
 				$File	"$SRCDIR\game\shared\hl2mp\weapon_hl2mpbasebasebludgeon.cpp"
+				$File	"$SRCDIR\game\shared\hl2mp\weapon_hl2mpbase_scriptedweapon.cpp"
+				$File	"$SRCDIR\game\shared\hl2mp\weapon_hl2mpbase_scriptedweapon.h"
 				$File	"$SRCDIR\game\shared\hl2mp\weapon_hl2mpbasehlmpcombatweapon.cpp"
 				$File	"$SRCDIR\game\shared\hl2mp\weapon_hl2mpbasehlmpcombatweapon.h"
+				
 				$File	"$SRCDIR\game\shared\hl2mp\weapon_physcannon.cpp"
 				$File	"$SRCDIR\game\shared\hl2mp\weapon_physcannon.h"
 				$File	"$SRCDIR\game\shared\hl2mp\weapon_pistol.cpp"

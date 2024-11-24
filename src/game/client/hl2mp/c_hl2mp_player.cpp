@@ -19,6 +19,14 @@
 #include "iclientmode.h"
 #endif
 
+#if defined( LUA_SDK )
+#include "luamanager.h"
+#include "lgametrace.h"
+#include "lhl2mp_player_shared.h"
+#include "ltakedamageinfo.h"
+#include "mathlib/lvector.h"
+#endif
+
 // Don't alias here
 #if defined( CHL2MP_Player )
 #undef CHL2MP_Player	
@@ -107,39 +115,79 @@ void C_HL2MP_Player::UpdateIDTarget()
 	}
 }
 
-void C_HL2MP_Player::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator )
+
+void C_HL2MP_Player::TraceAttack(const CTakeDamageInfo& info, const Vector& vecDir, trace_t* ptr, CDmgAccumulator* pAccumulator)
 {
+#if defined ( LUA_SDK )
+	// Andrew; push a copy of the damageinfo/vector, bring the changes back out
+	// of Lua and set info/vecDir to the new value if it's been modified.
+	CTakeDamageInfo lInfo = info;
+	Vector lvecDir = vecDir;
+
+	BEGIN_LUA_CALL_HOOK("PlayerTraceAttack");
+	lua_pushhl2mpplayer(L, this);
+	lua_pushdamageinfo(L, lInfo);
+	lua_pushvector(L, lvecDir);
+	lua_pushtrace(L, *ptr);
+	END_LUA_CALL_HOOK(4, 1);
+
+	RETURN_LUA_NONE();
+#endif
+
+#if defined ( LUA_SDK )
+	Vector vecOrigin = ptr->endpos - lvecDir * 4;
+#else
 	Vector vecOrigin = ptr->endpos - vecDir * 4;
+#endif
 
 	float flDistance = 0.0f;
-	
-	if ( info.GetAttacker() )
+
+#if defined ( LUA_SDK )
+	if (lInfo.GetAttacker())
+	{
+		flDistance = (ptr->endpos - lInfo.GetAttacker()->GetAbsOrigin()).Length();
+	}
+#else
+	if (info.GetAttacker())
 	{
 		flDistance = (ptr->endpos - info.GetAttacker()->GetAbsOrigin()).Length();
 	}
+#endif
 
-	if ( m_takedamage )
+	if (m_takedamage)
 	{
-		AddMultiDamage( info, this );
+#if defined ( LUA_SDK )
+		AddMultiDamage(lInfo, this);
+#else
+		AddMultiDamage(info, this);
+#endif
 
 		int blood = BloodColor();
-		
-		CBaseEntity *pAttacker = info.GetAttacker();
 
-		if ( pAttacker )
+#if defined ( LUA_SDK )
+		CBaseEntity* pAttacker = lInfo.GetAttacker();
+#else
+		CBaseEntity* pAttacker = info.GetAttacker();
+#endif
+
+		if (pAttacker)
 		{
-			if ( HL2MPRules()->IsTeamplay() && pAttacker->InSameTeam( this ) == true )
+			if (HL2MPRules()->IsTeamplay() && pAttacker->InSameTeam(this) == true)
 				return;
 		}
 
-		if ( blood != DONT_BLEED )
+		if (blood != DONT_BLEED)
 		{
-			SpawnBlood( vecOrigin, vecDir, blood, flDistance );// a little surface blood.
-			TraceBleed( flDistance, vecDir, ptr, info.GetDamageType() );
+#if defined ( LUA_SDK )
+			SpawnBlood(vecOrigin, lvecDir, blood, flDistance);// a little surface blood.
+			TraceBleed(flDistance, lvecDir, ptr, lInfo.GetDamageType());
+#else
+			SpawnBlood(vecOrigin, vecDir, blood, flDistance);// a little surface blood.
+			TraceBleed(flDistance, vecDir, ptr, info.GetDamageType());
+#endif
 		}
 	}
 }
-
 
 C_HL2MP_Player* C_HL2MP_Player::GetLocalHL2MPPlayer()
 {

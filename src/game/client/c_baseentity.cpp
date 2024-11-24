@@ -40,6 +40,10 @@
 #include "cdll_bounded_cvars.h"
 #include "inetchannelinfo.h"
 #include "proto_version.h"
+#ifdef LUA_SDK
+#include "luamanager.h"
+#include "mathlib/lvector.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -984,6 +988,9 @@ C_BaseEntity::~C_BaseEntity()
 #endif
 	RemoveFromInterpolationList();
 	RemoveFromTeleportList();
+#if defined( LUA_SDK )
+	lua_unref(L, m_nTableReference);
+#endif
 }
 
 void C_BaseEntity::Clear( void )
@@ -4764,6 +4771,13 @@ const char *C_BaseEntity::GetClassname( void )
 	static char outstr[ 256 ];
 	outstr[ 0 ] = 0;
 	bool gotname = false;
+#if defined ( LUA_SDK )
+	if (m_iClassname && m_iClassname[0])
+	{
+		Q_snprintf(outstr, sizeof(outstr), "%s", m_iClassname);
+		gotname = true;
+	}
+#endif
 #ifndef NO_ENTITY_PREDICTION
 	if ( GetPredDescMap() )
 	{

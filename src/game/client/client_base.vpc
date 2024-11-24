@@ -52,7 +52,7 @@ $Configuration
 	$Compiler
 	{
 		$AdditionalIncludeDirectories	".\;$BASE;$SRCDIR\vgui2\include;$SRCDIR\vgui2\controls;$SRCDIR\game\shared;.\game_controls"
-		$PreprocessorDefinitions		"$BASE;NO_STRING_T;CLIENT_DLL;VECTOR;VERSION_SAFE_STEAM_API_INTERFACES;PROTECTED_THINGS_ENABLE;strncpy=use_Q_strncpy_instead;_snprintf=use_Q_snprintf_instead" 
+		$PreprocessorDefinitions		"$BASE;NO_STRING_T;CLIENT_DLL;VECTOR;VERSION_SAFE_STEAM_API_INTERFACES;PROTECTED_THINGS_ENABLE;strncpy=use_Q_strncpy_instead;_snprintf=use_Q_snprintf_instead;LUA_SDK" 
 		$PreprocessorDefinitions		"$BASE;fopen=dont_use_fopen" [$WIN32]
 		$PreprocessorDefinitions		"$BASE;USE_WEBM_FOR_REPLAY;" [$LINUXALL]
 		$PreprocessorDefinitions		"$BASE;CURL_STATICLIB" [$WIN32 && $BUILD_REPLAY]
@@ -645,6 +645,99 @@ $Project
 			$File	"game_controls\vguitextwindow.cpp"
 			$File	"game_controls\IconPanel.cpp"
 		}
+		
+		$Folder "scripted_controls"
+		{
+			$File "scripted_controls\lButton.cpp"
+			$File "scripted_controls\lCheckButton.cpp"
+			$File "scripted_controls\lFrame.cpp"
+			$File "scripted_controls\lPropertyDialog.cpp"
+			$File "scripted_controls\lPropertyPage.cpp"
+			$File "scripted_controls\scriptedclientluapanel.cpp"
+			$File "scripted_controls\scriptedhudviewport.cpp"
+			$File "scripted_controls\l_Panel.cpp"
+		}
+
+		$Folder	"Lua"
+		{   
+            $File "lc_baseanimating.cpp"
+            $File "lc_baseentity.cpp"
+            $File "lc_baseplayer.cpp"
+            $File "lcdll_util.cpp"
+            $File "liclientshadowmgr.cpp"
+            $File "lprediction.cpp"
+
+            $File "$SRCDIR\game\shared\basescripted.cpp"
+		    $File "$SRCDIR\game\shared\lbasecombatweapon_shared.cpp"
+            $File "$SRCDIR\game\shared\lbaseentity_shared.cpp"
+            $File "$SRCDIR\game\shared\lbaseplayer_shared.cpp"
+		   	$File "$SRCDIR\game\shared\leffect_dispatch_data.cpp"
+            $File "$SRCDIR\game\shared\limovehelper.cpp"
+            $File "$SRCDIR\game\shared\lin_buttons.cpp"
+            $File "$SRCDIR\game\shared\lipredictionsystem.cpp"
+            $File "$SRCDIR\game\shared\lshareddefs.cpp"
+            $File "$SRCDIR\game\shared\lsrcinit.cpp"
+            $File "$SRCDIR\game\shared\ltakedamageinfo.cpp"
+            $File "$SRCDIR\game\shared\luacachefile.cpp"
+            $File "$SRCDIR\game\shared\luamanager.cpp"
+            $File "$SRCDIR\game\shared\lutil_shared.cpp"
+
+            $File "$SRCDIR\public\lbspflags.cpp"
+            $File "$SRCDIR\public\lcdll_int.cpp"
+            $File "$SRCDIR\public\lColor.cpp"
+            $File "$SRCDIR\public\tier1\lconvar.cpp"
+            $File "$SRCDIR\public\tier0\ldbg.cpp"
+		    $File "$SRCDIR\public\lfilesystem.cpp"
+		    $File "$SRCDIR\public\lgametrace.cpp"
+		    $File "$SRCDIR\public\lglobalvars_base.cpp"
+		    $File "$SRCDIR\public\tier1\liconvar.cpp"
+		    $File "$SRCDIR\public\licvar.cpp"
+		    $File "$SRCDIR\public\lienginevgui.cpp"
+		    $File "$SRCDIR\public\vgui\LIInput.cpp"
+		    $File "$SRCDIR\public\materialsystem\limaterial.cpp"
+            $File "$SRCDIR\public\vgui\LIScheme.cpp"
+            $File "$SRCDIR\public\SoundEmitterSystem\lisoundemittersystembase.cpp"
+            $File "$SRCDIR\public\steam\listeamfriends.cpp"
+            $File "$SRCDIR\public\vgui\LISurface.cpp"
+            $File "$SRCDIR\public\engine\livdebugoverlay.cpp"
+            $File "$SRCDIR\public\tier1\LKeyValues.cpp"
+            $File "$SRCDIR\public\mathlib\lmathlib.cpp"
+            $File "$SRCDIR\public\lnetworkstringtabledefs.cpp"
+            $File "$SRCDIR\public\vphysics\lperformance.cpp"
+            $File "$SRCDIR\public\vstdlib\lrandom.cpp"
+            $File "$SRCDIR\public\steam\lsteam_api.cpp"
+            $File "$SRCDIR\public\mathlib\lvector.cpp"
+            $File "$SRCDIR\public\vgui\LVGUI.cpp"
+            $File "$SRCDIR\public\mathlib\lvmatrix.cpp"
+            $File "$SRCDIR\public\lvphysics_interface.cpp"
+            
+            $File "$SRCDIR\public\XUnzip.cpp"
+			{
+				$Configuration
+				{
+					$Compiler
+					{
+						$Create/UsePrecompiledHeader	"Not Using Precompiled Headers"
+					}
+				}
+			}
+            
+            $File "$SRCDIR\public\zip_utils.cpp"
+            {
+				$Configuration
+				{
+					$Compiler
+					{
+						$Create/UsePrecompiledHeader	"Not Using Precompiled Headers"
+					}
+				}
+			}
+			
+            // VGUI
+            $File "$SRCDIR\public\vgui_controls\lvgui_controls.cpp"
+            $File "$SRCDIR\public\vgui_controls\lPanel.cpp"
+            $File "$SRCDIR\public\vgui_controls\lEditablePanel.cpp"
+        }
 
 	}
 
@@ -1232,6 +1325,7 @@ $Project
 		$Lib		bitmap
 		$Lib		choreoobjects
 		$Lib		dmxloader
+		$Lib		lua51
 		$Lib		mathlib
 		$Lib		matsys_controls
 		$Lib		particles

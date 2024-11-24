@@ -1212,6 +1212,12 @@ private:
 
 	bool m_autoKickDisabled;
 
+#if !defined( LUA_SDK )
+private:
+#else
+public:
+#endif
+
 	struct StepSoundCache_t
 	{
 		StepSoundCache_t() : m_usSoundNameIndex( 0 ) {}
@@ -1220,6 +1226,8 @@ private:
 	};
 	// One for left and one for right side of step
 	StepSoundCache_t		m_StepSoundCache[ 2 ];
+
+private:
 
 	CUtlLinkedList< CPlayerSimInfo >  m_vecPlayerSimInfo;
 	CUtlLinkedList< CPlayerCmdInfo >  m_vecPlayerCmdInfo;

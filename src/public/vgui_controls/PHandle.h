@@ -38,7 +38,7 @@ public:
 	bool operator == (Panel *pPanel)		{ return (Get() == pPanel); }
 	operator bool ()						{ return Get() != 0; }
 
-private:
+public:
 	HPanel m_iPanelID;
 };
 

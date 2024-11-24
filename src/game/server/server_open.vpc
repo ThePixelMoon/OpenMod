@@ -284,6 +284,13 @@ $Project "Server (OpenMod)"
 			$File	"$SRCDIR\game\shared\hl2mp\hl2mp_weapon_parse.cpp"
 			$File	"$SRCDIR\game\shared\hl2mp\hl2mp_weapon_parse.h"
 			
+			$Folder "Lua"
+			{
+				$File	"hl2\lhl2_player.cpp"
+				$File	"$SRCDIR\game\shared\hl2mp\lhl2mp_player_shared.cpp"
+				$File	"$SRCDIR\game\shared\hl2mp\lhl2mp_player_shared.h"
+			}
+			
 			$Folder	"Weapons"
 			{
 				$File	"hl2mp\grenade_satchel.cpp"
@@ -305,6 +312,9 @@ $Project "Server (OpenMod)"
 				$File	"$SRCDIR\game\shared\hl2mp\weapon_hl2mpbasebasebludgeon.cpp"
 				$File	"$SRCDIR\game\shared\hl2mp\weapon_hl2mpbasehlmpcombatweapon.cpp"
 				$File	"$SRCDIR\game\shared\hl2mp\weapon_hl2mpbasehlmpcombatweapon.h"
+				$File	"$SRCDIR\game\shared\hl2mp\weapon_hl2mpbase_scriptedweapon.cpp"
+				$File	"$SRCDIR\game\shared\hl2mp\weapon_hl2mpbase_scriptedweapon.h"
+				
 				$File	"$SRCDIR\game\shared\hl2mp\weapon_physcannon.cpp"
 				$File	"$SRCDIR\game\shared\hl2mp\weapon_physcannon.h"
 				$File	"$SRCDIR\game\shared\hl2mp\weapon_pistol.cpp"

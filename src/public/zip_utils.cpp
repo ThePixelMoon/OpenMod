@@ -123,7 +123,7 @@ public:
 			char uniqueFilename[MAX_PATH];
 			SYSTEMTIME sysTime;                                                       \
 			GetLocalTime( &sysTime );   
-			sprintf( uniqueFilename, "%d_%d_%d_%d_%d.tmp", sysTime.wDay, sysTime.wHour, sysTime.wMinute, sysTime.wSecond, sysTime.wMilliseconds );                                                \
+			sprintf_s( uniqueFilename, "%d_%d_%d_%d_%d.tmp", sysTime.wDay, sysTime.wHour, sysTime.wMinute, sysTime.wSecond, sysTime.wMilliseconds );                                                \
 			V_ComposeFileName( WritePath.String(), uniqueFilename, tempFileName, sizeof( tempFileName ) );
 		}
 
@@ -1245,7 +1245,8 @@ bool CZipFile::FileExistsInZip( const char *pRelativeName )
 //-----------------------------------------------------------------------------
 void CZipFile::AddFileToZip( const char *relativename, const char *fullpath, IZip::eCompressionType compressionType )
 {
-	FILE *temp = fopen( fullpath, "rb" );
+	FILE* temp;
+	fopen_s(&temp, fullpath, "rb");
 	if ( !temp )
 		return;
 

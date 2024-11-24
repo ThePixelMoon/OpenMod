@@ -129,6 +129,11 @@ extern ConVar tf_mm_servermode;
 #include "replay/ireplaysystem.h"
 #endif
 
+#ifdef LUA_SDK
+#include "luamanager.h"
+#include "luacachefile.h"
+#endif
+
 extern IToolFrameworkServer *g_pToolFrameworkServer;
 extern IParticleSystemQuery *g_pParticleSystemQuery;
 
@@ -961,6 +966,34 @@ bool CServerGameDLL::LevelInit( const char *pMapName, char const *pMapEntities, 
 	}
 #endif // USES_ECON_ITEMS
 
+#ifdef LUA_SDK
+	lcf_recursivedeletefile(LUA_PATH_CACHE);
+
+	// Add Lua environment
+	luasrc_init();
+
+	luasrc_dofolder(L, LUA_PATH_EXTENSIONS);
+	luasrc_dofolder(L, LUA_PATH_MODULES);
+	luasrc_dofolder(L, LUA_PATH_GAME_SHARED);
+	luasrc_dofolder(L, LUA_PATH_GAME_SERVER);
+
+	luasrc_LoadWeapons();
+	luasrc_LoadEntities();
+	// luasrc_LoadEffects();
+
+	//Andrew; loadup base gamemode.
+	luasrc_LoadGamemode(LUA_BASE_GAMEMODE);
+
+	luasrc_LoadGamemode(gamemode.GetString());
+	luasrc_SetGamemode(gamemode.GetString());
+
+	if (gpGlobals->maxClients > 1)
+	{
+		// load LCF into stringtable
+		lcf_preparecachefile();
+	}
+#endif
+
 	ResetWindspeed();
 	UpdateChapterRestrictions( pMapName );
 
@@ -1065,6 +1098,18 @@ bool CServerGameDLL::LevelInit( const char *pMapName, char const *pMapEntities, 
 	// clear any pending autosavedangerous
 	m_fAutoSaveDangerousTime = 0.0f;
 	m_fAutoSaveDangerousMinHealthToCommit = 0.0f;
+
+#if defined ( LUA_SDK )
+	BEGIN_LUA_CALL_HOOK("LevelInit");
+	lua_pushstring(L, pMapName);
+	lua_pushstring(L, pMapEntities);
+	lua_pushstring(L, pOldLevel);
+	lua_pushstring(L, pLandmarkName);
+	lua_pushboolean(L, loadGame);
+	lua_pushboolean(L, background);
+	END_LUA_CALL_HOOK(6, 0);
+#endif
+
 	return true;
 }
 
@@ -1366,6 +1411,14 @@ void CServerGameDLL::OnQueryCvarValueFinished( QueryCvarCookie_t iCookie, edict_
 // Called when a level is shutdown (including changing levels)
 void CServerGameDLL::LevelShutdown( void )
 {
+#if defined ( LUA_SDK )
+	if (g_bLuaInitialized)
+	{
+		BEGIN_LUA_CALL_HOOK("LevelShutdown");
+		END_LUA_CALL_HOOK(0, 0);
+	}
+#endif
+
 #ifndef NO_STEAM
 	IGameSystem::LevelShutdownPreClearSteamAPIContextAllSystems();
 
