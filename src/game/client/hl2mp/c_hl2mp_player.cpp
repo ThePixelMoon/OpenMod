@@ -17,6 +17,7 @@
 
 #ifdef OMOD
 #include "iclientmode.h"
+#include "obstacle_pushaway.h"
 #endif
 
 #if defined( LUA_SDK )
@@ -313,6 +314,14 @@ void C_HL2MP_Player::ClientThink( void )
 	}
 
 	UpdateIDTarget();
+
+#ifdef OMOD
+	if (gpGlobals->curtime >= m_fNextThinkPushAway)
+	{
+		PerformObstaclePushaway(this);
+		m_fNextThinkPushAway = gpGlobals->curtime + HL2MP_PUSHAWAY_THINK_INTERVAL;
+	}
+#endif
 }
 
 //-----------------------------------------------------------------------------

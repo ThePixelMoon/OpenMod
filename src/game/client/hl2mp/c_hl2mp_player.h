@@ -112,6 +112,9 @@ private:
 	float m_flCurrentHeadYaw;
 	float m_flCurrentHeadPitch;
 
+#ifdef OMOD
+	float m_fNextThinkPushAway;
+#endif
 	int	  m_iIDEntIndex;
 
 	CountdownTimer m_blinkTimer;
