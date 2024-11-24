@@ -55,6 +55,11 @@ ConVar player_limit_jump_speed( "player_limit_jump_speed", "1", FCVAR_REPLICATED
 // duck controls. Its value is meaningless anytime we don't have the options window open.
 ConVar option_duck_method("option_duck_method", "1", FCVAR_REPLICATED|FCVAR_ARCHIVE );// 0 = HOLD to duck, 1 = Duck is a toggle
 
+#ifdef OMOD
+// autojumping
+ConVar cl_autojump("cl_autojump", "0", FCVAR_CLIENTDLL);
+#endif
+
 #ifdef STAGING_ONLY
 #ifdef CLIENT_DLL
 ConVar debug_latch_reset_onduck( "debug_latch_reset_onduck", "1", FCVAR_CHEAT );
@@ -2409,7 +2414,11 @@ bool CGameMovement::CheckJumpButton( void )
 		return false;
 #endif
 
+#ifdef OMOD
+	if ( mv->m_nOldButtons & IN_JUMP && !cl_autojump.GetBool() )
+#else
 	if ( mv->m_nOldButtons & IN_JUMP )
+#endif
 		return false;		// don't pogo stick
 
 	// Cannot jump will in the unduck transition.
