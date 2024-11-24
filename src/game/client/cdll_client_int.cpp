@@ -171,6 +171,7 @@ extern vgui::IInputInternal *g_InputInternal;
 #ifdef OMOD
 #include "basemenu.h"
 #include "mountsteamcontent.h"
+#include "mountaddons.h"
 #ifdef _WIN32
 #pragma warning( ignore:4005,4701,4703 )
 #include <Windows.h>
@@ -1060,6 +1061,10 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 	{
 		return false;
 	}
+
+#ifdef OMOD
+	MountAddons(); // addons...
+#endif
 
 	if ( CommandLine()->FindParm( "-textmode" ) )
 		g_bTextMode = true;

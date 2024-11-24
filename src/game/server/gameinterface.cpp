@@ -134,6 +134,10 @@ extern ConVar tf_mm_servermode;
 #include "luacachefile.h"
 #endif
 
+#ifdef OMOD
+#include "mountaddons.h"
+#endif
+
 extern IToolFrameworkServer *g_pToolFrameworkServer;
 extern IParticleSystemQuery *g_pParticleSystemQuery;
 
@@ -728,6 +732,10 @@ bool CServerGameDLL::DLLInit( CreateInterfaceFn appSystemFactory,
 	{
 		return false;
 	}
+
+#ifdef OMOD
+	MountAddons(); // addons...
+#endif
 
 	InvalidateQueryCache();
 

@@ -82,6 +82,8 @@ $Project "Server (OpenMod)"
 			
 			$File	"$SRCDIR\game\shared\Multiplayer\multiplayer_animstate.h"
 			$File	"$SRCDIR\game\shared\Multiplayer\multiplayer_animstate.cpp"
+			$File	"$SRCDIR\game\shared\openmod\mountaddons.cpp"
+			$File	"$SRCDIR\game\shared\openmod\mountaddons.h"
 			
 			$File	"$SRCDIR\game\shared\openmod\weapon_physgun.cpp"
 		}

@@ -54,6 +54,8 @@ $Project "Client (OpenMod)"
 			
 			$File	"openmod\mountsteamcontent.cpp"
 			$File	"openmod\mountsteamcontent.h"
+			$File	"$SRCDIR\game\shared\openmod\mountaddons.cpp"
+			$File	"$SRCDIR\game\shared\openmod\mountaddons.h"
 			
 			$File	"$SRCDIR\game\shared\Multiplayer\multiplayer_animstate.h"
 			$File	"$SRCDIR\game\shared\Multiplayer\multiplayer_animstate.cpp"
