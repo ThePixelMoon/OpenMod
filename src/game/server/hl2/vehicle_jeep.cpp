@@ -907,29 +907,67 @@ void CPropJeep::FireCannon( void )
 
 	//Find the direction the gun is pointing in
 	Vector aimDir;
-	GetCannonAim( &aimDir );
+	GetCannonAim(&aimDir);
 
-#if defined( WIN32 ) && !defined( _X360 ) 
-	// NVNT apply a punch on fire
-	HapticPunch(m_hPlayer,0,0,hap_jeep_cannon_mag.GetFloat());
+	Vector endPos = m_vecGunOrigin + (aimDir * MAX_TRACE_LENGTH);
+
+	//Shoot a shot straight out
+	trace_t	tr;
+	UTIL_TraceLine(m_vecGunOrigin, endPos, MASK_SHOT, this, COLLISION_GROUP_NONE, &tr);
+
+	//DispatchParticleEffect("hl2mmod_tracer_gaussrifle_tracer_buggy2", PATTACH_POINT_FOLLOW, this, "muzzle", true);
+	DoMuzzleFlash();
+	//Show the effect
+	DrawBeam(m_vecGunOrigin, tr.endpos, 1.6);
+
+	UTIL_ImpactTrace(&tr, m_nBulletType, "ImpactJeep");
+	if (tr.DidHitWorld() && !(tr.surface.flags & SURF_SKY))
+	{
+		UTIL_ImpactTrace(&tr, m_nBulletType, "HelicopterImpact");
+	}
+	CBaseEntity* pHit = tr.m_pEnt;
+#ifndef CLIENT_DLL         
+	CTakeDamageInfo dmgInfo(this, GetDriver(), 10.0f, DMG_SHOCK | DMG_BULLET);
 #endif
-	FireBulletsInfo_t info( 1, m_vecGunOrigin, aimDir, VECTOR_CONE_1DEGREES, MAX_TRACE_LENGTH, m_nAmmoType );
+
+	if (pHit != NULL)
+	{
+#ifndef CLIENT_DLL
+		CalculateBulletDamageForce(&dmgInfo, m_nBulletType, aimDir, tr.endpos, 7.0f * 5.0f);
+		pHit->DispatchTraceAttack(dmgInfo, aimDir, &tr);
+#endif
+	}
+
+	//Kick up an effect
+	if (!(tr.surface.flags & SURF_SKY))
+	{
+		UTIL_ImpactTrace(&tr, m_nBulletType, "ImpactJeep");
+		if (tr.DidHitWorld() && !(tr.surface.flags & SURF_SKY))
+		{
+			UTIL_ImpactTrace(&tr, m_nBulletType, "HelicopterImpact");
+		}
+		//Do a gauss explosion
+		CPVSFilter filter(tr.endpos);
+		te->GaussExplosion(filter, 0.0f, tr.endpos, tr.plane.normal, 0);
+	}
+
+	FireBulletsInfo_t info(1, m_vecGunOrigin, aimDir, VECTOR_CONE_1DEGREES, MAX_TRACE_LENGTH, m_nAmmoType);
 
 	info.m_nFlags = FIRE_BULLETS_ALLOW_WATER_SURFACE_IMPACTS;
 	info.m_pAttacker = m_hPlayer;
 
-	FireBullets( info );
+	FireBullets(info);
 
 	// Register a muzzleflash for the AI
-	if ( m_hPlayer )
+	if (m_hPlayer)
 	{
-		m_hPlayer->SetMuzzleFlashTime( gpGlobals->curtime + 0.5 );
-		m_hPlayer->RumbleEffect( RUMBLE_PISTOL, 0, RUMBLE_FLAG_RESTART	);
+		m_hPlayer->SetMuzzleFlashTime(gpGlobals->curtime + 0.5);
+		m_hPlayer->RumbleEffect(RUMBLE_PISTOL, 0, RUMBLE_FLAG_RESTART);
 	}
 
-	CPASAttenuationFilter sndFilter( this, "PropJeep.FireCannon" );
-	EmitSound( sndFilter, entindex(), "PropJeep.FireCannon" );
-	
+	CPASAttenuationFilter sndFilter(this, "PropJeep.FireCannon");
+	EmitSound(sndFilter, entindex(), "PropJeep.FireCannon");
+
 	// make cylinders of gun spin a bit
 	m_nSpinPos += JEEP_GUN_SPIN_RATE;
 	//SetPoseParameter( JEEP_GUN_SPIN, m_nSpinPos );	//FIXME: Don't bother with this for E3, won't look right
