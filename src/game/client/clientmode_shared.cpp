@@ -66,6 +66,10 @@ extern ConVar replay_rendersetting_renderglow;
 #include "lbaseplayer_shared.h"
 #endif
 
+#ifdef GLOWS_ENABLE
+#include "clienteffectprecachesystem.h"
+#endif // GLOWS_ENABLE
+
 #if defined( TF_CLIENT_DLL )
 #include "c_tf_player.h"
 #include "econ_item_description.h"
@@ -97,6 +101,13 @@ CON_COMMAND( cl_reload_localization_files, "Reloads all localization files" )
 {
 	g_pVGuiLocalize->ReloadLocalizationFiles();
 }
+
+#ifdef GLOWS_ENABLE
+CLIENTEFFECT_REGISTER_BEGIN(PrecachePostProcessingEffectsGlow)
+CLIENTEFFECT_MATERIAL("dev/glow_color")
+CLIENTEFFECT_MATERIAL("dev/halo_add_to_screen")
+CLIENTEFFECT_REGISTER_END_CONDITIONAL(engine->GetDXSupportLevel() >= 90)
+#endif // GLOWS_ENABLE
 
 #ifdef VOICE_VOX_ENABLE
 void VoxCallback( IConVar *var, const char *oldString, float oldFloat )
@@ -919,7 +930,17 @@ bool ClientModeShared::DoPostScreenSpaceEffects( const CViewSetup *pSetup )
 		if ( !replay_rendersetting_renderglow.GetBool() )
 			return false;
 	}
-#endif 
+#endif
+
+#ifdef LUA_SDK
+	BEGIN_LUA_CALL_HOOK("DoPostScreenSpaceEffects")
+	END_LUA_CALL_HOOK(0, 0)
+#endif // LUA_SDK
+
+#ifdef GLOWS_ENABLE
+	g_GlowObjectManager.RenderGlowEffects(pSetup, 0);
+#endif // GLOWS_ENABLE
+
 	return true;
 }
 

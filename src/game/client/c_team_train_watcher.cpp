@@ -85,9 +85,11 @@ void C_TeamTrainWatcher::UpdateGlowEffect( void )
 	// create a new effect if we have a cart
 	if ( m_hGlowEnt )
 	{
+#ifndef OMOD
 		float r, g, b;
 		TeamplayRoundBasedRules()->GetTeamGlowColor( GetTeamNumber(), r, g, b );
 		m_pGlowEffect = new CGlowObject( m_hGlowEnt, Vector( r, g, b ), 1.0, true );
+#endif
 	}
 }
 

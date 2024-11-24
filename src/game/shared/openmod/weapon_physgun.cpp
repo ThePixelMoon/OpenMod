@@ -14,6 +14,9 @@
 #include "iviewrender.h"
 #else
 #include "physics_prop_ragdoll.h"
+#ifdef GLOWS_ENABLE
+#include "props.h"
+#endif
 #endif
 
 #include "weapon_hl2mpbasehlmpcombatweapon.h"
@@ -774,11 +777,24 @@ void CWeaponPhysicsGun::EffectUpdate( void )
 	CBaseEntity *pObject = m_hObject;
 	if ( pObject )
 	{
-#ifdef OMOD
-#ifndef CLIENT_DLL
+#if defined( OMOD ) && defined( GAME_DLL )
 		IPhysicsObject* pFreeze = GetPhysObjFromPhysicsBone( pObject, m_physicsBone );
 		pFreeze->EnableMotion( true ); // unfreeze, if possible
 #endif
+
+#if defined( GLOWS_ENABLE ) && defined( GAME_DLL )
+		CBaseAnimating* pAnimating = dynamic_cast<CBaseAnimating*>(pObject);
+		if (pAnimating) {
+			pAnimating->SetGlowEffectColor(0,255,255);
+			pAnimating->AddGlowEffect();
+		}
+		else { // try converting it into a different type
+			CBaseProp* pProp = dynamic_cast<CBaseProp*>(pObject);
+			if (pProp) {
+				pProp->SetGlowEffectColor(0, 255, 255);
+				pProp->AddGlowEffect();
+			}
+		}
 #endif
 
 		if ( m_useDown )
@@ -1045,13 +1061,50 @@ CBaseEntity *CWeaponPhysicsGun::GetBeamEntity()
 	return pOwner;
 }
 
+#pragma warning( disable:4189 )
 void CWeaponPhysicsGun::EffectDestroy( void )
 {
+#ifdef GLOWS_ENABLE // we do this just for glow
+	Vector start, forward, right;
+	trace_t tr;
+
+	CBasePlayer* pOwner = ToBasePlayer(GetOwner());
+	if (!pOwner)
+		return;
+#endif
+
 #ifdef CLIENT_DLL
 	gHUD.m_bSkipClear = false;
 #endif
+
+#ifdef GLOWS_ENABLE
+	pOwner->EyeVectors(&forward, &right, NULL);
+
+	start = pOwner->Weapon_ShootPosition();
+
+	TraceLine(&tr);
+	Vector end = tr.endpos;
+	float distance = tr.fraction * 4096;
+	if (m_hObject == NULL && tr.DidHitNonWorldEntity())
+	{
+		CBaseEntity* pEntity = tr.m_pEnt;
+		AttachObject(pEntity, GetPhysObjFromPhysicsBone(pEntity, tr.physicsbone), tr.physicsbone, start, tr.endpos, distance);
+	}
+
+	// Add the incremental player yaw to the target transform
+	QAngle angles = m_gravCallback.TransformAnglesFromPlayerSpace(m_gravCallback.m_targetRotation, pOwner);
+
+	CBaseEntity* pObject = m_hObject;
+#endif
+
 	m_active = false;
 	SoundStop();
+
+#if defined( GLOWS_ENABLE ) && defined( GAME_DLL )
+	CBaseAnimating* pAnimating = dynamic_cast<CBaseAnimating*>(pObject);
+	if (pAnimating != nullptr)
+		pAnimating->RemoveGlowEffect();
+#endif
 
 	DetachObject();
 }

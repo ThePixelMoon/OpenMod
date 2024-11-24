@@ -801,6 +801,18 @@ static int CBaseAnimating_VPhysicsUpdate (lua_State *L) {
   return 0;
 }
 
+#ifdef GLOWS_ENABLE
+static int CBaseAnimating_UpdateGlowEffect(lua_State* L) {
+    luaL_checkanimating(L, 1)->UpdateGlowEffect();
+    return 0;
+}
+
+static int CBaseAnimating_DestroyGlowEffect(lua_State* L) {
+    luaL_checkanimating(L, 1)->DestroyGlowEffect();
+    return 0;
+}
+#endif
+
 static int CBaseAnimating___index (lua_State *L) {
   CBaseAnimating *pEntity = lua_toanimating(L, 1);
   if (pEntity == NULL) {  /* avoid extra test when d is not 0 */
@@ -1029,6 +1041,10 @@ static const luaL_Reg CBaseAnimatingmeta[] = {
   {"UsesPowerOfTwoFrameBufferTexture", CBaseAnimating_UsesPowerOfTwoFrameBufferTexture},
   {"VPhysicsGetObjectList", CBaseAnimating_VPhysicsGetObjectList},
   {"VPhysicsUpdate", CBaseAnimating_VPhysicsUpdate},
+#ifdef GLOWS_ENABLE
+  {"UpdateGlowEffect", CBaseAnimating_UpdateGlowEffect},
+  {"DestroyGlowEffect", CBaseAnimating_DestroyGlowEffect},
+#endif
   {"__index", CBaseAnimating___index},
   {"__newindex", CBaseAnimating___newindex},
   {"__eq", CBaseAnimating___eq},

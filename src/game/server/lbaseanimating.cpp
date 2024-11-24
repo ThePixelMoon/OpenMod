@@ -389,6 +389,28 @@ static int CBaseAnimating_VPhysicsUpdate (lua_State *L) {
   return 0;
 }
 
+#ifdef GLOWS_ENABLE
+static int CBaseAnimating_AddGlowEffect(lua_State* L) {
+    luaL_checkanimating(L, 1)->AddGlowEffect();
+    return 0;
+}
+
+static int CBaseAnimating_RemoveGlowEffect(lua_State* L) {
+    luaL_checkanimating(L, 1)->RemoveGlowEffect();
+    return 0;
+}
+
+static int CBaseAnimating_SetGlowEffectColor(lua_State* L) {
+    luaL_checkanimating(L, 1)->SetGlowEffectColor(luaL_checkinteger(L, 2), luaL_checkinteger(L, 3), luaL_checkinteger(L, 4));
+    return 0;
+}
+
+static int CBaseAnimating_IsGlowEffectActive(lua_State* L) {
+    lua_pushboolean(L, luaL_checkanimating(L, 1)->IsGlowEffectActive());
+    return 0;
+}
+#endif
+
 static int CBaseAnimating___index (lua_State *L) {
   CBaseAnimating *pEntity = lua_toanimating(L, 1);
   if (pEntity == NULL) {  /* avoid extra test when d is not 0 */
@@ -540,6 +562,12 @@ static const luaL_Reg CBaseAnimatingmeta[] = {
   {"TransferDissolveFrom", CBaseAnimating_TransferDissolveFrom},
   {"UseClientSideAnimation", CBaseAnimating_UseClientSideAnimation},
   {"VPhysicsUpdate", CBaseAnimating_VPhysicsUpdate},
+#ifdef GLOWS_ENABLE
+  {"AddGlowEffect", CBaseAnimating_AddGlowEffect},
+  {"RemoveGlowEffect", CBaseAnimating_RemoveGlowEffect},
+  {"SetGlowEffectColor", CBaseAnimating_SetGlowEffectColor},
+  {"IsGlowEffectActive", CBaseAnimating_IsGlowEffectActive},
+#endif
   {"__index", CBaseAnimating___index},
   {"__newindex", CBaseAnimating___newindex},
   {"__eq", CBaseAnimating___eq},

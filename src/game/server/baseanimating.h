@@ -51,6 +51,16 @@ public:
 	virtual void Precache();
 	virtual void SetTransmit( CCheckTransmitInfo *pInfo, bool bAlways );
 
+#ifdef GLOWS_ENABLE
+	void				SetGlowEffectColor(float r, float g, float b);
+	void				AddGlowEffect(void);
+	void				RemoveGlowEffect(void);
+	bool				IsGlowEffectActive(void);
+
+	void				UpdateGlowEffect(void);
+	void				DestroyGlowEffect(void);
+#endif // GLOWS_ENABLE
+
 	virtual int	 Restore( IRestore &restore );
 	virtual void OnRestore();
 
@@ -163,6 +173,13 @@ protected:
 	// save off your pose parameters in member variables in your derivation of this function:
 	virtual void	PopulatePoseParameters( void );
 
+#ifdef GLOWS_ENABLE
+protected:
+	CNetworkVar(bool, m_bGlowEnabled);
+	CNetworkVar(float, m_flGlowR);
+	CNetworkVar(float, m_flGlowG);
+	CNetworkVar(float, m_flGlowB);
+#endif // GLOWS_ENABLE
 
 public:
 
@@ -281,6 +298,16 @@ public:
 	void	GetInputDispatchEffectPosition( const char *sInputString, Vector &pOrigin, QAngle &pAngles );
 
 	virtual void	ModifyOrAppendCriteria( AI_CriteriaSet& set );
+
+#ifdef GLOWS_ENABLE
+	void ReloadGlow(inputdata_t& inputdata);
+	void SetGlowEnabled(inputdata_t& inputdata);
+	void SetGlowDisabled(inputdata_t& inputdata);
+	void SetGlowColorRed(inputdata_t& inputdata);
+	void SetGlowColorGreen(inputdata_t& inputdata);
+	void SetGlowColorBlue(inputdata_t& inputdata);
+	void SetGlowColor(inputdata_t& inputdata);
+#endif // GLOWS_ENABLE
 
 	// Send a muzzle flash event to the client for this entity.
 	void DoMuzzleFlash();

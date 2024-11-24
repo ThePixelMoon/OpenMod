@@ -15,7 +15,7 @@ $Configuration
 	$Compiler
 	{
 		$AdditionalIncludeDirectories	"$BASE;$SRCDIR\game\shared\hl2,.\hl2,.\hl2mp,$SRCDIR\game\shared\hl2mp;.\openmod;$SRCDIR\game\shared\openmod;.\portal"
-		$PreprocessorDefinitions		"$BASE;HL2MP;HL2_DLL;OMOD"
+		$PreprocessorDefinitions		"$BASE;HL2MP;HL2_DLL;OMOD;GLOWS_ENABLE"
 	}
 }
 
