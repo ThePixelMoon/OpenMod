@@ -16,10 +16,10 @@ Scheme
 	Colors
 	{
 		// orig gray vgui base colors
-		"White"				"255 255 255 255"
-		"OffWhite"			"221 221 221 255"
-		"DullWhite"			"190 190 190 255"
-		"Orange"			"255 155 0 255"
+		"White"				"255 155 0 255"
+		"OffWhite"			"255 217 128 255"
+		"DullWhite"			"186 179 141 255"
+		"Orange"			"255 255 255 255"
 		"TransparentBlack"	"0 0 0 128"
 		"Black"				"0 0 0 255"
 
@@ -31,23 +31,23 @@ Scheme
 		"AchievementsInactiveFG"	"130 130 130 255" //
 		
 		// hl1 base color scheme
-		"ControlBG"					"115 115 115 255"		
-		"BrightControlText"			"255 255 255 255" 	
-		"BorderBright"				"191 191 191 255"	
-		"BorderDark"				"70 70 70 255"		
-		"BaseText"					"255 255 255 255"	
-		"ListBG"					"91 91 91 255"		
-		"BorderSelection"			"0 0 55 255"			
-		"DimBaseText"				"255 255 255 255"	
-		"SelectionBG"				"188 188 188 255"	
-		"SelectionBG2"				"0 0 0 255"
-		"DisabledText1"				"91 91 91 255"	
-		"DisabledText2"				"255 255 255 255"		
-		"ControlDarkBG"				"91 91 91 255"
-		"TitleText"					"255 255 255 255"
-		"TitleDimText"				"255 255 255 255"
-		"TitleBG"					"76 88 68 0"
-		"TitleDimBG"				"76 88 68 0"
+		"ControlBG"                  "145 140 80 255"      
+		"BrightControlText"          "255 255 255 255"     
+		"BorderBright"               "191 191 191 255"     
+		"BorderDark"                 "70 70 70 255"        
+		"BaseText"                   "255 255 255 255"     
+		"ListBG"                     "90 85 40 255"  
+		"BorderSelection"            "80 70 20 255"        
+		"DimBaseText"                "255 255 255 255"     
+		"SelectionBG"                "123 138 54 255"  
+		"SelectionBG2"               "45 40 0 255"       
+		"DisabledText1"              "91 91 91 255"        
+		"DisabledText2"              "255 255 255 255"     
+		"ControlDarkBG"              "85 80 45 255" 
+		"TitleText"                  "255 255 255 255"     
+		"TitleDimText"               "255 255 255 255"     
+		"TitleBG"                    "76 88 68 0"          
+		"TitleDimBG"                 "76 88 68 0"
 	}
 
 	///////////////////// BASE SETTINGS ////////////////////////
