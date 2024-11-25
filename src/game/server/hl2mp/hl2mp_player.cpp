@@ -31,6 +31,7 @@
 #include "lbaseentity_shared.h"
 #include "lhl2mp_player_shared.h"
 #include "ltakedamageinfo.h"
+#include "mathlib/lvector.h"
 #endif
 
 int g_iLastCitizenModel = 0;
@@ -1131,6 +1132,10 @@ void CHL2MP_Player::CreateViewModel( int index /*=0*/ )
 
 bool CHL2MP_Player::BecomeRagdollOnClient( const Vector &force )
 {
+	BEGIN_LUA_CALL_HOOK("BecomeRagdollOnClient");
+	lua_pushvector(L, force);
+	lua_pushhl2mpplayer(L, this);
+	END_LUA_CALL_HOOK(2, 0);
 	return true;
 }
 
