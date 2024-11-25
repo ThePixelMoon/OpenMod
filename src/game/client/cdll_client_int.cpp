@@ -1094,7 +1094,6 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 	if (!ParticleMgr()->Init(MAX_TOTAL_PARTICLES, materials))
 		return false;
 
-
 	if (!VGui_Startup( appSystemFactory ))
 		return false;
 

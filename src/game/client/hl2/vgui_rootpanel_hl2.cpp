@@ -25,7 +25,7 @@ C_ScriptedBaseGameUIPanel *g_pScriptedBaseGameUIPanel = NULL;
 //-----------------------------------------------------------------------------
 void VGUI_CreateGameUIRootPanel( void )
 {
-	g_pScriptedBaseGameUIPanel = new C_ScriptedBaseGameUIPanel( enginevgui->GetPanel( PANEL_GAMEUIDLL ) );
+	g_pScriptedBaseGameUIPanel = new C_ScriptedBaseGameUIPanel( enginevgui->GetPanel( PANEL_ROOT ) );
 }
 
 //-----------------------------------------------------------------------------
