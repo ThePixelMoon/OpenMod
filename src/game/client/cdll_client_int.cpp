@@ -169,7 +169,9 @@ extern vgui::IInputInternal *g_InputInternal;
 #endif
 
 #ifdef OMOD
+#ifndef _ANDROID
 #include "basemenu.h"
+#endif
 #include "mountsteamcontent.h"
 #include "mountaddons.h"
 #ifdef _WIN32
@@ -233,7 +235,7 @@ IReplaySystem *g_pReplay = NULL;
 
 IHaptics* haptics = NULL;// NVNT haptics system interface singleton
 
-#ifdef OMOD
+#if defined( OMOD ) && !defined( _ANDROID )
 RootPanel          	*IBaseMenu;
 #endif
 
@@ -961,7 +963,7 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 	ClientSteamContext().Activate();
 #endif
 
-#ifdef OMOD
+#if defined( OMOD ) && !defined( _ANDROID )
 	if ( CommandLine()->FindParm( "-gameui" ) == 0 )
 	{
 		if ( !IBaseMenu )
@@ -1316,7 +1318,7 @@ void CHLClient::Shutdown( void )
 
 	IGameSystem::ShutdownAllSystems();
 	
-#ifdef OMOD
+#if defined( OMOD ) && !defined( _ANDROID )
 	if ( IBaseMenu )
   	{
     	IBaseMenu->~RootPanel();
@@ -1812,7 +1814,7 @@ void CHLClient::LevelInitPreEntity( char const* pMapName )
 //-----------------------------------------------------------------------------
 void CHLClient::LevelInitPostEntity( )
 {
-#ifdef OMOD
+#if defined( OMOD ) && !defined( _ANDROID )
 	IBaseMenu->m_pHTMLPanel->RunJavascript("togglevisible(true);");
 	IBaseMenu->m_pHTMLPanel->RunJavascript("modifybg(true);");
 	IBaseMenu->m_pHTMLPanel->RequestFocus();
@@ -1881,7 +1883,7 @@ void CHLClient::LevelShutdown( void )
 	// clean up before hand.
 	tempents->LevelShutdown();
 
-#ifdef OMOD
+#if defined( OMOD ) && !defined( _ANDROID )
 	IBaseMenu->m_pHTMLPanel->RunJavascript("togglevisible(false);");
 	IBaseMenu->m_pHTMLPanel->RunJavascript("modifybg(false);");
 	IBaseMenu->m_pHTMLPanel->RequestFocus();
