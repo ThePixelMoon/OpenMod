@@ -42,6 +42,10 @@ vgui::IInputInternal *g_InputInternal = NULL;
 
 #include <vgui_controls/Controls.h>
 
+#ifdef OMOD
+#include "spawnmenu.h"
+#endif
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -220,7 +224,7 @@ void VGui_CreateGlobalPanels( void )
 	debugoverlaypanel->Create( gameToolParent );
 
 #ifdef OMOD
-	smlmenu->Create(gameParent);
+	smenu->Create(gameParent);
 #endif
 
 #ifndef _X360
@@ -251,7 +255,7 @@ void VGui_Shutdown()
 	loadingdisc->Destroy();
 	internalCenterPrint->Destroy();
 #ifdef OMOD
-	smlmenu->Destroy();
+	smenu->Destroy();
 #endif
 
 	if ( g_pClientMode )

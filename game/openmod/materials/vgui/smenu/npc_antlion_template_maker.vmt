@@ -1,0 +1,6 @@
+UnlitGeneric{
+ $basetexture vgui/smenu/npc_antlion_template_maker
+ $vertexcolor		1
+  $vertexalpha		1
+  $nolod			1
+}

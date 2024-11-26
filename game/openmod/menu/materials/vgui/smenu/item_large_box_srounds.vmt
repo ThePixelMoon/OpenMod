@@ -1,0 +1,6 @@
+UnlitGeneric{
+ $basetexture vgui/smenu/item_large_box_srounds
+ $vertexcolor		1
+  $vertexalpha		1
+  $nolod			1
+}

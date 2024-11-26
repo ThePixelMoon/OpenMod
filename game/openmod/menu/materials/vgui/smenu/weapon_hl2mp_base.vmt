@@ -1,0 +1,6 @@
+UnlitGeneric{
+ $basetexture vgui/smenu/weapon_hl2mp_base
+ $vertexcolor		1
+  $vertexalpha		1
+  $nolod			1
+}

@@ -1,0 +1,6 @@
+UnlitGeneric{
+ $basetexture vgui/smenu/item_ar2_grenade
+ $vertexcolor		1
+  $vertexalpha		1
+  $nolod			1
+}

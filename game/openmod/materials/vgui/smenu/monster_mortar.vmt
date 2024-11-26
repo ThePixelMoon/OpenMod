@@ -1,0 +1,6 @@
+UnlitGeneric{
+ $basetexture vgui/smenu/monster_mortar
+ $vertexcolor		1
+  $vertexalpha		1
+  $nolod			1
+}

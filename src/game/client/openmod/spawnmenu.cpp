@@ -1,345 +1,437 @@
-//========= Copyright OpenMod, All rights reserved. ============//
+﻿//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose:
 //
 // $NoKeywords: $
-//=============================================================================//
+//===========================================================================//
 #include "cbase.h"
-
-#include <vgui/ISurface.h>
-#include <vgui/IScheme.h>
+#include <stdio.h>
 #include <vgui/IVGui.h>
-
-#include <vgui_controls/Label.h>
-#include <vgui_controls/Slider.h>
-#include <vgui_controls/Frame.h>
-#include <vgui_controls/MenuButton.h>
+#include <vgui/IScheme.h>
+#include <vgui/ISurface.h>
 #include <vgui_controls/Menu.h>
-#include <vgui_controls/MenuItem.h>
-#include <vgui_controls/PropertyPage.h>
-#include <vgui_controls/PropertySheet.h>
-#include <vgui_controls/PropertyDialog.h>
+#include <vgui_controls/Frame.h>
+#include <vgui_controls/Label.h>
 #include <vgui_controls/Controls.h>
-#include <vgui_controls/ScrollBar.h>
+#include <vgui_controls/MenuButton.h>
+#include <vgui_controls/MenuItem.h>
+#include <vgui_controls/ImageList.h>
+#include <vgui_controls/ComboBox.h>
+#include <vgui_controls/PanelListPanel.h>
+#include <vgui_controls/PropertyPage.h>
+#include <vgui_controls/PropertyDialog.h>
+#include <vgui_controls/PropertySheet.h>
+#include <vgui_controls/TextEntry.h>
+#include <vgui_controls/Button.h>
+#include <vgui_controls/MessageBox.h>
 
-#include "matsys_controls/mdlpanel.h"
 #include "filesystem.h"
-#include "vgui_int.h"
-#include "steam/steam_api.h"
+#include "spawnmenu.h"
+#include "game_controls/basemodel_panel.h"
 
-// memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
 using namespace vgui;
 
-class CModelButton : public CMDLPanel
+ConVar cl_spawnmenu("cl_spawnmenu", "0", FCVAR_CLIENTDLL, "Spawn Menu");
+
+ImageButton::ImageButton(vgui::Panel* parent, const char* panelName, const char* normalImage, const char* mouseOverImage, const char* mouseClickImage, const char* pCmd)
+	: ImagePanel(parent, panelName)
 {
-	typedef CMDLPanel BaseClass;
+	m_pParent = parent;
 
-public:
-	CModelButton(vgui::Panel* parent, const char* panelName, const char* modelPath, const char* command)
-		: BaseClass(parent, panelName)
+	SetParent(parent);
+
+	if (pCmd != NULL)
 	{
-		m_Command = command;
-		SetMDL(modelPath);
-		LookAtMDL();
+		Q_strncpy(command, pCmd, 100);
+		hasCommand = true;
 	}
+	else
+		hasCommand = false;
 
-	virtual void OnMouseReleased(vgui::MouseCode code)
+	// Защищаемся от Buffer Overflow
+	Q_strncpy(m_normalImage, normalImage, 100);
+
+	i_normalImage = vgui::scheme()->GetImage(m_normalImage, true);
+
+	if (mouseOverImage != NULL)
 	{
-		if (code == MOUSE_LEFT)
-		{
-			if (!m_Command.IsEmpty())
-			{
-				engine->ClientCmd(m_Command.Get());
-			}
-		}
-		BaseClass::OnMouseReleased(code);
+		Q_strcpy(m_mouseOverImage, mouseOverImage);
+		i_mouseOverImage = vgui::scheme()->GetImage(m_mouseOverImage, true);
+		hasMouseOverImage = true;
 	}
+	else
+		hasMouseOverImage = false;
 
-private:
-	CUtlString m_Command;
-};
-
-
-class CSMLButton : public MenuButton
-{
-	typedef MenuButton BaseClass;
-public:
-	CSMLButton(Panel* parent, const char* panelName, const char* text);
-
-private:
-	Menu* m_pMenu;
-	Frame* m_pFrame;
-};
-
-class CSMLCommandButton : public vgui::Button
-{
-	typedef vgui::Button BaseClass;
-
-public:
-	CSMLCommandButton(vgui::Panel* parent, const char* panelName, const char* labelText, const char* command)
-		: BaseClass(parent, panelName, labelText)
+	if (mouseClickImage != NULL)
 	{
-		AddActionSignalTarget(this);
-		SetCommand(command);
+		Q_strcpy(m_mouseClickImage, mouseClickImage);
+		i_mouseClickImage = vgui::scheme()->GetImage(m_mouseClickImage, true);
+		hasMouseClickImage = true;
 	}
+	else
+		hasMouseClickImage = false;
 
-	virtual void OnCommand(const char* command)
-	{
-		engine->ClientCmd((char*)command);
-	}
-
-	virtual void OnTick(void)
-	{
-	}
-};
-
-class CSMLPage : public vgui::PropertyPage
-{
-	typedef vgui::PropertyPage BaseClass;
-public:
-	CSMLPage(vgui::Panel* parent, const char* panelName)
-		: BaseClass(parent, panelName)
-	{
-		vgui::ivgui()->AddTickSignal(GetVPanel(), 250);
-	}
-
-	virtual void OnTick(void)
-	{
-		BaseClass::OnTick();
-
-		if (!IsVisible())
-			return;
-
-		int c = m_LayoutItems.Count();
-		for (int i = 0; i < c; i++)
-		{
-			vgui::Panel* p = m_LayoutItems[i];
-			p->OnTick();
-		}
-	}
-
-	virtual void PerformLayout()
-	{
-		BaseClass::PerformLayout();
-
-		const int xStart = 5;
-		const int yStart = 5;
-		const int itemWidth = 150;
-		const int itemHeight = 150;
-		const int gap = 10;
-
-		int x = xStart;
-		int y = yStart;
-
-		int itemCount = m_LayoutItems.Count();
-		int containerHeight = GetTall();
-
-		for (int i = 0; i < itemCount; ++i)
-		{
-			vgui::Panel* item = m_LayoutItems[i];
-			item->SetBounds(x, y, itemWidth, itemHeight);
-
-			y += (itemHeight + gap);
-
-			if (y + itemHeight > containerHeight)
-			{
-				x += (itemWidth + gap);
-				y = yStart;
-			}
-		}
-	}
-
-	void Init(KeyValues* kv)
-	{
-		for (KeyValues* control = kv->GetFirstSubKey(); control != nullptr; control = control->GetNextKey())
-		{
-			const char* command = control->GetString("#", "");
-			if (command[0])
-			{
-				CSMLCommandButton* btn = new CSMLCommandButton(this, "CommandButton", control->GetName(), command);
-				m_LayoutItems.AddToTail(btn);
-			}
-		}
-	}
-
-public:
-	CUtlVector<vgui::Panel*> m_LayoutItems;
-};
-
-ConVar spawn("cl_spawnmenu", "0", FCVAR_CLIENTDLL, "enable spawnmenu");
-
-class CSMLMenu : public vgui::PropertyDialog
-{
-	typedef vgui::PropertyDialog BaseClass;
-public:
-
-	CSMLMenu(vgui::VPANEL* parent, const char* panelName)
-		: BaseClass(NULL, "SMLenu")
-	{
-		SetTitle("SPAWN MENU", true);
-		int x, y;
-		surface()->GetScreenSize(x, y);
-		SetSize(x, y);
-		SetPos(0,0);
-
-		vgui::ivgui()->AddTickSignal(GetVPanel(), 100);
-
-		m_pScrollBar = new vgui::ScrollBar(this, "ScrollBar", false);
-		m_pButtonContainer = new vgui::Panel(this, "ButtonContainer");
-
-		int screenWidth, screenHeight;
-		engine->GetScreenSize(screenWidth, screenHeight);
-
-		m_pButtonContainer->SetSize(screenWidth - 20, screenHeight);
-		m_pButtonContainer->SetPos(0, 0);
-		m_pButtonContainer->SetVisible(true);
-
-		m_pScrollBar->SetVisible(true);
-		m_pScrollBar->SetSize(16, screenHeight);
-		m_pScrollBar->SetPos(screenWidth - 16, 0);
-		m_pScrollBar->AddActionSignalTarget(this);
-
-		loadButtons();
-
-		GetPropertySheet()->SetTabWidth(72);
-		SetMoveable(false);
-		SetVisible(true);
-		SetKeyBoardInputEnabled(false);
-		SetMouseInputEnabled(true);
-		SetSizeable(false);
-		SetProportional(false);
-	}
-
-	void CSMLMenu::loadButtons() {
-		const int buttonWidth = 128;
-		const int buttonHeight = 128;
-		const int startX = 50;
-		const int startY = 50;
-		const int gap = 10;
-
-		int screenWidth, screenHeight;
-		engine->GetScreenSize(screenWidth, screenHeight);
-		const int buttonsPerRow = (screenWidth - startX * 2) / (buttonWidth + gap);
-
-		FileFindHandle_t handle;
-		const char* modelFile = g_pFullFileSystem->FindFirstEx("models/*.mdl", "GAME", &handle);
-
-		if (modelFile) {
-			int i = 0;
-			do {
-				char fullPath[MAX_PATH];
-				Q_snprintf(fullPath, sizeof(fullPath), "models/%s", modelFile);
-
-				CModelButton* btn = new CModelButton(this, modelFile, fullPath, "give weapon_bugbait");
-
-				int xPos = startX + (i % buttonsPerRow) * (buttonWidth + gap);
-				int yPos = startY + (i / buttonsPerRow) * (buttonHeight + gap);
-
-				btn->SetBounds(xPos, yPos, buttonWidth, buttonHeight);
-				btn->LookAtMDL();
-
-				m_Buttons.AddToTail(btn);
-
-				i++;
-			} while ((modelFile = g_pFullFileSystem->FindNext(handle)) != nullptr);
-
-			g_pFullFileSystem->FindClose(handle);
-		}
-
-		int totalHeight = (buttonHeight + gap) * ((m_Buttons.Count() / buttonsPerRow) + 1);
-		int scrollRange = totalHeight - GetTall();
-		if (scrollRange > 0) {
-			m_pScrollBar->SetRange(0, scrollRange);
-		}
-		else {
-			m_pScrollBar->SetRange(0, 0);
-		}
-	}
-
-	void OnScrollBarMoved()
-	{
-		int scrollPos = m_pScrollBar->GetValue();
-
-		for (int i = 0; i < m_Buttons.Count(); i++)
-		{
-			vgui::Panel* btn = m_Buttons[i];
-			int yOffset = btn->GetYPos() - scrollPos;
-			btn->SetPos(btn->GetXPos(), yOffset);
-		}
-	}
-
-	void OnMouseWheeled(int delta) override
-	{
-		if (!m_pScrollBar)
-			return;
-
-		int currentScroll = m_pScrollBar->GetValue();
-		int scrollIncrement = 30;
-		int newScroll = currentScroll - delta * scrollIncrement;
-
-		m_pScrollBar->SetValue(newScroll);
-
-		OnScrollBarMoved();
-	}
-
-	void Init(KeyValues* kv);
-
-	void OnTick()
-	{
-		BaseClass::OnTick();
-		SetVisible(spawn.GetBool());
-
-		m_pScrollBar->InvalidateLayout(true);
-		m_pButtonContainer->InvalidateLayout(true);
-		OnScrollBarMoved();
-	}
-
-	void OnCommand(const char* command)
-	{
-		BaseClass::OnCommand(command);
-	}
-
-private:
-	vgui::Panel* m_pButtonContainer;
-	vgui::ScrollBar* m_pScrollBar;
-	CUtlVector<vgui::Panel*> m_Buttons;
-
-};
-
-void CSMLMenu::Init(KeyValues* kv)
-{
+	SetNormalImage();
 }
 
-class CSMLPanelInterface : public SMLPanel
+void ImageButton::OnCursorEntered()
+{
+	if (hasMouseOverImage)
+		SetMouseOverImage();
+}
+
+void ImageButton::OnCursorExited()
+{
+	if (hasMouseOverImage)
+		SetNormalImage();
+}
+
+void ImageButton::OnMouseReleased(vgui::MouseCode code)
+{
+	m_pParent->OnCommand(command);
+
+	if ((code == MOUSE_LEFT) && hasMouseClickImage)
+		SetNormalImage();
+}
+
+void ImageButton::OnMousePressed(vgui::MouseCode code)
+{
+	if ((code == MOUSE_LEFT) && hasMouseClickImage)
+		SetMouseClickImage();
+}
+
+void ImageButton::SetNormalImage(void)
+{
+	SetImage(i_normalImage);
+	Repaint();
+}
+
+void ImageButton::SetMouseOverImage(void)
+{
+	SetImage(i_mouseOverImage);
+	Repaint();
+}
+
+void ImageButton::SetMouseClickImage(void)
+{
+	SetImage(i_mouseClickImage);
+	Repaint();
+}
+
+void ImageButton::SetImage(vgui::IImage* image)
+{
+	BaseClass::SetImage(image);
+}
+
+SMModels::SMModels( vgui::Panel *parent, const char *panelName ) : BaseClass( parent, panelName )
+{
+	vgui::ivgui()->AddTickSignal( GetVPanel(), 250 );
+	box = new ComboBox( this, "ComboBox", 50, false);
+	mdl = new CMDLPanel( this, "MDLPanel" );
+	LoadControlSettings( "menu/resource/ui/smmodels.res" );
+}
+
+void SMModels::InitModels( Panel *panel, const char *modeltype, const char *modelfolder, const char *mdlPath )
+{
+	FileFindHandle_t fh;
+	char const *pModel = g_pFullFileSystem->FindFirst( mdlPath, &fh );
+	
+	while ( pModel )
+	{
+		if ( pModel[0] != '.' )
+		{
+			char ext[ 10 ];
+			Q_ExtractFileExtension( pModel, ext, sizeof( ext ) );
+			if ( !Q_stricmp( ext, "mdl" ) )
+			{
+				char file[MAX_PATH];
+				Q_FileBase( pModel, file, sizeof( file ) );
+			
+				if ( pModel && pModel[0] )
+				{
+					char modelname[MAX_PATH], 
+						 entspawn[MAX_PATH], 
+						 modelfile[MAX_PATH];
+
+					Q_snprintf( modelname, sizeof(modelname), "%s/%s", modelfolder, file );
+					Q_snprintf( entspawn, sizeof(entspawn), "%s_create %s", modeltype, modelname );
+					Q_snprintf( modelfile, sizeof( modelfile ), "models/%s.mdl", modelname );
+					
+					box->AddItem( modelname, NULL );
+				}
+			}
+		}
+		pModel = g_pFullFileSystem->FindNext( fh );
+	}
+	g_pFullFileSystem->FindClose( fh );
+}
+
+const char *SMModels::GetText()
+{
+	box->GetText( sz_mdlname, 260 );
+#ifdef DEBUG	
+	printf( "%s\n", sz_mdlname );
+#endif
+	return sz_mdlname;
+}
+
+void SMModels::OnCommand( const char *command )
+{
+	BaseClass::OnCommand( command );
+
+	if(!Q_stricmp(command, "spawn"))
+	{
+		char spawncommand[260];
+
+		Q_snprintf( spawncommand, sizeof( spawncommand ), "prop_physics_create %s", GetText() );
+		engine->ClientCmd( spawncommand );
+	}
+	else if ( !Q_stricmp( command, "preview")  )
+	{	
+		char mdlname[260];
+		Q_snprintf( mdlname, sizeof( mdlname ), "models/%s.mdl", GetText() );
+		mdl->SetMDL( mdlname );
+	}
+}
+
+SMList::SMList( vgui::Panel *parent, const char *pName ) : BaseClass( parent, pName )
+{
+	SetBounds( 0, 0, 800, 640 );
+}
+
+void SMList::OnTick( void )
+{
+	BaseClass::OnTick();
+
+	if ( !IsVisible() )
+		return;
+
+	int c = m_LayoutItems.Count();
+	for ( int i = 0; i < c; i++ )
+	{
+		vgui::Panel *p = m_LayoutItems[ i ];
+		p->OnTick();
+	}
+}
+
+void SMList::OnCommand( const char *command )
+{
+	engine->ClientCmd( (char *)command );
+}
+
+void SMList::PerformLayout()
+{
+	BaseClass::PerformLayout();
+
+	int w = 64;
+	int h = 64;
+	int x = 5;
+	int y = 5;
+
+	for ( int i = 0; i < m_LayoutItems.Count(); i++ )
+	{	
+		vgui::Panel *p = m_LayoutItems[ i ];
+		p->SetBounds( x, y, w, h );
+
+		x += ( w + 2 );
+		if ( x >= GetWide() - w )
+		{
+			y += ( h + 2 );
+			x = 5;
+		}	
+	}
+}
+
+void SMList::AddImageButton( PanelListPanel *panel, const char *image, const char *hover, const char *command )
+{
+	ImageButton *btn = new ImageButton( panel, image, image, hover, NULL, command );
+	m_LayoutItems.AddToTail( btn );
+	panel->AddItem( NULL, btn );
+}
+
+void SMList::AddModelPanel( PanelListPanel *panel, const char *mdlname, const char *cmd )
+{
+	CMDLPanel *mdl = new CMDLPanel( panel, "MDLPanel" );
+	mdl->SetMDL( mdlname );
+	m_LayoutItems.AddToTail( mdl );
+	panel->AddItem( NULL, mdl );
+}
+	
+void SMList::InitEntities( KeyValues *kv, PanelListPanel *panel, const char *enttype )
+{
+	for ( KeyValues *control = kv->GetFirstSubKey(); control != NULL; control = control->GetNextKey() )
+	{
+		const char *entname;
+		
+		if ( !Q_strcasecmp( control->GetName(), "entity" ) )
+		{
+			entname = control->GetString();
+		}
+		
+		if( Q_strncmp( entname, enttype, Q_strlen(enttype) ) == 0 )
+		{
+			if ( entname && entname[0] )
+			{
+				char entspawn[MAX_PATH], normalImage[MAX_PATH], vtf[MAX_PATH], vtf_without_ex[MAX_PATH], vmt[MAX_PATH], file[MAX_PATH];
+				
+				Q_snprintf( entspawn, sizeof(entspawn), "ent_create %s", entname );
+				Q_snprintf( normalImage, sizeof(normalImage), "smenu/%s", entname );
+				Q_snprintf( vtf, sizeof( vtf ), "materials/vgui/smenu/%s.vtf", entname );
+				Q_snprintf( vtf_without_ex, sizeof(vtf_without_ex), "vgui/smenu/%s", entname );
+				Q_snprintf( vmt, sizeof( vmt ), "materials/vgui/smenu/%s.vmt", entname );
+
+				if ( filesystem->FileExists( vtf ) && filesystem->FileExists( vmt ) )
+				{
+					AddImageButton( panel, normalImage, NULL, entspawn );
+					continue;
+				}
+			}
+		}
+	}		
+}
+
+void SMList::InitModels( PanelListPanel *panel, const char *modeltype, const char *modelfolder, const char *mdlPath )
+{
+	FileFindHandle_t fh;
+	char const *pModel = g_pFullFileSystem->FindFirst( mdlPath, &fh );
+	
+	while ( pModel )
+	{
+		if ( pModel[0] != '.' )
+		{
+			char ext[ 10 ];
+			Q_ExtractFileExtension( pModel, ext, sizeof( ext ) );
+			if ( !Q_stricmp( ext, "mdl" ) )
+			{
+				char file[MAX_PATH];
+				Q_FileBase( pModel, file, sizeof( file ) );
+			
+				if ( pModel && pModel[0] )
+				{
+					char modelname[MAX_PATH], 
+						 entspawn[MAX_PATH], 
+						 modelfile[MAX_PATH];
+					Q_snprintf( modelname, sizeof(modelname), "%s/%s", modelfolder, file );
+					Q_snprintf( entspawn, sizeof(entspawn), "%s_create %s", modeltype, modelname );
+					Q_snprintf( modelfile, sizeof( modelfile ), "models/%s.mdl", modelname );
+					
+					DevMsg("Added: %s\n", modelfile);
+					AddModelPanel( panel, modelfile, entspawn );
+				}
+			}
+		}
+		pModel = g_pFullFileSystem->FindNext( fh );
+	}
+	g_pFullFileSystem->FindClose( fh );
+}
+
+CSMenu::CSMenu( vgui::VPANEL *parent, const char *panelName ) : BaseClass( NULL, "SMenu" )
+{
+	SetTitle( "SMenu", true );
+	SetScheme(vgui::scheme()->LoadSchemeFromFile("menu/resource/sch.res", "SourceScheme"));
+
+	SetProportional(true);
+	
+	int w = 750;
+	int h = 450;
+
+	if (IsProportional())
+	{
+		w = scheme()->GetProportionalScaledValueEx(GetScheme(), w);
+		h = scheme()->GetProportionalScaledValueEx(GetScheme(), h);
+	}
+
+	SetSize(w, h);
+		
+	KeyValues *kv = new KeyValues( "SMenu" );
+	if ( kv )
+	{
+		if ( kv->LoadFromFile(g_pFullFileSystem, "menu/entitylist.txt") )
+		{
+			SMList *npces = new SMList( this, "EntityPanel");
+			npces->InitEntities( kv, npces, "npc_" );
+			SMList *weapons = new SMList( this, "EntityPanel");
+			weapons->InitEntities( kv, weapons, "weapon_" );
+			weapons->InitEntities( kv, weapons, "item_");
+			weapons->InitEntities( kv, weapons, "ammo_");
+			AddPage( npces, "NPCs" );
+			AddPage( weapons, "Weapons");
+		}
+		kv->deleteThis();
+	}
+	
+	SMList *mdl = new SMList( this, "PropMenu" );
+	FileFindHandle_t fh;
+	for ( const char *pDir = filesystem->FindFirstEx( "models/*", "GAME", &fh ); pDir && *pDir; pDir = filesystem->FindNext( fh ) )
+	{			
+		if ( Q_strncmp( pDir, "props_", Q_strlen("props_") ) == 0 ) {
+			if ( filesystem->FindIsDirectory( fh ) )
+			{
+				char dir[MAX_PATH];
+				char file[MAX_PATH];
+				Q_FileBase( pDir, file, sizeof( file ) );
+				Q_snprintf( dir, sizeof( dir ), "models/%s/*.mdl", file );
+				printf("%s\n", pDir );
+				mdl->InitModels( mdl, "prop_physics", file, dir );
+			}
+		}
+	}
+
+	AddPage( mdl, "Props" );
+	
+	vgui::ivgui()->AddTickSignal(GetVPanel(), 100);
+	GetPropertySheet()->SetTabWidth(72);
+	SetMoveable( true );
+	SetVisible( true );
+	SetSizeable( true );
+}
+
+void CSMenu::OnTick()
+{
+	BaseClass::OnTick();
+	SetVisible(cl_spawnmenu.GetBool());
+}
+
+void CSMenu::OnCommand( const char *command )
+{
+	BaseClass::OnCommand( command );
+		
+	if (!Q_stricmp(command, "Close"))	
+	{
+		cl_spawnmenu.SetValue(0);
+	}
+}
+
+class CSMPanelInterface : public SMPanel
 {
 private:
-	CSMLMenu* SMLPanel;
+	CSMenu *SMPanel;
 public:
-	CSMLPanelInterface()
+	CSMPanelInterface()
 	{
-		SMLPanel = NULL;
+		SMPanel = NULL;
 	}
 	void Create(vgui::VPANEL parent)
 	{
-		SMLPanel = new CSMLMenu(&parent, "SMenu");
+		SMPanel = new CSMenu(&parent, "SMenu");
 	}
 	void Destroy()
 	{
-		if (SMLPanel)
+		if (SMPanel)
 		{
-			SMLPanel->SetParent((vgui::Panel*)NULL);
-			delete SMLPanel;
+			SMPanel->SetParent((vgui::Panel *)NULL);
+			delete SMPanel;
 		}
 	}
 	void Activate(void)
 	{
-		if (SMLPanel)
+		if (SMPanel)
 		{
-			SMLPanel->Activate();
+			SMPanel->Activate();
 		}
 	}
 };
-static CSMLPanelInterface g_SMLPanel;
-SMLPanel* smlmenu = (SMLPanel*)&g_SMLPanel;
+static CSMPanelInterface g_SMPanel;
+SMPanel* smenu = (SMPanel*)&g_SMPanel;

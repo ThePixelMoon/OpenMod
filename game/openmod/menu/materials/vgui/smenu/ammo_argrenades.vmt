@@ -1,0 +1,6 @@
+UnlitGeneric{
+ $basetexture vgui/smenu/ammo_argrenades
+ $vertexcolor		1
+  $vertexalpha		1
+  $nolod			1
+}

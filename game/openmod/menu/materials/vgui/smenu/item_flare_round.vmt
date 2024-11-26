@@ -1,0 +1,6 @@
+UnlitGeneric{
+ $basetexture vgui/smenu/item_flare_round
+ $vertexcolor		1
+  $vertexalpha		1
+  $nolod			1
+}
