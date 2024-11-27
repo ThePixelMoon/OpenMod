@@ -23,8 +23,29 @@ namespace vgui
 	class Panel;
 }
 
-void OverrideRootUI();
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+class CMapLoadBG : public vgui::EditablePanel
+{
+	DECLARE_CLASS_SIMPLE(CMapLoadBG, vgui::EditablePanel);
+
+public:
+	CMapLoadBG(char const* panelName);
+	~CMapLoadBG();
+
+	void SetEnable( bool enabled );
+
+protected:
+	void ApplySchemeSettings(vgui::IScheme* pScheme);
+
+private:
+	vgui::HTML *HHPanel;
+};
  
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
 class RootPanel : public vgui::Panel
 {
 	DECLARE_CLASS_SIMPLE( RootPanel, vgui::Panel );
@@ -49,6 +70,9 @@ private:
 	IGameUI*		gameui;
 };
 
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
 class IOverrideInterface
 {
 public:
@@ -61,5 +85,7 @@ public:
 
 extern RootPanel *guiroot;
 extern IOverrideInterface *OverrideUI;
+
+void OverrideRootUI(void);
 
 #endif

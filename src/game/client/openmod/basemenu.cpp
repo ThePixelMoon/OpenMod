@@ -30,7 +30,7 @@ static CDllDemandLoader g_GameUIDLL( "GameUI" );
 
 RootPanel *guiroot = NULL;
 
-void OverrideRootUI()
+void OverrideRootUI(void)
 {
 	if( !OverrideUI->GetPanel() )
 	{
@@ -280,7 +280,12 @@ public:
 			SetVisible(false); // so we could see progress bar
 
 			// minor commands
-			engine->ClientCmd_Unrestricted("disconnect\nwait\nwait\nsv_lan 1\nsetmaster enable\nprogress_enable\n");
+			engine->ClientCmd_Unrestricted("disconnect");
+			engine->ClientCmd_Unrestricted("wait");
+			engine->ClientCmd_Unrestricted("wait");
+			engine->ClientCmd_Unrestricted("sv_lan 1");
+			engine->ClientCmd_Unrestricted("setmaster enable");
+			engine->ClientCmd_Unrestricted("progress_enable");
 
 			// MAJOR commands (get it?)
 			int maxPlayers = m_pMaxPlayersComboBox->GetActiveItem();
@@ -366,4 +371,53 @@ CON_COMMAND(opennewgame, "new game")
 
 	pCurrentMenu = new NewGame(nullptr, "NewGame");
 	pCurrentMenu->Activate();
+}
+
+// loading screen
+
+//-----------------------------------------------------------------------------
+// Purpose: Constructor
+//-----------------------------------------------------------------------------
+CMapLoadBG::CMapLoadBG( char const* panelName ) : EditablePanel( NULL, panelName )
+{
+	VPANEL toolParent = enginevgui->GetPanel(PANEL_GAMEUIDLL);
+	SetParent(toolParent);
+	LoadControlSettings("resource/loadingdialog.res");
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Destructor
+//-----------------------------------------------------------------------------
+CMapLoadBG::~CMapLoadBG()
+{}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CMapLoadBG::ApplySchemeSettings( IScheme *pScheme)
+{
+	BaseClass::ApplySchemeSettings(pScheme);
+
+	int iWide, iTall;
+	surface()->GetScreenSize(iWide, iTall);
+	SetSize(iWide, iTall);
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Sets a new background on demand
+//-----------------------------------------------------------------------------
+void CMapLoadBG::SetEnable( bool enabled)
+{
+	int wide, tall;
+	vgui::surface()->GetScreenSize(wide, tall);
+
+#if 0
+	HHPanel = new vgui::HTML( this, "HHPanel" );
+	HHPanel->SetScrollbarsEnabled( false );
+	HHPanel->SetContextMenuEnabled( false );
+	HHPanel->SetViewSourceEnabled( false );
+	HHPanel->SetBounds( 0, 0, wide, tall );
+	HHPanel->OpenURL( "https://google.com/", nullptr, true );
+	HHPanel->SetEnabled( enabled );
+#endif
 }
