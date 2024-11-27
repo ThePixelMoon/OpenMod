@@ -70,10 +70,10 @@ end
 		end
 	end
 
-if not _CLIENT then
 	local filter = CRecipientFilter();
 	filter:AddRecipientsByPAS( vecOrigin );
-	
+
+if not _CLIENT then
 	-- in MP, server removes all players in the vecOrigin's PVS, these players generate the footsteps client side
 	if ( gpGlobals.maxClients() > 1 ) then
 		filter:RemoveRecipientsByPVS( vecOrigin );

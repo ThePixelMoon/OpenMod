@@ -55,7 +55,8 @@ class CUserCmd;
 // Put this in your derived class definition to declare it's activity table
 // UNDONE: Cascade these?
 #define DECLARE_ACTTABLE()		static acttable_t m_acttable[];\
-	virtual acttable_t *ActivityList( int &iActivityCount ) OVERRIDE;
+	acttable_t *ActivityList( void );\
+	int ActivityListCount( void );
 
 // You also need to include the activity table itself in your class' implementation:
 // e.g.
@@ -72,7 +73,8 @@ class CUserCmd;
 // activity table.
 // UNDONE: Cascade these?
 #define IMPLEMENT_ACTTABLE(className) \
-	acttable_t *className::ActivityList( int &iActivityCount ) { iActivityCount = ARRAYSIZE(m_acttable); return m_acttable; }
+	acttable_t *className::ActivityList( void ) { return m_acttable; } \
+	int className::ActivityListCount( void ) { return ARRAYSIZE(m_acttable); } \
 
 typedef struct
 {
@@ -362,7 +364,11 @@ public:
 public:
 
 	// Weapon info accessors for data in the weapon's data file
-	const FileWeaponInfo_t	&GetWpnData( void ) const;
+#ifndef LUA_SDK
+	const FileWeaponInfo_t& GetWpnData(void) const;
+#else
+	virtual const FileWeaponInfo_t& GetWpnData(void) const;
+#endif
 	virtual const char		*GetViewModel( int viewmodelindex = 0 ) const;
 	virtual const char		*GetWorldModel( void ) const;
 	virtual const char		*GetAnimPrefix( void ) const;

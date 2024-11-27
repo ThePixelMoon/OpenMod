@@ -957,6 +957,11 @@ $Project
 		$File	"weapons_resource.h"
 		$File	"vgui_video.h"
 		$File   "vgui_video_player.h"
+		
+	// Lua
+    $File "lc_recipientfilter.h"
+    $File "lc_recipientfilter.cpp"
+    $File "lc_baseanimating.h"
 	}
 
 	$Folder	"Public Header Files"
