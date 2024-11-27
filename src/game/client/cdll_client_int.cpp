@@ -175,7 +175,7 @@ extern vgui::IInputInternal *g_InputInternal;
 #include "mountsteamcontent.h"
 #include "mountaddons.h"
 #ifdef _WIN32
-#pragma warning( ignore:4005,4701,4703 )
+#pragma warning( disable : 4005 )
 #include <Windows.h>
 #include <dwmapi.h>
 #pragma comment( lib, "Dwmapi.lib" )
