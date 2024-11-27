@@ -70,3 +70,5 @@ voice_ban.dt
 mapsrc/*.bsp
 mapsrc/*.prt
 mapsrc/*.vmx
+
+addons/
