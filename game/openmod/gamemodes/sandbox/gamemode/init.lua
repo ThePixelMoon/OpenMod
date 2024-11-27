@@ -23,27 +23,19 @@ end
 
 function GM:GiveDefaultItems( pPlayer )
   pPlayer:GiveNamedItem( "weapon_physgun" )
-  pPlayer:GiveNamedItem("weapon_crowbar")
-  pPlayer:GiveNamedItem("weapon_stunstick")
-  pPlayer:GiveNamedItem("weapon_pistol")
-  pPlayer:GiveNamedItem("weapon_357")
-     
-  pPlayer:GiveNamedItem("weapon_smg1")
-  pPlayer:GiveNamedItem("weapon_ar2")
-     
-  pPlayer:GiveNamedItem("weapon_shotgun")
-  pPlayer:GiveNamedItem("weapon_frag")
-     
-  pPlayer:GiveNamedItem("weapon_crossbow")
-     
-  pPlayer:GiveNamedItem("weapon_rpg")
-     
-  pPlayer:GiveNamedItem("weapon_slam")
-     
-  pPlayer:GiveNamedItem("weapon_physcannon")
-  pPlayer:GiveNamedItem("weapon_physgun")
-
-  pPlayer:GiveNamedItem("weapon_bugbait")
+  pPlayer:GiveNamedItem( "weapon_crowbar" )
+  pPlayer:GiveNamedItem( "weapon_stunstick" )
+  pPlayer:GiveNamedItem( "weapon_pistol" )
+  pPlayer:GiveNamedItem( "weapon_357" )
+  pPlayer:GiveNamedItem( "weapon_smg1" )
+  pPlayer:GiveNamedItem( "weapon_ar2" )
+  pPlayer:GiveNamedItem( "weapon_shotgun" )
+  pPlayer:GiveNamedItem( "weapon_frag" )
+  pPlayer:GiveNamedItem( "weapon_crossbow" )
+  pPlayer:GiveNamedItem( "weapon_rpg" )
+  pPlayer:GiveNamedItem( "weapon_slam" )
+  pPlayer:GiveNamedItem( "weapon_physcannon" )
+  pPlayer:GiveNamedItem( "weapon_bugbait")
   
   self.BaseClass.GiveDefaultItems( self, pPlayer ) -- fallback..
 end
