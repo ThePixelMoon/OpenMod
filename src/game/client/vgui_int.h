@@ -13,7 +13,6 @@
 #include "interface.h"
 
 #include <vgui/VGUI.h>
-#include <vgui_controls/ImagePanel.h>
 
 namespace vgui
 {
