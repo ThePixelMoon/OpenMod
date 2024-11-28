@@ -26,8 +26,13 @@ static int random_RandomFloatExp (lua_State *L) {
   return 1;
 }
 
+#pragma warning( disable: 4389 ) // '!=' : signed/unsigned mismatch
 static int random_RandomInt (lua_State *L) {
-  lua_pushinteger(L, random->RandomInt(luaL_checkint(L, 1), luaL_checkint(L, 2)));
+  int arg1 = luaL_optint(L, 1, 0);
+  int arg2 = luaL_optint(L, 2, 1);
+
+  lua_pushinteger(L, random->RandomInt(arg1, arg2));
+  
   return 1;
 }
 
