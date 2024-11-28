@@ -11,6 +11,7 @@ local FCVAR_CLIENTDLL = _E.FCVAR.CLIENTDLL
 require( "concommand" )
 
 local hContentDialog = INVALID_PANEL
+local hStartGameDialog = INVALID_PANEL
 
 local function PositionDialog(dlg)
 	if ( dlg == INVALID_PANEL ) then
@@ -33,4 +34,13 @@ local function OnOpenContentDialog()
 	hContentDialog:Activate();
 end
 
+local function OnOpenStartGame()
+	if ( ToPanel( hStartGameDialog ) == INVALID_PANEL ) then
+		hStartGameDialog = vgui.CStartGame(VGui_GetGameUIPanel(), "StartGame");
+		PositionDialog( hStartGameDialog );
+	end
+	hStartGameDialog:Activate();
+end
+
+concommand.Create( "OpenNewGame", OnOpenStartGame, "Open the start game menu.", FCVAR_CLIENTDLL )
 concommand.Create( "OpenContentDialog", OnOpenContentDialog, "Open content dialog.", FCVAR_CLIENTDLL )

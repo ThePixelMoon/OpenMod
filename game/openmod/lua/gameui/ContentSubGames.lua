@@ -102,7 +102,7 @@ function CContentSubGames:Init(parent)
 	self.m_pTeamFortressCheckBox.OnCheckButtonChecked = OnCheckButtonChecked
 	self.m_pTeamFortressCheckBox:AddActionSignalTarget( self.m_pTeamFortressCheckBox )
 
-	self:LoadControlSettings("Resource\\ContentSubGames.res");
+	self:LoadControlSettings("resource\\ContentSubGames.res");
 end
 
 -------------------------------------------------------------------------------

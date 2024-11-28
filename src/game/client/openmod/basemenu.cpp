@@ -359,6 +359,7 @@ private:
 	vgui::CheckButton* m_pEnableCheatsCheckBox;
 };
 
+#if 0
 CON_COMMAND(opennewgame, "new game")
 {
 	static NewGame* pCurrentMenu = nullptr;
@@ -372,6 +373,7 @@ CON_COMMAND(opennewgame, "new game")
 	pCurrentMenu = new NewGame(nullptr, "NewGame");
 	pCurrentMenu->Activate();
 }
+#endif
 
 // loading screen
 
