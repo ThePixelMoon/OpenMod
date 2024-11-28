@@ -38,6 +38,10 @@
 
 #endif
 
+#ifdef LUA_SDK
+#include "luamanager.h"
+#endif
+
 #include "vprof.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -1183,13 +1187,26 @@ bool CBaseCombatWeapon::IsViewModelSequenceFinished( void ) const
 void CBaseCombatWeapon::SetViewModel()
 {
 	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
-	if ( pOwner == NULL )
-		return;
-	CBaseViewModel *vm = pOwner->GetViewModel( m_nViewModelIndex, false );
-	if ( vm == NULL )
-		return;
-	Assert( vm->ViewModelIndex() == m_nViewModelIndex );
-	vm->SetWeaponModel( GetViewModel( m_nViewModelIndex ), this );
+    if ( pOwner == NULL )
+        return;
+
+    CBaseViewModel *vm = pOwner->GetViewModel( m_nViewModelIndex, false );
+    if ( vm == NULL )
+        return;
+
+    Assert( vm->ViewModelIndex() == m_nViewModelIndex );
+
+    const char *pszCurrentModel = STRING( vm->GetModelName() );
+    const char *pszNewModel = GetViewModel( m_nViewModelIndex );
+
+    vm->SetWeaponModel( pszNewModel, this );
+
+#ifdef LUA_SDK
+    BEGIN_LUA_CALL_HOOK( "OnViewModelChanged" )
+    lua_pushstring( L, pszCurrentModel );
+    lua_pushstring( L, pszNewModel );
+	END_LUA_CALL_HOOK( 3, 0 )
+#endif
 }
 
 //-----------------------------------------------------------------------------
