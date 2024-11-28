@@ -115,6 +115,7 @@ static const luaL_Reg base_funcs[] = {
   {"print", luasrc_print},
   {"type", luasrc_type},
   {"include", luasrc_include},
+  {"require", luasrc_include}, // hehe
   {NULL, NULL}
 };
 

@@ -680,6 +680,7 @@ $Project
             $File "$SRCDIR\game\shared\ltakedamageinfo.cpp"
             $File "$SRCDIR\game\shared\luacachefile.cpp"
             $File "$SRCDIR\game\shared\luamanager.cpp"
+			$File "$SRCDIR\game\shared\luamanager.h"
             $File "$SRCDIR\game\shared\lutil_shared.cpp"
 
             $File "$SRCDIR\public\lbspflags.cpp"
