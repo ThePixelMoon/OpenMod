@@ -91,3 +91,38 @@ body {
     opacity: 0.7;
     filter: invert(1);
 }
+
+.news-panel {
+    position: absolute;
+    top: 10vh;
+    left: 5vh;
+    width: 20vw;
+    height: 15vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 1.5vh;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    overflow-y: auto;
+}
+
+.news-panel h2 {
+    font-size: 2.5vh;
+    margin-bottom: 1vh;
+}
+
+.news-item {
+    margin-bottom: 1.5vh;
+}
+
+.news-item h3 {
+    font-size: 2vh;
+    margin-bottom: 0.5vh;
+}
+
+.news-item p {
+    font-size: 1.6vh;
+}
+
+.news-item:last-child {
+    margin-bottom: 0;
+}
