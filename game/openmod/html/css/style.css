@@ -78,18 +78,24 @@ body {
     background: transparent;
     border: none;
     cursor: pointer;
-    transition: opacity 0.3s ease, filter 0.3s ease;
+    transition: opacity 0.3s ease, filter 0.3s ease, transform 0.3s ease;
     font-size: 3.5vh;
 }
 
 .bottom-btn i {
     color: white;
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
 }
 
 .bottom-btn:hover {
     opacity: 0.7;
-    filter: invert(1);
+    /*filter: invert(1);*/
+}
+
+.bottom-btn:hover i {
+    text-shadow: 0 0 5px rgba(0, 128, 255, 0.05), 0 0 10px rgba(0, 0, 255, 0.6);
+    transform: translateY(-0.5vh);
 }
 
 .news-panel {
