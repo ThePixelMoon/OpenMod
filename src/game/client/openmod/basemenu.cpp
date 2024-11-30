@@ -121,7 +121,7 @@ void RootPanel::ApplySchemeSettings(IScheme *pScheme)
 
     const char *gameDir = engine->GetGameDirectory();
     char filePath[256];
-    sprintf( filePath, "%s/html/menu.html", gameDir );
+    sprintf( filePath, "%s/html/index.html", gameDir );
 
     m_pHTMLPanel->SetBounds(0, 0, wide, tall);
     m_pHTMLPanel->OpenURL(filePath, nullptr, true);
@@ -359,7 +359,6 @@ private:
 	vgui::CheckButton* m_pEnableCheatsCheckBox;
 };
 
-#if 0
 CON_COMMAND(opennewgame, "new game")
 {
 	static NewGame* pCurrentMenu = nullptr;
@@ -373,7 +372,6 @@ CON_COMMAND(opennewgame, "new game")
 	pCurrentMenu = new NewGame(nullptr, "NewGame");
 	pCurrentMenu->Activate();
 }
-#endif
 
 // loading screen
 

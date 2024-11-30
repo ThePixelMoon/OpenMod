@@ -973,8 +973,6 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 			OverrideRootUI();
 		}
 	}
-
-	IBaseMenu->m_pHTMLPanel->RunJavascript("modifybg(false);");
 #endif
 
 	// We aren't happy unless we get all of our interfaces.
@@ -1814,9 +1812,11 @@ void CHLClient::LevelInitPreEntity( char const* pMapName )
 void CHLClient::LevelInitPostEntity( )
 {
 #if defined( OMOD ) && !defined( _ANDROID )
-	IBaseMenu->m_pHTMLPanel->RunJavascript("togglevisible(true);");
-	IBaseMenu->m_pHTMLPanel->RunJavascript("modifybg(true);");
-	IBaseMenu->m_pHTMLPanel->RequestFocus();
+	const char* gameDir = engine->GetGameDirectory();
+	char filePath[256];
+	sprintf(filePath, "%s/html/index-nobg.html", gameDir);
+
+	IBaseMenu->m_pHTMLPanel->OpenURL(filePath, nullptr, true);
 #endif
 
 #if defined ( LUA_SDK )
@@ -1883,9 +1883,11 @@ void CHLClient::LevelShutdown( void )
 	tempents->LevelShutdown();
 
 #if defined( OMOD ) && !defined( _ANDROID )
-	IBaseMenu->m_pHTMLPanel->RunJavascript("togglevisible(false);");
-	IBaseMenu->m_pHTMLPanel->RunJavascript("modifybg(false);");
-	IBaseMenu->m_pHTMLPanel->RequestFocus();
+	const char* gameDir = engine->GetGameDirectory();
+	char filePath[256];
+	sprintf(filePath, "%s/html/index.html", gameDir);
+
+	IBaseMenu->m_pHTMLPanel->OpenURL(filePath, nullptr, true);
 #endif
 
 	// Now release/delete the entities
