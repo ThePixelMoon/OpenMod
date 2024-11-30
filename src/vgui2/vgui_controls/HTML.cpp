@@ -1740,15 +1740,14 @@ void HTML::BrowserJSAlert( HTML_JSAlert_t *pCmd )
 	pDlg->SetCommand( new KeyValues( "DismissJSDialog", "result", false ) );
 	pDlg->DoModal();
 #else
+	DismissJSDialog( true );
+
 	// check if alert
 	if ( strstr( pCmd->pchMessage, "cmd:" ) == pCmd->pchMessage )
 	{
-		DismissJSDialog( true );
 		const char* command = pCmd->pchMessage + 4;
 		if ( command && strlen( command ) > 0 )
-		{
 			engine->ClientCmd_Unrestricted( command );
-		}
 	}
 #endif
 }

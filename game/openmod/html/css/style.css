@@ -63,3 +63,31 @@ body {
 .top-btn:hover {
     background: rgba(255, 255, 255, 0.1);
 }
+
+.bottom-buttons {
+    position: absolute;
+    bottom: 2vh;
+    left: 3vh;
+    display: flex;
+    gap: 3vh;
+}
+
+.bottom-btn {
+    width: 3vh;
+    height: 7.5vh;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.3s ease, filter 0.3s ease;
+    font-size: 3.5vh;
+}
+
+.bottom-btn i {
+    color: white;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.bottom-btn:hover {
+    opacity: 0.7;
+    filter: invert(1);
+}

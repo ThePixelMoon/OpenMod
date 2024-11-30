@@ -23,3 +23,7 @@ function handleButtonAction() {
 function togglevisible(show) {
   gameState = show ? "inGame" : "menu";
 }
+
+function openPopup(url) {
+  alert(`cmd:open "${url}"`);
+}
