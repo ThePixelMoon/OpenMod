@@ -55,8 +55,7 @@ class CUserCmd;
 // Put this in your derived class definition to declare it's activity table
 // UNDONE: Cascade these?
 #define DECLARE_ACTTABLE()		static acttable_t m_acttable[];\
-	acttable_t *ActivityList( void );\
-	int ActivityListCount( void );
+	virtual acttable_t *ActivityList( int &iActivityCount ) OVERRIDE;
 
 // You also need to include the activity table itself in your class' implementation:
 // e.g.
@@ -73,8 +72,7 @@ class CUserCmd;
 // activity table.
 // UNDONE: Cascade these?
 #define IMPLEMENT_ACTTABLE(className) \
-	acttable_t *className::ActivityList( void ) { return m_acttable; } \
-	int className::ActivityListCount( void ) { return ARRAYSIZE(m_acttable); } \
+	acttable_t *className::ActivityList( int &iActivityCount ) { iActivityCount = ARRAYSIZE(m_acttable); return m_acttable; }
 
 typedef struct
 {
