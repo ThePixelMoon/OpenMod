@@ -124,6 +124,36 @@
 #include "sourcevr/isourcevirtualreality.h"
 #include "client_virtualreality.h"
 #include "mumble.h"
+#if defined( CSTRIKE15 )
+#include "gametypes/igametypes.h"
+#include "c_keyvalue_saver.h"
+#include "cs_workshop_manager.h"
+#include "c_team.h"
+#include "cstrike15/fatdemo.h"
+#endif
+
+#ifdef GAMEUI_UISYSTEM2_ENABLED
+#include "gameui.h"
+#endif
+#ifdef GAMEUI_EMBEDDED
+#if defined( PORTAL2 )
+#ifdef GAMEUI_UISYSTEM2_ENABLED
+#include "gameui/basemodpanel.h"
+#else
+#include "portal2/gameui/portal2/basemodpanel.h"
+#endif
+#elif defined( SWARM_DLL )
+#include "swarm/gameui/swarm/basemodpanel.h"
+#elif defined( CSTRIKE15 )
+#include "cstrike15/gameui/basepanel.h"
+#else
+#error "GAMEUI_EMBEDDED"
+#endif
+#endif
+
+#ifdef DEMOPOLISH_ENABLED
+#include "demo_polish/demo_polish.h"
+#endif
 
 // NVNT includes
 #include "hud_macros.h"
@@ -160,8 +190,42 @@ extern vgui::IInputInternal *g_InputInternal;
 // HPE_END
 //=============================================================================
 
+#if defined ( CSTRIKE15 )
+#include "iachievementmgr.h"
+#include "hud.h"
+#include "hud_element_helper.h"
+#include "Scaleform/HUD/sfhud_chat.h"
+#include "Scaleform/HUD/sfhud_radio.h"
+#include "Scaleform/options_scaleform.h"
+#include "Scaleform/loadingscreen_scaleform.h"
+#include "Scaleform/HUD/sfhud_deathnotice.h"
+#endif
+
 #ifdef PORTAL
 #include "PortalRender.h"
+#endif
+
+#ifdef PORTAL2
+#include "portal_util_shared.h"
+#include "portal_base2d_shared.h"
+#include "c_keyvalue_saver.h"
+#include "portal2/gameui/portal2/steamoverlay/isteamoverlaymgr.h"
+extern void ProcessPortalTeleportations(void);
+#if defined( PORTAL2_PUZZLEMAKER )
+#include "puzzlemaker/puzzlemaker.h"
+#endif // PORTAL2_PUZZLEMAKER
+#endif
+
+#ifdef INFESTED_PARTICLES
+#include "c_asw_generic_emitter.h"
+#endif
+
+#if defined( CSTRIKE15 )
+#include "p4lib/ip4.h"
+#endif
+
+#ifdef INFESTED_DLL
+#include "missionchooser/iasw_mission_chooser.h"
 #endif
 
 #ifdef SIXENSE
@@ -185,6 +249,10 @@ extern vgui::IInputInternal *g_InputInternal;
 #ifdef LUA_SDK
 #include "luamanager.h"
 #include "luacachefile.h"
+#endif
+
+#if defined(_PS3)
+#include "buildrenderables_PS3.h"
 #endif
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -231,6 +299,16 @@ IReplayPerformanceController *g_pReplayPerformanceController = NULL;
 IEngineReplay *g_pEngineReplay = NULL;
 IEngineClientReplay *g_pEngineClientReplay = NULL;
 IReplaySystem *g_pReplay = NULL;
+#endif
+
+#if defined( INCLUDE_SCALEFORM )
+IScaleformUI* g_pScaleformUI = NULL;
+#endif
+#ifdef INFESTED_DLL
+IASW_Mission_Chooser* missionchooser = NULL;
+#endif
+#if defined( REPLAY_ENABLED )
+IReplayHistoryManager* g_pReplayHistoryManager = NULL;
 #endif
 
 IHaptics* haptics = NULL;// NVNT haptics system interface singleton
@@ -285,6 +363,17 @@ void ProcessCacheUsedMaterials()
 	{
         materials->CacheUsedMaterials();
 	}
+}
+
+static bool g_bHeadTrackingEnabled = false;
+
+bool IsHeadTrackingEnabled()
+{
+#if defined( HL2_CLIENT_DLL )
+	return g_bHeadTrackingEnabled;
+#else
+	return false;
+#endif
 }
 
 // String tables
@@ -467,6 +556,12 @@ public:
 	{
 		AddAppSystem( "soundemittersystem" DLL_EXT_STRING, SOUNDEMITTERSYSTEM_INTERFACE_VERSION );
 		AddAppSystem( "scenefilecache" DLL_EXT_STRING, SCENE_FILE_CACHE_INTERFACE_VERSION );
+#ifdef GAMEUI_UISYSTEM2_ENABLED
+		AddAppSystem( "client", GAMEUISYSTEMMGR_INTERFACE_VERSION );
+#endif
+#ifdef INFESTED_DLL
+		AddAppSystem( "missionchooser", ASW_MISSION_CHOOSER_VERSION );
+#endif
 	}
 
 	virtual int	Count()
@@ -1029,6 +1124,32 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 	if ( ( gamestatsuploader = (IUploadGameStats *)appSystemFactory( INTERFACEVERSION_UPLOADGAMESTATS, NULL )) == NULL )
 		return false;
 #endif
+#if defined( QUICKTIME_VIDEO )
+	if ( (pQuicktime = (IQuickTime*)appSystemFactory( QUICKTIME_INTERFACE_VERSION, NULL)) == NULL )
+		return false;
+#endif
+
+#if defined( CSTRIKE15 )
+	if ((g_pGameTypes = (IGameTypes*)appSystemFactory(VENGINE_GAMETYPES_VERSION, NULL)) == NULL)
+		return false;
+
+	// load the p4 lib - not doing it in CS:GO to prevent extra .dlls from being loaded
+	CSysModule* m_pP4Module = Sys_LoadModule("p4lib");
+	if (m_pP4Module)
+	{
+		CreateInterfaceFn factory = Sys_GetFactory(m_pP4Module);
+		if (factory)
+		{
+			p4 = (IP4*)factory(P4_INTERFACE_VERSION, NULL);
+
+			if (p4)
+			{
+				p4->Connect(appSystemFactory);
+				p4->Init();
+			}
+	}
+	}
+#endif
 
 #if defined( REPLAY_ENABLED )
 	if ( IsPC() && (g_pEngineReplay = (IEngineReplay *)appSystemFactory( ENGINE_REPLAY_INTERFACE_VERSION, NULL )) == NULL )
@@ -1040,12 +1161,44 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 	if (!g_pMatSystemSurface)
 		return false;
 
+#ifdef INFESTED_DLL
+	if ( (missionchooser = (IASW_Mission_Chooser *)appSystemFactory(ASW_MISSION_CHOOSER_VERSION, NULL)) == NULL )
+		return false;
+#endif
+
+#ifdef TERROR
+	if ( ( g_pMatchExtL4D = ( IMatchExtL4D * ) appSystemFactory( IMATCHEXT_L4D_INTERFACE, NULL ) ) == NULL )
+		return false;
+	if ( !g_pMatchFramework )
+		return false;
+//  if client.dll needs to register any matchmaking extensions do it here:
+// 	if ( IMatchExtensions *pIMatchExtensions = g_pMatchFramework->GetMatchExtensions() )
+// 		pIMatchExtensions->RegisterExtensionInterface(
+// 		INTERFACEVERSION_SERVERGAMEDLL, static_cast< IServerGameDLL * >( this ) );
+#endif
+
+#ifdef PORTAL2
+	if ( !g_pMatchFramework )
+		return false;
+	GameInstructor_Init();
+	//  if client.dll needs to register any matchmaking extensions do it here:
+	// 	if ( IMatchExtensions *pIMatchExtensions = g_pMatchFramework->GetMatchExtensions() )
+	// 		pIMatchExtensions->RegisterExtensionInterface(
+	// 		INTERFACEVERSION_SERVERGAMEDLL, static_cast< IServerGameDLL * >( this ) );
+#endif // PORTAL2
+
 #ifdef WORKSHOP_IMPORT_ENABLED
 	if ( !ConnectDataModel( appSystemFactory ) )
 		return false;
 	if ( InitDataModel() != INIT_OK )
 		return false;
 	InitFbx();
+#endif
+
+#ifdef CSTRIKE15
+	if (!g_pMatchFramework)
+		return false;
+	GameInstructor_Init();
 #endif
 
 	// it's ok if this is NULL. That just means the sourcevr.dll wasn't found
@@ -1062,15 +1215,36 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 		return false;
 	}
 
+#if defined(_PS3)
+	// VJOBS is used to spawn jobs on SPUs
+	if ((g_pVJobs = (IVJobs*)appSystemFactory(VJOBS_INTERFACE_VERSION, NULL)) == NULL)
+		return false;
+
+	// init client SPURS jobs
+	g_pBuildRenderablesJob->Init();
+#endif
+
 #ifdef OMOD
 	MountAddons(); // addons...
 #endif
 
-	if ( CommandLine()->FindParm( "-textmode" ) )
-		g_bTextMode = true;
+#ifdef CSTRIKE15
+	if (!CommandLine()->CheckParm("-noscripting"))
+	{
+		scriptmanager = (IScriptManager*)appSystemFactory(VSCRIPT_INTERFACE_VERSION, NULL);
+	}
+#endif
 
-	if ( CommandLine()->FindParm( "-makedevshots" ) )
+#if defined( ALLOW_TEXT_MODE )
+	if (CommandLine()->FindParm("-textmode"))
+		g_bTextMode = true;
+#endif
+
+	if (CommandLine()->FindParm("-makedevshots"))
 		g_MakingDevShots = true;
+
+	if (CommandLine()->FindParm("-headtracking"))
+		g_bHeadTrackingEnabled = true;
 
 	// Not fatal if the material system stub isn't around.
 	materials_stub = (IMaterialSystemStub*)appSystemFactory( MATERIAL_SYSTEM_STUB_INTERFACE_VERSION, NULL );
@@ -1085,6 +1259,16 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 	ConVar_Register( FCVAR_CLIENTDLL );
 
 	g_pcv_ThreadMode = g_pCVar->FindVar( "host_thread_mode" );
+
+#if defined( PORTAL2 )
+	engine->EnablePaintmapRender();
+#endif
+
+	COM_TimestampedLog("InitGameSystems");
+
+#ifdef INFESTED_PARTICLES	// let the emitter cache load in our standard
+	g_ASWGenericEmitterCache.PrecacheTemplates();
+#endif
 
 	if (!Initializer::InitializeAllObjects())
 		return false;
@@ -1186,6 +1370,7 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 
 	ClientWorldFactoryInit();
 
+	COM_TimestampedLog("C_BaseAnimating::InitBoneSetupThreadPool");
 	C_BaseAnimating::InitBoneSetupThreadPool();
 
 	if (CommandLine()->FindParm("-nosrgb"))
@@ -1277,6 +1462,10 @@ void CHLClient::PostInit()
 //-----------------------------------------------------------------------------
 void CHLClient::Shutdown( void )
 {
+#ifdef PORTAL2
+	GameInstructor_Shutdown();
+#endif
+
     if (g_pAchievementsAndStatsInterface)
     {
         g_pAchievementsAndStatsInterface->ReleasePanel();
@@ -1326,6 +1515,10 @@ void CHLClient::Shutdown( void )
 	VGui_Shutdown();
 	
 	ParticleMgr()->Term();
+
+#ifdef USE_BLOBULATOR
+	Blobulator::ShutdownBlob();
+#endif // USE_BLOBULATOR
 	
 	ClearKeyValuesCache();
 
