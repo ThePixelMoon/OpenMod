@@ -167,3 +167,7 @@ body {
 ul {
     list-style-type: square;
 }
+
+button i {
+    font-size: 3.5vh;
+}
