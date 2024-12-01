@@ -2262,4 +2262,35 @@ SpawnMenu
 			"#"	"exec autogun"
 		}
 	}
+	"Toolgun (ttt_*)"
+	{
+		"Remover"
+		{
+			"#"	"toolmode 0"
+		}
+		"Color"
+		{
+			"#"	"toolmode 1"
+		}
+		"Model Scale"
+		{
+			"#"	"toolmode 2"
+		}
+		"Igniter"
+		{
+			"#"	"toolmode 3"
+		}
+		"Dynamite (STUB)"
+		{
+			"#"	"toolmode 4"
+		}
+		"Spawner"
+		{
+			"#"	"toolmode 5"
+		}
+		"Emitter (STUB)"
+		{
+			"#"	"toolmode 6"
+		}
+	}
 }

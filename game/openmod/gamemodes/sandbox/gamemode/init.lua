@@ -35,7 +35,8 @@ function GM:GiveDefaultItems( pPlayer )
   pPlayer:GiveNamedItem( "weapon_rpg" )
   pPlayer:GiveNamedItem( "weapon_slam" )
   pPlayer:GiveNamedItem( "weapon_physcannon" )
-  pPlayer:GiveNamedItem( "weapon_bugbait")
+  pPlayer:GiveNamedItem( "weapon_bugbait" )
+  pPlayer:GiveNamedItem( "weapon_multitool" )
   
   self.BaseClass.GiveDefaultItems( self, pPlayer ) -- fallback..
 end

@@ -1,0 +1,48 @@
+"UnlitGeneric"
+{
+    "$spriteorientation" "parallel_upright"
+    "$spriteorigin" "[ 0.50 0.50 ]"
+    "$basetexture" "sprites/lgtning"
+    "$spriterendermode" "5"
+    
+    "$additive" "1"
+    "$translucent" "1"
+    "$vertexcolor" "1"
+    "$vertexalpha" "1"
+    "$nocull" "1"
+    "$selfillum" "1"
+
+    // Glow effect
+    "$selfillummask" "sprites/physcannon_bluecore1b"
+
+    // Scroll properties for the first texture
+    "Proxies"
+    {
+        "TextureScroll"
+        {
+            "texturescrollvar" "$basetexturetransform"
+            "texturescrollrate" "10" // Increased scroll speed
+            "texturescrollangle" "90" // Scroll direction
+        }
+    }
+
+    // Second sprite overlay
+    "Detail"
+    {
+        "$detail" "sprites/orangelight1"
+        "$detailscale" "1.0"
+        "$detailblendmode" "5"
+        "$detailtint" "[1 0.5 0]" // Adjust this for color tint
+    }
+
+    // Scroll properties for the second texture
+    "Proxies"
+    {
+        "TextureScroll"
+        {
+            "texturescrollvar" "$detailtransform"
+            "texturescrollrate" "5" // Adjust this for the second sprite scroll speed
+            "texturescrollangle" "90" // Scroll direction
+        }
+    }
+}
