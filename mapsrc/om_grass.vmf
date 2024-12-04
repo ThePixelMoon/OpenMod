@@ -2,7 +2,7 @@ versioninfo
 {
 	"editorversion" "400"
 	"editorbuild" "8869"
-	"mapversion" "17"
+	"mapversion" "22"
 	"formatversion" "100"
 	"prefab" "0"
 }
@@ -89,7 +89,7 @@ bgimages_plus
 world
 {
 	"id" "0"
-	"mapversion" "17"
+	"mapversion" "22"
 	"classname" "worldspawn"
 	"detailmaterial" "detail/detailsprites"
 	"detailvbsp" "detail.vbsp"
@@ -2541,29 +2541,6 @@ entity
 }
 entity
 {
-	"id" "193"
-	"classname" "light_environment"
-	"_ambient" "172 196 204 50"
-	"_ambientHDR" "-1 -1 -1 1"
-	"_AmbientScaleHDR" "1"
-	"_light" "255 244 213 700"
-	"_lightHDR" "-1 -1 -1 1"
-	"_lightscaleHDR" ".7"
-	"angles" "0 225 0"
-	"pitch" "-20"
-	"spawnflags" "0"
-	"SunSpreadAngle" "0"
-	"origin" "-2560 3648 256"
-	editor
-	{
-		"color" "220 30 220"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 -2768]"
-	}
-}
-entity
-{
 	"id" "709"
 	"classname" "info_player_start"
 	"angles" "0 90 0"
@@ -2574,6 +2551,47 @@ entity
 		"visgroupshown" "1"
 		"visgroupautoshown" "1"
 		"logicalpos" "[0 3500]"
+	}
+}
+entity
+{
+	"id" "1014"
+	"classname" "env_cascade_light"
+	"angles" "-0 0 0"
+	"brightnessscale" "1"
+	"enablethird" "1"
+	"lightcolor" "237 218 143 20"
+	"spawnflags" "1"
+	"uselightenvangles" "1"
+	"origin" "-2560 3648 448"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "1019"
+	"classname" "light_environment"
+	"_ambient" "190 201 220 100"
+	"_ambientHDR" "-1 -1 -1 1"
+	"_AmbientScaleHDR" "1"
+	"_light" "237 218 143 800"
+	"_lightHDR" "-1 -1 -1 1"
+	"_lightscaleHDR" "1"
+	"angles" "-4 359 0"
+	"pitch" "-4"
+	"targetname" "light_environment"
+	"origin" "-2560 3648 384"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 500]"
 	}
 }
 cameras

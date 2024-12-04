@@ -19,11 +19,7 @@
 #include "c_basehlplayer.h"
 #endif // HL2_CLIENT_DLL
 
-#if defined( _X360 )
 extern ConVar r_flashlightdepthres;
-#else
-extern ConVar r_flashlightdepthres;
-#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -48,8 +44,16 @@ static ConVar r_flashlightvisualizetrace( "r_flashlightvisualizetrace", "0", FCV
 static ConVar r_flashlightambient( "r_flashlightambient", "0.0", FCVAR_CHEAT );
 static ConVar r_flashlightshadowatten( "r_flashlightshadowatten", "0.35", FCVAR_CHEAT );
 static ConVar r_flashlightladderdist( "r_flashlightladderdist", "40.0", FCVAR_CHEAT );
+#ifndef OMOD
 static ConVar mat_slopescaledepthbias_shadowmap( "mat_slopescaledepthbias_shadowmap", "16", FCVAR_CHEAT );
 static ConVar mat_depthbias_shadowmap(	"mat_depthbias_shadowmap", "0.0005", FCVAR_CHEAT  );
+#else
+extern ConVarRef mat_slopescaledepthbias_shadowmap;
+extern ConVarRef mat_depthbias_shadowmap;
+#endif
+#ifdef OMOD
+static ConVar r_flashlighttextureoverride( "r_flashlighttextureoverride", "", FCVAR_CHEAT );
+#endif
 
 
 void r_newflashlightCallback_f( IConVar *pConVar, const char *pOldString, float flOldValue )
@@ -78,6 +82,13 @@ CFlashlightEffect::CFlashlightEffect(int nEntIndex)
 		r_newflashlight.SetValue( 0 );
 	}	
 
+#ifdef OMOD
+	if ( r_flashlighttextureoverride.GetString()[0] != '\0' )
+	{
+		m_FlashlightTexture.Init( r_flashlighttextureoverride.GetString(), TEXTURE_GROUP_OTHER, true );
+	}
+	else
+#endif
 	if ( g_pMaterialSystemHardwareConfig->SupportsBorderColor() )
 	{
 		m_FlashlightTexture.Init( "effects/flashlight_border", TEXTURE_GROUP_OTHER, true );
@@ -537,4 +548,3 @@ void CHeadlightEffect::UpdateLight( const Vector &vecPos, const Vector &vecDir, 
 	
 	g_pClientShadowMgr->UpdateProjectedTexture( GetFlashlightHandle(), true );
 }
-
