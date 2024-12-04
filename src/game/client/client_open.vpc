@@ -22,6 +22,118 @@ $Project "Client (OpenMod)"
 {
 	$Folder	"Source Files"
 	{
+		$Folder	"Deferred"
+		{
+			$Folder "Shared"
+			{
+				$File	"$SRCDIR\game\shared\deferred\CDefLight.cpp"
+				$File	"$SRCDIR\game\shared\deferred\CDefLight.h"
+				$File	"$SRCDIR\game\shared\deferred\CDefLightContainer.cpp"
+				$File	"$SRCDIR\game\shared\deferred\CDefLightContainer.h"
+				$File	"$SRCDIR\game\shared\deferred\CDefLightGlobal.cpp"
+				$File	"$SRCDIR\game\shared\deferred\CDefLightGlobal.h"
+				$File	"$SRCDIR\game\shared\deferred\deferred_shared_common.cpp"
+				$File	"$SRCDIR\game\shared\deferred\deferred_shared_common.h"
+				$File	"$SRCDIR\game\shared\deferred\ssemath_ext.h"
+			}
+		
+			$Folder "Client"
+			{
+				$Folder "VGUI"
+				{
+					$File	"deferred\vgui\projectable_factory.cpp"
+					$File	"deferred\vgui\projectable_factory.h"
+					$File	"deferred\vgui\vgui_deferred.h"
+					$File	"deferred\vgui\vgui_editor_controls.cpp"
+					$File	"deferred\vgui\vgui_editor_controls.h"
+					$File	"deferred\vgui\vgui_editor_props.cpp"
+					$File	"deferred\vgui\vgui_editor_props.h"
+					$File	"deferred\vgui\vgui_editor_root.cpp"
+					$File	"deferred\vgui\vgui_marquee.cpp"
+					$File	"deferred\vgui\vgui_marquee.h"
+					$File	"deferred\vgui\vgui_particles.cpp"
+					$File	"deferred\vgui\vgui_particles.h"
+					$File	"deferred\vgui\vgui_projectable.cpp"
+					$File	"deferred\vgui\vgui_projectable.h"
+				}
+				
+				$Folder	"Hooking"
+				{
+					$File	"$SRCDIR\thirdparty\subhook\subhook.c"
+					{
+						$Configuration
+						{
+							$Compiler
+							{
+								$PreprocessorDefinitions		"$BASE;SUBHOOK_STATIC"
+								$Create/UsePrecompiledHeader	"Not Using Precompiled Headers"
+								$DisableSpecificWarnings		"4316;4100;4244;4701;4310"
+							}
+						}
+					}
+				}
+			
+				$File	"deferred\cascade_t.h"
+				$File	"deferred\cascade_t.cpp"
+				$File	"deferred\cdeferred_manager_client.cpp"
+				$File	"deferred\cdeferred_manager_client.h"
+				$File	"deferred\clight_editor.cpp"
+				$File	"deferred\clight_editor.h"
+				$File	"deferred\clight_manager.cpp"
+				$File	"deferred\clight_manager.h"
+				$File	"deferred\def_light_t.cpp"
+				$File	"deferred\def_light_t.h"
+				$File	"deferred\DefCookieProjectable.cpp"
+				$File	"deferred\DefCookieProjectable.h"
+				$File	"deferred\DefCookieTexture.cpp"
+				$File	"deferred\DefCookieTexture.h"
+				$File	"deferred\deferred_client_common.cpp"
+				$File	"deferred\deferred_client_common.h"
+				$File	"deferred\deferred_rt.cpp"
+				$File	"deferred\deferred_rt.h"
+				$File	"deferred\flashlighteffect_deferred.cpp"
+				$File	"deferred\flashlighteffect_deferred.h"
+				$File	"deferred\IDefCookie.h"
+				$File	"deferred\IDeferredExtClient.cpp"
+				$File	"deferred\materialsystem_passthru.cpp"
+				$File	"deferred\materialsystem_passthru.h"
+				$File	"deferred\viewrender_deferred_helper.cpp"
+				{
+					$Configuration
+					{
+						$Compiler
+						{
+							$AdditionalIncludeDirectories	"$BASE;$SRCDIR\thirdparty\subhook"
+						}
+					}
+				}
+				$File	"deferred\viewrender_deferred_helper.h"
+				$File	"deferred\viewrender_deferred.cpp"
+				$File	"deferred\viewrender_deferred.h"
+				$File	"$SRCDIR\public\deferred_light_lump.cpp"
+				{
+					$Configuration
+					{
+						$Compiler
+						{
+							$Create/UsePrecompiledHeader	"Not Using Precompiled Headers"
+						}
+					}
+				}
+				$File	"$SRCDIR\public\deferred_light_lump.h"
+			}
+		}
+		
+		$Folder "Shader editor"
+		{
+			$File	"ShaderEditor/SEdit_ModelRender.cpp"
+			$File	"ShaderEditor/SEdit_ModelRender.h"
+			$File	"ShaderEditor/ShaderEditorSystem.cpp"
+			$File	"ShaderEditor/ShaderEditorSystem.h"
+			$File	"ShaderEditor/ISEdit_ModelRender.h"
+			$File	"ShaderEditor/IVShaderEditor.h"
+		}
+		
 		-$File	"$SRCDIR\game\shared\weapon_parse_default.cpp"
 
 		$File	"c_team_objectiveresource.cpp"
