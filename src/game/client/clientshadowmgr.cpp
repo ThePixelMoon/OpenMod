@@ -81,21 +81,7 @@
 #include "toolframework_client.h"
 #include "bonetoworldarray.h"
 #include "cmodel.h"
-#ifdef OMOD
-#include "renderparm.h"
-#endif
-#ifdef OMOD
-#include "flashlighteffect.h"
-#endif
-#ifdef OMOD
-#include "debugoverlay_shared.h"
-#include "bspfile.h"
-#include "filesystem.h"
-#include "client_factorylist.h" // FactoryList_Retrieve
-#include "eiface.h" // IVEngineServer
 
-static IVEngineServer* g_pEngineServer = NULL;
-#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -103,12 +89,6 @@ static IVEngineServer* g_pEngineServer = NULL;
 static ConVar r_flashlightdrawfrustum( "r_flashlightdrawfrustum", "0" );
 static ConVar r_flashlightmodels( "r_flashlightmodels", "1" );
 static ConVar r_shadowrendertotexture( "r_shadowrendertotexture", "0" );
-#ifdef OMOD
-static ConVar r_shadow_lightpos_lerptime( "r_shadow_lightpos_lerptime", "0.5" );
-static ConVar r_shadowfromworldlights_debug( "r_shadowfromworldlights_debug", "0", FCVAR_CHEAT );
-static ConVar r_shadow_shortenfactor( "r_shadow_shortenfactor", "2" , 0, "Makes shadows cast from local lights shorter" );
-static ConVar r_shadow_mincastintensity( "r_shadow_mincastintensity", "0.3", FCVAR_CHEAT, "Minimum brightness of a light to be classed as shadow casting", true, 0, false, 0 );
-#endif
 static ConVar r_flashlight_version2( "r_flashlight_version2", "0", FCVAR_CHEAT | FCVAR_DEVELOPMENTONLY );
 
 ConVar r_flashlightdepthtexture( "r_flashlightdepthtexture", "1" );
@@ -116,27 +96,10 @@ ConVar r_flashlightdepthtexture( "r_flashlightdepthtexture", "1" );
 #if defined( _X360 )
 ConVar r_flashlightdepthres( "r_flashlightdepthres", "512" );
 #else
-#ifdef OMOD
-ConVar r_flashlightdepthres( "r_flashlightdepthres", "2048" );
-#else
 ConVar r_flashlightdepthres( "r_flashlightdepthres", "1024" );
 #endif
-#endif
 
-#ifdef OMOD
-ConVar cl_worldlight_use_new_method("cl_worldlight_use_new_method", "1", FCVAR_NONE, "Uses the new world light iteration method which splits lights into multiple lists for each cluster.");
-#endif
-
-#ifdef OMOD
-ConVar r_threaded_client_shadow_manager( "r_threaded_client_shadow_manager", "1" );
-#else
 ConVar r_threaded_client_shadow_manager( "r_threaded_client_shadow_manager", "0" );
-#endif
-
-#ifdef OMOD
-ConVarRef mat_slopescaledepthbias_shadowmap( "mat_slopescaledepthbias_shadowmap" );
-ConVarRef mat_depthbias_shadowmap( "mat_depthbias_shadowmap" );
-#endif
 
 #ifdef _WIN32
 #pragma warning( disable: 4701 )
@@ -145,464 +108,6 @@ ConVarRef mat_depthbias_shadowmap( "mat_depthbias_shadowmap" );
 // forward declarations
 void ToolFramework_RecordMaterialParams( IMaterial *pMaterial );
 
-//-----------------------------------------------------------------------------
-// Purpose: calculate intensity ratio for a worldlight by distance
-// Author: Valve Software
-//-----------------------------------------------------------------------------
-static float Engine_WorldLightDistanceFalloff( const dworldlight_t *wl, const Vector& delta )
-{
-	float falloff;
-
-	switch (wl->type)
-	{
-	case emit_surface:
-		// Cull out stuff that's too far
-		if(wl->radius != 0)
-		{
-			if(DotProduct( delta, delta ) > (wl->radius * wl->radius))
-				return 0.0f;
-		}
-
-		return InvRSquared(delta);
-		break;
-
-	case emit_skylight:
-		return 1.f;
-		break;
-
-	case emit_quakelight:
-		// X - r;
-		falloff = wl->linear_attn - FastSqrt( DotProduct( delta, delta ) );
-		if(falloff < 0)
-			return 0.f;
-
-		return falloff;
-		break;
-
-	case emit_skyambient:
-		return 1.f;
-		break;
-
-	case emit_point:
-	case emit_spotlight:	// directional & positional
-		{
-			float dist2, dist;
-
-			dist2 = DotProduct(delta, delta);
-			dist = FastSqrt(dist2);
-
-			// Cull out stuff that's too far
-			if(wl->radius != 0 && dist > wl->radius)
-				return 0.f;
-
-			return 1.f / (wl->constant_attn + wl->linear_attn * dist + wl->quadratic_attn * dist2);
-		}
-
-		break;
-	}
-
-	return 1.f;
-}
-
-//-----------------------------------------------------------------------------
-// Purpose: initialise game system and members
-//-----------------------------------------------------------------------------
-CWorldLights::CWorldLights() : CAutoGameSystem("World lights")
-{
-	m_nWorldLights = 0;
-	m_pWorldLights = NULL;
-}
-
-//-----------------------------------------------------------------------------
-// Purpose: clear worldlights, free memory
-//-----------------------------------------------------------------------------
-void CWorldLights::Clear()
-{
-	m_nWorldLights = 0;
-
-	if(m_pWorldLights)
-	{
-		delete [] m_pWorldLights;
-		m_pWorldLights = NULL;
-	}
-}
-
-//-----------------------------------------------------------------------------
-// Purpose: get the IVEngineServer, we need this for the PVS functions
-//-----------------------------------------------------------------------------
-bool CWorldLights::Init()
-{
-#ifdef OMOD
-	// Moved to its own clientside interface after I found out it was possible
-	// (still have no idea how or why this works)
-	if ((g_pEngineServer = serverengine) == NULL)
-		return false;
-
-	return true;
-#else
-	factorylist_t factories;
-	FactoryList_Retrieve(factories);
-
-	if((g_pEngineServer = (IVEngineServer*)factories.appSystemFactory(INTERFACEVERSION_VENGINESERVER, NULL)) == NULL)
-		return false;
-
-	return true;
-#endif
-}
-
-//-----------------------------------------------------------------------------
-// Purpose: get all world lights from the BSP
-//-----------------------------------------------------------------------------
-void CWorldLights::LevelInitPreEntity()
-{
-	// Get the map path
-	const char *pszMapName = modelinfo->GetModelName(modelinfo->GetModel(1));
-
-	// Open map
-	FileHandle_t hFile = g_pFullFileSystem->Open(pszMapName, "rb");
-	if(!hFile)
-	{
-		Warning("CWorldLights: unable to open map\n");
-		return;
-	}
-
-	// Read the BSP header. We don't need to do any version checks, etc. as we
-	// can safely assume that the engine did this for us
-	dheader_t hdr;
-	g_pFullFileSystem->Read(&hdr, sizeof(hdr), hFile);
-
-	// Grab the light lump and seek to it
-	lump_t &lightLump = hdr.lumps[LUMP_WORLDLIGHTS];
-
-	// INSOLENCE: If the worldlights lump is empty, that means theres no normal, LDR lights to extract
-	//			  This can happen when, for example, the map is compiled in HDR mode only
-	//			  So move on to the HDR worldlights lump
-	if (lightLump.filelen == 0)
-	{
-		lightLump = hdr.lumps[LUMP_WORLDLIGHTS_HDR];
-	}
-
-	// If we can't divide the lump data into a whole number of worldlights,
-	// then the BSP format changed and we're unaware
-	if(lightLump.filelen % sizeof(dworldlight_t))
-	{
-		Warning("CWorldLights: unknown world light lump\n");
-
-		// Close file
-		g_pFullFileSystem->Close(hFile);
-		return;
-	}
-
-	g_pFullFileSystem->Seek(hFile, lightLump.fileofs, FILESYSTEM_SEEK_HEAD);
-
-	// Allocate memory for the worldlights
-	m_nWorldLights = lightLump.filelen / sizeof(dworldlight_t);
-	m_pWorldLights = new dworldlight_t[m_nWorldLights];
-
-	// Read worldlights then close
-	g_pFullFileSystem->Read(m_pWorldLights, lightLump.filelen, hFile);
-	g_pFullFileSystem->Close(hFile);
-
-	DevMsg("CWorldLights: load successful (%d lights at 0x%p)\n", m_nWorldLights, m_pWorldLights);
-
-#ifdef OMOD
-	// Now that the lights have been gathered, begin separating them into lists for each PVS cluster.
-	// This code is adapted from the soundscape cluster list code (see soundscape_system.cpp) and is intended to
-	// reduce frame drops in large maps which use dynamic RTT shadow angles.
-	CUtlVector<bbox_t> clusterbounds;
-	int clusterCount = g_pEngineServer->GetClusterCount();
-	clusterbounds.SetCount( clusterCount );
-	g_pEngineServer->GetAllClusterBounds( clusterbounds.Base(), clusterCount );
-	m_WorldLightsInCluster.SetCount(clusterCount);
-	for ( int i = 0; i < clusterCount; i++ )
-	{
-		m_WorldLightsInCluster[i].lightCount = 0;
-		m_WorldLightsInCluster[i].firstLight = 0;
-	}
-	unsigned char myPVS[16 * 1024];
-	CUtlVector<short> clusterIndexList;
-	CUtlVector<short> lightIndexList;
-
-	// Find the clusters visible from each light, then add it to those clusters' light lists
-	// (Also try to clip for radius if possible)
-	for (int i = 0; i < m_nWorldLights; ++i)
-	{
-		dworldlight_t *light = &m_pWorldLights[i];
-
-		// Assign the sun to its own pointer
-		if (light->type == emit_skylight)
-		{
-			m_iSunIndex = i;
-			continue;
-		}
-
-		float radiusSq = light->radius * light->radius;
-		if (radiusSq == 0.0f)
-		{
-			// TODO: Use intensity instead?
-			radiusSq = FLT_MAX;
-		}
-
-		g_pEngineServer->GetPVSForCluster( light->cluster, sizeof( myPVS ), myPVS );
-		for ( int j = 0; j < clusterCount; j++ )
-		{
-			if ( myPVS[ j >> 3 ] & (1<<(j&7)) )
-			{
-				float distSq = CalcSqrDistanceToAABB( clusterbounds[j].mins, clusterbounds[j].maxs, light->origin );
-				if ( distSq < radiusSq )
-				{
-					m_WorldLightsInCluster[j].lightCount++;
-					clusterIndexList.AddToTail(j);
-					lightIndexList.AddToTail(i);
-				}
-			}
-		}
-	}
-
-	m_WorldLightsIndexList.SetCount(lightIndexList.Count());
-
-	// Compute the starting index of each cluster
-	int firstLight = 0;
-	for ( int i = 0; i < clusterCount; i++ )
-	{
-		m_WorldLightsInCluster[i].firstLight = firstLight;
-		firstLight += m_WorldLightsInCluster[i].lightCount;
-		m_WorldLightsInCluster[i].lightCount = 0;
-	}
-
-	// Now add each light index to the appropriate cluster's list
-	for ( int i = 0; i < lightIndexList.Count(); i++ )
-	{
-		int cluster = clusterIndexList[i];
-		int outIndex = m_WorldLightsInCluster[cluster].lightCount + m_WorldLightsInCluster[cluster].firstLight;
-		m_WorldLightsInCluster[cluster].lightCount++;
-		m_WorldLightsIndexList[outIndex] = lightIndexList[i];
-	}
-
-	//DevMsg( "CWorldLights: Light clusters list has %i elements; Light index list has %i\n", m_WorldLightsInCluster.Count(), m_WorldLightsIndexList.Count() );
-#endif
-}
-
-//-----------------------------------------------------------------------------
-// Purpose: find the brightest light source at a point
-//-----------------------------------------------------------------------------
-bool CWorldLights::GetBrightestLightSource(const Vector &vecPosition, Vector &vecLightPos, Vector &vecLightBrightness)
-{
-	if(!m_nWorldLights || !m_pWorldLights)
-		return false;
-
-	// Default light position and brightness to zero
-	vecLightBrightness.Init();
-	vecLightPos.Init();
-
-	// Find the size of the PVS for our current position
-	int nCluster = g_pEngineServer->GetClusterForOrigin(vecPosition);
-
-#ifdef OMOD
-	if (cl_worldlight_use_new_method.GetBool())
-	{
-		FindBrightestLightSourceNew( vecPosition, vecLightPos, vecLightBrightness, nCluster );
-	}
-	else
-#endif
-	{
-		FindBrightestLightSourceOld( vecPosition, vecLightPos, vecLightBrightness, nCluster );
-	}
-
-	//engine->Con_NPrintf(m_nWorldLights, "result: %d", !vecLightBrightness.IsZero());
-	return !vecLightBrightness.IsZero();
-}
-
-void CWorldLights::FindBrightestLightSourceOld( const Vector &vecPosition, Vector &vecLightPos, Vector &vecLightBrightness, int nCluster )
-{
-	// Find the size of the PVS for our current position
-	int nPVSSize = g_pEngineServer->GetPVSForCluster(nCluster, 0, NULL);
-
-	// Get the PVS at our position
-	byte *pvs = new byte[nPVSSize];
-	g_pEngineServer->GetPVSForCluster(nCluster, nPVSSize, pvs);
-
-	// Iterate through all the worldlights
-	for(int i = 0; i < m_nWorldLights; ++i)
-	{
-		dworldlight_t *light = &m_pWorldLights[i];
-
-		// Skip skyambient
-		if(light->type == emit_skyambient)
-		{
-			//engine->Con_NPrintf(i, "%d: skyambient", i);
-			continue;
-		}
-
-		// Handle sun
-		if(light->type == emit_skylight)
-		{
-			// Calculate sun position
-			Vector vecAbsStart = vecPosition + Vector(0,0,30);
-			Vector vecAbsEnd = vecAbsStart - (light->normal * MAX_TRACE_LENGTH);
-
-			trace_t tr;
-			UTIL_TraceLine(vecPosition, vecAbsEnd, MASK_OPAQUE, NULL, COLLISION_GROUP_NONE, &tr);
-
-			// If we didn't hit anything then we have a problem
-			if(!tr.DidHit())
-			{
-				//engine->Con_NPrintf(i, "%d: skylight: couldn't touch sky", i);
-				continue;
-			}
-
-			// If we did hit something, and it wasn't the skybox, then skip
-			// this worldlight
-			if(!(tr.surface.flags & SURF_SKY) && !(tr.surface.flags & SURF_SKY2D))
-			{
-				//engine->Con_NPrintf(i, "%d: skylight: no sight to sun", i);
-				continue;
-			}
-
-			// Act like we didn't find any valid worldlights, so the shadow
-			// manager uses the default shadow direction instead (should be the
-			// sun direction)
-
-			delete[] pvs;
-
-			return;
-		}
-
-		// Calculate square distance to this worldlight
-		Vector vecDelta = light->origin - vecPosition;
-		float flDistSqr = vecDelta.LengthSqr();
-		float flRadiusSqr = light->radius * light->radius;
-
-		// Skip lights that are out of our radius
-		if(flRadiusSqr > 0 && flDistSqr >= flRadiusSqr)
-		{
-			//engine->Con_NPrintf(i, "%d: out-of-radius (dist: %d, radius: %d)", i, sqrt(flDistSqr), light->radius);
-			continue;
-		}
-
-		// Is it out of our PVS?
-		if(!g_pEngineServer->CheckOriginInPVS(light->origin, pvs, nPVSSize))
-		{
-			//engine->Con_NPrintf(i, "%d: out of PVS", i);
-			continue;
-		}
-
-		// Calculate intensity at our position
-		float flRatio = Engine_WorldLightDistanceFalloff(light, vecDelta);
-		Vector vecIntensity = light->intensity * flRatio;
-
-		// Is this light more intense than the one we already found?
-		if(vecIntensity.LengthSqr() <= vecLightBrightness.LengthSqr())
-		{
-			//engine->Con_NPrintf(i, "%d: too dim", i);
-			continue;
-		}
-
-		// Can we see the light?
-		trace_t tr;
-		Vector vecAbsStart = vecPosition + Vector(0,0,30);
-		UTIL_TraceLine(vecAbsStart, light->origin, MASK_OPAQUE, NULL, COLLISION_GROUP_NONE, &tr);
-
-		if(tr.DidHit())
-		{
-			//engine->Con_NPrintf(i, "%d: trace failed", i);
-			continue;
-		}
-
-		vecLightPos = light->origin;
-		vecLightBrightness = vecIntensity;
-
-		//engine->Con_NPrintf(i, "%d: set (%.2f)", i, vecIntensity.Length());
-	}
-
-	delete[] pvs;
-}
-
-#ifdef OMOD
-void CWorldLights::FindBrightestLightSourceNew( const Vector &vecPosition, Vector &vecLightPos, Vector &vecLightBrightness, int nCluster )
-{
-	// Handle sun
-	if (m_iSunIndex != -1)
-	{
-		dworldlight_t *light = &m_pWorldLights[m_iSunIndex];
-
-		// Calculate sun position
-		Vector vecAbsStart = vecPosition + Vector(0,0,30);
-		Vector vecAbsEnd = vecAbsStart - (light->normal * MAX_TRACE_LENGTH);
-
-		trace_t tr;
-		UTIL_TraceLine(vecPosition, vecAbsEnd, MASK_OPAQUE, NULL, COLLISION_GROUP_NONE, &tr);
-
-		// If we didn't hit anything then we have a problem
-		if(tr.DidHit())
-		{
-			// If we did hit something, and it wasn't the skybox, then skip
-			// this worldlight
-			if((tr.surface.flags & SURF_SKY) && (tr.surface.flags & SURF_SKY2D))
-			{
-				// Act like we didn't find any valid worldlights, so the shadow
-				// manager uses the default shadow direction instead (should be the
-				// sun direction)
-
-				return;
-			}
-		}
-	}
-
-	// Iterate through all the worldlights
-	if ( nCluster >= 0 && nCluster < m_WorldLightsInCluster.Count() )
-	{
-		// find all soundscapes that could possibly attach to this player and update them
-		for ( int j = 0; j < m_WorldLightsInCluster[nCluster].lightCount; j++ )
-		{
-			int ssIndex = m_WorldLightsIndexList[m_WorldLightsInCluster[nCluster].firstLight + j];
-			dworldlight_t *light = &m_pWorldLights[ssIndex];
-
-			// Calculate square distance to this worldlight
-			Vector vecDelta = light->origin - vecPosition;
-			float flDistSqr = vecDelta.LengthSqr();
-			float flRadiusSqr = light->radius * light->radius;
-
-			// Skip lights that are out of our radius
-			if(flRadiusSqr > 0 && flDistSqr >= flRadiusSqr)
-			{
-				//engine->Con_NPrintf(i, "%d: out-of-radius (dist: %d, radius: %d)", i, sqrt(flDistSqr), light->radius);
-				continue;
-			}
-
-			// Calculate intensity at our position
-			float flRatio = Engine_WorldLightDistanceFalloff(light, vecDelta);
-			Vector vecIntensity = light->intensity * flRatio;
-
-			// Is this light more intense than the one we already found?
-			if(vecIntensity.LengthSqr() <= vecLightBrightness.LengthSqr())
-			{
-				//engine->Con_NPrintf(i, "%d: too dim", i);
-				continue;
-			}
-
-			// Can we see the light?
-			trace_t tr;
-			Vector vecAbsStart = vecPosition + Vector(0,0,30);
-			UTIL_TraceLine(vecAbsStart, light->origin, MASK_OPAQUE, NULL, COLLISION_GROUP_NONE, &tr);
-
-			if(tr.DidHit())
-			{
-				//engine->Con_NPrintf(i, "%d: trace failed", i);
-				continue;
-			}
-
-			vecLightPos = light->origin;
-			vecLightBrightness = vecIntensity;
-
-			//engine->Con_NPrintf(i, "%d: set (%.2f)", i, vecIntensity.Length());
-		}
-	}
-}
-#endif
-
-static CWorldLights s_WorldLights;
-CWorldLights* g_pWorldLights = &s_WorldLights;
 
 //-----------------------------------------------------------------------------
 // A texture allocator used to batch textures together
@@ -1277,11 +782,7 @@ public:
 	void RestoreRenderState();
 
 	// Computes a rough bounding box encompassing the volume of the shadow
-#ifdef OMOD
-	void ComputeShadowBBox( IClientRenderable *pRenderable, ClientShadowHandle_t shadowHandle, const Vector &vecAbsCenter, float flRadius, Vector *pAbsMins, Vector *pAbsMaxs );
-#else
 	void ComputeShadowBBox( IClientRenderable *pRenderable, const Vector &vecAbsCenter, float flRadius, Vector *pAbsMins, Vector *pAbsMaxs );
-#endif
 
 	bool WillParentRenderBlobbyShadow( IClientRenderable *pRenderable );
 
@@ -1292,13 +793,6 @@ public:
 	{ 
 		r_shadows_gamecontrol.SetValue( bDisabled != 1 );
 	}
-
-#ifdef OMOD
-	// Toggle shadow casting from world light sources
-	virtual void SetShadowFromWorldLightsEnabled( bool bEnable );
-	void SuppressShadowFromWorldLights( bool bSuppress );
-	bool IsShadowingFromWorldLights() const { return m_bShadowFromWorldLights && !m_bSuppressShadowFromWorldLights; }
-#endif
 
 private:
 	enum
@@ -1317,16 +811,8 @@ private:
 		unsigned short			m_Flags;
 		VMatrix					m_WorldToShadow;
 		Vector2D				m_WorldSize;
-#ifdef OMOD
-		Vector					m_ShadowDir;
-#endif
 		Vector					m_LastOrigin;
 		QAngle					m_LastAngles;
-#ifdef OMOD
-		Vector					m_CurrentLightPos;	// When shadowing from local lights, stores the position of the currently shadowing light
-		Vector					m_TargetLightPos;	// When shadowing from local lights, stores the position of the new shadowing light
-		float					m_LightPosLerp;		// Lerp progress when going from current to target light
-#endif
 		TextureHandle_t			m_ShadowTexture;
 		CTextureReference		m_ShadowDepthTexture;
 		int						m_nRenderFrame;
@@ -1338,11 +824,6 @@ private:
 	void UpdateStudioShadow( IClientRenderable *pRenderable, ClientShadowHandle_t handle );
 	void UpdateBrushShadow( IClientRenderable *pRenderable, ClientShadowHandle_t handle );
 	void UpdateShadow( ClientShadowHandle_t handle, bool force );
-
-#ifdef OMOD
-	// Updates shadow cast direction when shadowing from world lights
-	void UpdateShadowDirectionFromLocalLightSource( ClientShadowHandle_t shadowHandle );
-#endif
 
 	// Gets the entity whose shadow this shadow will render into
 	IClientRenderable *GetParentShadowEntity( ClientShadowHandle_t handle );
@@ -1360,10 +841,6 @@ private:
 	void BuildWorldToShadowMatrix( VMatrix& matWorldToShadow, const Vector& origin, const Quaternion& quatOrientation );
 
 	void BuildPerspectiveWorldToFlashlightMatrix( VMatrix& matWorldToShadow, const FlashlightState_t &flashlightState );
-
-#ifdef OMOD
-	void BuildOrthoWorldToFlashlightMatrix( VMatrix& matWorldToShadow, const FlashlightState_t &flashlightState );
-#endif
 
 	// Update a shadow
 	void UpdateProjectedTextureInternal( ClientShadowHandle_t handle, bool force );
@@ -1433,9 +910,6 @@ private:
 	// Returns renderable-specific shadow info
 	float GetShadowDistance( IClientRenderable *pRenderable ) const;
 	const Vector &GetShadowDirection( IClientRenderable *pRenderable ) const;
-#ifdef OMOD
-	const Vector &GetShadowDirection( ClientShadowHandle_t shadowHandle ) const;
-#endif
 
 	// Initialize, shutdown render-to-texture shadows
 	void InitDepthTextureShadows();
@@ -1459,11 +933,6 @@ private:
 	// Set and clear flashlight target renderable
 	void	SetFlashlightTarget( ClientShadowHandle_t shadowHandle, EHANDLE targetEntity );
 
-#ifdef OMOD
-	// Get current frustum extents
-	void GetFrustumExtents( ClientShadowHandle_t handle, Vector &vecMin, Vector &vecMax );
-#endif
-
 	// Set flashlight light world flag
 	void	SetFlashlightLightWorld( ClientShadowHandle_t shadowHandle, bool bLightWorld );
 
@@ -1472,17 +941,8 @@ private:
 	// Builds a list of active shadows requiring shadow depth renders
 	int		BuildActiveShadowDepthList( const CViewSetup &viewSetup, int nMaxDepthShadows, ClientShadowHandle_t *pActiveDepthShadows );
 
-#ifdef OMOD
-	// Builds a list of active flashlights
-	int		BuildActiveFlashlightList( const CViewSetup &viewSetup, int nMaxFlashlights, ClientShadowHandle_t *pActiveFlashlights );
-#endif
-
 	// Sets the view's active flashlight render state
 	void	SetViewFlashlightState( int nActiveFlashlightCount, ClientShadowHandle_t* pActiveFlashlights );
-
-#ifdef OMOD
-	void	UpdateDirtyShadow( ClientShadowHandle_t handle );
-#endif
 
 private:
 	Vector	m_SimpleShadowDir;
@@ -1503,10 +963,6 @@ private:
 	CUtlRBTree< ClientShadowHandle_t, unsigned short >	m_DirtyShadows;
 	CUtlVector< ClientShadowHandle_t > m_TransparentShadows;
 
-#ifdef OMOD
-	int m_nPrevFrameCount;
-#endif
-
 	// These members maintain current state of depth texturing (size and global active state)
 	// If either changes in a frame, PreRender() will catch it and do the appropriate allocation, deallocation or reallocation
 	bool m_bDepthTextureActive;
@@ -1515,11 +971,6 @@ private:
 	CUtlVector< CTextureReference > m_DepthTextureCache;
 	CUtlVector< bool > m_DepthTextureCacheLocks;
 	int	m_nMaxDepthTextureShadows;
-
-#ifdef OMOD
-	bool m_bShadowFromWorldLights;
-	bool m_bSuppressShadowFromWorldLights;
-#endif
 
 	friend class CVisibleShadowList;
 	friend class CVisibleShadowFrustumList;
@@ -1613,12 +1064,6 @@ void CVisibleShadowList::EnumShadow( unsigned short clientShadowHandle )
 	if ( shadow.m_nRenderFrame == gpGlobals->framecount )
 		return;
 
-#ifdef OMOD
-	// Don't bother with flashlights
-	if ( ( shadow.m_Flags & SHADOW_FLAGS_FLASHLIGHT ) != 0 )
-		return;
-#endif
-
 	// We don't need to bother with it if it's not render-to-texture
 	if ( s_ClientShadowMgr.GetActualShadowCastType( clientShadowHandle ) != SHADOWS_RENDER_TO_TEXTURE )
 		return;
@@ -1643,11 +1088,7 @@ void CVisibleShadowList::EnumShadow( unsigned short clientShadowHandle )
 
 	// Compute a box surrounding the shadow
 	Vector vecAbsMins, vecAbsMaxs;
-#ifdef OMOD
-	s_ClientShadowMgr.ComputeShadowBBox( pRenderable, shadow.m_ShadowHandle, vecAbsCenter, flRadius, &vecAbsMins, &vecAbsMaxs );
-#else
 	s_ClientShadowMgr.ComputeShadowBBox( pRenderable, vecAbsCenter, flRadius, &vecAbsMins, &vecAbsMaxs );
-#endif
 
 	// FIXME: Add distance check here?
 
@@ -1726,14 +1167,7 @@ int CVisibleShadowList::FindShadows( const CViewSetup *pView, int nLeafCount, Le
 //-----------------------------------------------------------------------------
 CClientShadowMgr::CClientShadowMgr() :
 	m_DirtyShadows( 0, 0, ShadowHandleCompareFunc ),
-#ifdef OMOD
-	m_nPrevFrameCount( -1 ),
-#endif
 	m_RenderToTextureActive( false ),
-#ifdef OMOD
-	m_bShadowFromWorldLights( false ),
-	m_bSuppressShadowFromWorldLights( false ),
-#endif
 	m_bDepthTextureActive( false )
 {
 	m_nDepthTextureResolution = r_flashlightdepthres.GetInt();
@@ -1837,15 +1271,6 @@ CON_COMMAND_F( r_shadowblobbycutoff, "some shadow stuff", FCVAR_CHEAT )
 	}
 }
 
-#ifdef OMOD
-void OnShadowFromWorldLights( IConVar *var, const char *pOldValue, float flOldValue );
-static ConVar r_shadowfromworldlights( "r_shadowfromworldlights", "1", FCVAR_NONE, "Enable shadowing from world lights", OnShadowFromWorldLights );
-void OnShadowFromWorldLights( IConVar *var, const char *pOldValue, float flOldValue )
-{
-	s_ClientShadowMgr.SuppressShadowFromWorldLights( !r_shadowfromworldlights.GetBool() );
-}
-#endif
-
 static void ShadowRestoreFunc( int nChangeFlags )
 {
 	s_ClientShadowMgr.RestoreRenderState();
@@ -1865,14 +1290,8 @@ bool CClientShadowMgr::Init()
 
 	SetShadowBlobbyCutoffArea( 0.005 );
 
-#ifndef OMOD
 	bool bTools = CommandLine()->CheckParm( "-tools" ) != NULL;
 	m_nMaxDepthTextureShadows = bTools ? 4 : 1;	// Just one shadow depth texture in games, more in tools
-#else
-	// 5 lets mappers use up to 4 shadow-casting projected textures, which is better than 3.
-	int iNumShadows = CommandLine()->ParmValue( "-numshadowtextures", 5 );
-	m_nMaxDepthTextureShadows = iNumShadows;
-#endif
 
 	bool bLowEnd = ( g_pMaterialSystemHardwareConfig->GetDXSupportLevel() < 80 );
 
@@ -1894,15 +1313,6 @@ bool CClientShadowMgr::Init()
 	}
 
 	materials->AddRestoreFunc( ShadowRestoreFunc );
-
-#ifdef OMOD
-	// These need to be referenced here since the cvars don't exist in the initial declaration
-	mat_slopescaledepthbias_shadowmap = ConVarRef( "mat_slopescaledepthbias_shadowmap" );
-	mat_depthbias_shadowmap = ConVarRef( "mat_depthbias_shadowmap" );
-
-	mat_slopescaledepthbias_shadowmap.SetValue( "16" ); // Would do something like 2 here, but it causes citizens to look weird under flashlights
-	mat_depthbias_shadowmap.SetValue( "0.00005" );
-#endif
 
 	return true;
 }
@@ -1926,11 +1336,6 @@ void CClientShadowMgr::InitDepthTextureShadows()
 {
 	VPROF_BUDGET( "CClientShadowMgr::InitDepthTextureShadows", VPROF_BUDGETGROUP_SHADOW_DEPTH_TEXTURING );
 
-#if defined(OMOD) //&& !defined(OMOD)
- 	// SAUL: set m_nDepthTextureResolution to the depth resolution we want
-	m_nDepthTextureResolution = r_flashlightdepthres.GetInt();
-#endif
-
 	if( !m_bDepthTextureActive )
 	{
 		m_bDepthTextureActive = true;
@@ -1947,12 +1352,7 @@ void CClientShadowMgr::InitDepthTextureShadows()
 		m_DummyColorTexture.InitRenderTargetTexture( r_flashlightdepthres.GetInt(), r_flashlightdepthres.GetInt(), RT_SIZE_OFFSCREEN, IMAGE_FORMAT_BGR565, MATERIAL_RT_DEPTH_SHARED, false, "_rt_ShadowDummy" );
 		m_DummyColorTexture.InitRenderTargetSurface( r_flashlightdepthres.GetInt(), r_flashlightdepthres.GetInt(), IMAGE_FORMAT_BGR565, true );
 #else
-#if defined(OMOD) //&& !defined(OMOD)
-		// SAUL: we want to create a render target of specific size, so use RT_SIZE_NO_CHANGE
-		m_DummyColorTexture.InitRenderTarget( m_nDepthTextureResolution, m_nDepthTextureResolution, RT_SIZE_NO_CHANGE, nullFormat, MATERIAL_RT_DEPTH_NONE, false, "_rt_ShadowDummy" );
-#else
 		m_DummyColorTexture.InitRenderTarget( r_flashlightdepthres.GetInt(), r_flashlightdepthres.GetInt(), RT_SIZE_OFFSCREEN, nullFormat, MATERIAL_RT_DEPTH_NONE, false, "_rt_ShadowDummy" );
-#endif
 #endif
 
 		// Create some number of depth-stencil textures
@@ -1972,18 +1372,7 @@ void CClientShadowMgr::InitDepthTextureShadows()
 			depthTex.InitRenderTargetTexture( m_nDepthTextureResolution, m_nDepthTextureResolution, RT_SIZE_OFFSCREEN, dstFormat, MATERIAL_RT_DEPTH_NONE, false, strRTName );
 			depthTex.InitRenderTargetSurface( 1, 1, dstFormat, false );
 #else
-#if defined(OMOD) //&& !defined(OMOD)
-			// SAUL: we want to create a *DEPTH TEXTURE* of specific size, so use RT_SIZE_NO_CHANGE and MATERIAL_RT_DEPTH_ONLY
-			// However, MATERIAL_RT_DEPTH_ONLY forces point filtering to be enabled which negatively affect PCF, so the standard MATERIAL_RT_DEPTH_NONE works better.
-			depthTex.InitRenderTarget( m_nDepthTextureResolution, m_nDepthTextureResolution, RT_SIZE_NO_CHANGE, dstFormat, MATERIAL_RT_DEPTH_NONE, false, strRTName );
-#else
 			depthTex.InitRenderTarget( m_nDepthTextureResolution, m_nDepthTextureResolution, RT_SIZE_OFFSCREEN, dstFormat, MATERIAL_RT_DEPTH_NONE, false, strRTName );
-#endif
-#endif
-
-#if defined(OMOD) //&& !defined(OMOD)
-			// SAUL: ensure the depth texture size wasn't changed
-			Assert(depthTex->GetActualWidth() == m_nDepthTextureResolution);
 #endif
 
 			if ( i == 0 )
@@ -2124,11 +1513,6 @@ void CClientShadowMgr::GetShadowColor( unsigned char *r, unsigned char *g, unsig
 void CClientShadowMgr::LevelInitPreEntity()
 {
 	m_bUpdatingDirtyShadows = false;
-
-#ifdef OMOD
-	// Default setting for this, can be overridden by shadow control entities
-	SetShadowFromWorldLightsEnabled( false );
-#endif
 
 	Vector ambientColor;
 	engine->GetAmbientLightColor( ambientColor );
@@ -2314,158 +1698,6 @@ const Vector &CClientShadowMgr::GetShadowDirection( IClientRenderable *pRenderab
 	return vecResult;
 }
 
-#ifdef OMOD
-const Vector &CClientShadowMgr::GetShadowDirection( ClientShadowHandle_t shadowHandle ) const
-{
-	Assert( shadowHandle != CLIENTSHADOW_INVALID_HANDLE );
-
-	IClientRenderable* pRenderable = ClientEntityList().GetClientRenderableFromHandle( m_Shadows[shadowHandle].m_Entity );
-	Assert( pRenderable );
-
-	if ( !IsShadowingFromWorldLights() )
-	{
-		return GetShadowDirection( pRenderable );
-	}
-
-	Vector &vecResult = AllocTempVector();
-	vecResult = m_Shadows[shadowHandle].m_ShadowDir;
-
-	// Allow the renderable to override the default
-	pRenderable->GetShadowCastDirection( &vecResult, GetActualShadowCastType( pRenderable ) );
-
-	return vecResult;
-}
-
-void CClientShadowMgr::UpdateShadowDirectionFromLocalLightSource( ClientShadowHandle_t shadowHandle )
-{
-	Assert( shadowHandle != CLIENTSHADOW_INVALID_HANDLE );
-
-	ClientShadow_t& shadow = m_Shadows[shadowHandle];
-
-	IClientRenderable* pRenderable = ClientEntityList().GetClientRenderableFromHandle( shadow.m_Entity );
-
-	// TODO: Figure out why this still gets hit
-	Assert( pRenderable );
-	if ( !pRenderable )
-	{
-		DevWarning( "%s(): Skipping shadow with invalid client renderable (shadow handle %d)\n", __FUNCTION__, shadowHandle );
-		return;
-	}
-
-	Vector bbMin, bbMax;
-	pRenderable->GetRenderBoundsWorldspace( bbMin, bbMax );
-	Vector origin( 0.5f * ( bbMin + bbMax ) );
-	origin.z = bbMin.z;	// Putting origin at the bottom of the bounding box makes the shadows a little shorter
-
-	Vector lightPos;
-	Vector lightBrightness;
-
-	if ( shadow.m_LightPosLerp >= 1.0f )	// skip finding new light source if we're in the middle of a lerp
-	{
-		// Calculate minimum brightness squared
-		float flMinBrightnessSqr = r_shadow_mincastintensity.GetFloat();
-		flMinBrightnessSqr *= flMinBrightnessSqr;
-
-		if(g_pWorldLights->GetBrightestLightSource(pRenderable->GetRenderOrigin(), lightPos, lightBrightness) == false ||
-			lightBrightness.LengthSqr() < flMinBrightnessSqr )
-		{
-			// didn't find a light source at all, use default shadow direction
-			// TODO: Could switch to using blobby shadow in this case
-			lightPos.Init( FLT_MAX, FLT_MAX, FLT_MAX );
-		}
-	}
-
-	if ( shadow.m_LightPosLerp == FLT_MAX )	// first light pos ever, just init
-	{
-		shadow.m_CurrentLightPos = lightPos;
-		shadow.m_TargetLightPos = lightPos;
-		shadow.m_LightPosLerp = 1.0f;
-	}
-	else if ( shadow.m_LightPosLerp < 1.0f )
-	{
-		// We're in the middle of a lerp from current to target light. Finish it.
-		shadow.m_LightPosLerp += gpGlobals->frametime * 1.0f/r_shadow_lightpos_lerptime.GetFloat();
-		shadow.m_LightPosLerp = clamp( shadow.m_LightPosLerp, 0.0f, 1.0f );
-
-		Vector currLightPos( shadow.m_CurrentLightPos );
-		Vector targetLightPos( shadow.m_TargetLightPos );
-		if ( currLightPos.x == FLT_MAX )
-		{
-			currLightPos = origin - 200.0f * GetShadowDirection();
-		}
-		if ( targetLightPos.x == FLT_MAX )
-		{
-			targetLightPos = origin - 200.0f * GetShadowDirection();
-		}
-
-		// lerp light pos
-		Vector v1 = origin - shadow.m_CurrentLightPos;
-		v1.NormalizeInPlace();
-
-		Vector v2 = origin - shadow.m_TargetLightPos;
-		v2.NormalizeInPlace();
-
-		// SAULUNDONE: caused over top sweeping far too often
-#if 0
-		if ( v1.Dot( v2 ) < 0.0f )
-		{
-			// if change in shadow angle is more than 90 degrees, lerp over the renderable's top to avoid long sweeping shadows
-			Vector fakeOverheadLightPos( origin.x, origin.y, origin.z + 200.0f );
-			if( shadow.m_LightPosLerp < 0.5f )
-			{
-				lightPos = Lerp( 2.0f * shadow.m_LightPosLerp, currLightPos, fakeOverheadLightPos );
-			}
-			else
-			{
-				lightPos = Lerp( 2.0f * shadow.m_LightPosLerp - 1.0f, fakeOverheadLightPos, targetLightPos );
-			}
-		}
-		else
-#endif
-		{
-			lightPos = Lerp( shadow.m_LightPosLerp, currLightPos, targetLightPos );
-		}
-
-		if ( shadow.m_LightPosLerp >= 1.0f )
-		{
-			shadow.m_CurrentLightPos = shadow.m_TargetLightPos;
-		}
-	}
-	else if ( shadow.m_LightPosLerp >= 1.0f )
-	{
-		// check if we have a new closest light position and start a new lerp
-		float flDistSq = ( lightPos - shadow.m_CurrentLightPos ).LengthSqr();
-
-		if ( flDistSq > 1.0f )
-		{
-			// light position has changed, which means we got a new light source. Initiate a lerp
-			shadow.m_TargetLightPos = lightPos;
-			shadow.m_LightPosLerp = 0.0f;
-		}
-
-		lightPos = shadow.m_CurrentLightPos;
-	}
-
-	if ( lightPos.x == FLT_MAX )
-	{
-		lightPos = origin - 200.0f * GetShadowDirection();
-	}
-
-	Vector vecResult( origin - lightPos );
-	vecResult.NormalizeInPlace();
-
-	vecResult.z *= r_shadow_shortenfactor.GetFloat();
-	vecResult.NormalizeInPlace();
-
-	shadow.m_ShadowDir = vecResult;
-
-	if ( r_shadowfromworldlights_debug.GetBool() )
-	{
-		NDebugOverlay::Line( lightPos, origin, 255, 255, 0, false, 0.0f );
-	}
-}
-#endif
-
 
 //-----------------------------------------------------------------------------
 // Sets the shadow distance
@@ -2570,6 +1802,9 @@ ClientShadowHandle_t CClientShadowMgr::CreateProjectedTexture( ClientEntityHandl
 	if( !( flags & SHADOW_FLAGS_FLASHLIGHT ) )
 	{
 		IClientRenderable *pRenderable = ClientEntityList().GetClientRenderableFromHandle( entity );
+		if ( !pRenderable )
+			return m_Shadows.InvalidIndex();
+
 		int modelType = modelinfo->GetModelType( pRenderable->GetModel() );
 		if (modelType == mod_brush)
 		{
@@ -2583,12 +1818,6 @@ ClientShadowHandle_t CClientShadowMgr::CreateProjectedTexture( ClientEntityHandl
 	shadow.m_ClientLeafShadowHandle = ClientLeafSystem()->AddShadow( h, flags );
 	shadow.m_Flags = flags;
 	shadow.m_nRenderFrame = -1;
-#ifdef OMOD
-	shadow.m_ShadowDir = GetShadowDirection();
-	shadow.m_CurrentLightPos.Init( FLT_MAX, FLT_MAX, FLT_MAX );
-	shadow.m_TargetLightPos.Init( FLT_MAX, FLT_MAX, FLT_MAX );
-	shadow.m_LightPosLerp = FLT_MAX;
-#endif
 	shadow.m_LastOrigin.Init( FLT_MAX, FLT_MAX, FLT_MAX );
 	shadow.m_LastAngles.Init( FLT_MAX, FLT_MAX, FLT_MAX );
 	Assert( ( ( shadow.m_Flags & SHADOW_FLAGS_FLASHLIGHT ) == 0 ) != 
@@ -2608,21 +1837,12 @@ ClientShadowHandle_t CClientShadowMgr::CreateProjectedTexture( ClientEntityHandl
 		pShadowProxyData = (void*)(uintp)h;
 	}
 
-#ifdef OMOD
-	if( ( flags & SHADOW_FLAGS_USE_DEPTH_TEXTURE ) || ( flags & ( SHADOW_FLAGS_FLASHLIGHT ) ) )
-	{
-		pShadowMaterial = NULL;		// these materials aren't used for shadow depth texture shadows.
-		pShadowModelMaterial = NULL;
-		pShadowProxyData = (void*)(uintp)h;
-	}
-#else
 	if( flags & SHADOW_FLAGS_USE_DEPTH_TEXTURE )
 	{
 		pShadowMaterial = m_RenderShadow;
 		pShadowModelMaterial = m_RenderModelShadow;
 		pShadowProxyData = (void*)(uintp)h;
 	}
-#endif
 
 	int createShadowFlags;
 	if( flags & SHADOW_FLAGS_FLASHLIGHT )
@@ -2685,27 +1905,7 @@ void CClientShadowMgr::UpdateFlashlightState( ClientShadowHandle_t shadowHandle,
 {
 	VPROF_BUDGET( "CClientShadowMgr::UpdateFlashlightState", VPROF_BUDGETGROUP_SHADOW_DEPTH_TEXTURING );
 
-#ifdef OMOD
-	if( flashlightState.m_bEnableShadows && r_flashlightdepthtexture.GetBool() )
-	{
-		m_Shadows[shadowHandle].m_Flags |= SHADOW_FLAGS_USE_DEPTH_TEXTURE;
-	}
-	else
-	{
-		m_Shadows[shadowHandle].m_Flags &= ~SHADOW_FLAGS_USE_DEPTH_TEXTURE;
-	}
-
-	if ( flashlightState.m_bOrtho )
-	{
-		BuildOrthoWorldToFlashlightMatrix( m_Shadows[shadowHandle].m_WorldToShadow, flashlightState );
-	}
-	else
-	{
-		BuildPerspectiveWorldToFlashlightMatrix( m_Shadows[shadowHandle].m_WorldToShadow, flashlightState );
-	}
-#else
 	BuildPerspectiveWorldToFlashlightMatrix( m_Shadows[shadowHandle].m_WorldToShadow, flashlightState );
-#endif
 											
 	shadowmgr->UpdateFlashlightState( m_Shadows[shadowHandle].m_ShadowHandle, flashlightState );
 }
@@ -2815,40 +2015,6 @@ void CClientShadowMgr::BuildPerspectiveWorldToFlashlightMatrix( VMatrix& matWorl
 
 	MatrixMultiply( matPerspective, matWorldToShadowView, matWorldToShadow );
 }
-
-#ifdef OMOD
-void CClientShadowMgr::BuildOrthoWorldToFlashlightMatrix( VMatrix& matWorldToShadow, const FlashlightState_t &flashlightState )
-{
-	VPROF_BUDGET( "CClientShadowMgr::BuildPerspectiveWorldToFlashlightMatrix", VPROF_BUDGETGROUP_SHADOW_DEPTH_TEXTURING );
-
-	// Buildworld to shadow matrix, then perspective projection and concatenate
-	VMatrix matWorldToShadowView, matPerspective;
-	BuildWorldToShadowMatrix( matWorldToShadowView, flashlightState.m_vecLightOrigin,
-		flashlightState.m_quatOrientation );
-
-	MatrixBuildOrtho( matPerspective, 
-					  flashlightState.m_fOrthoLeft, flashlightState.m_fOrthoTop, flashlightState.m_fOrthoRight, flashlightState.m_fOrthoBottom,
-					  flashlightState.m_NearZ, flashlightState.m_FarZ );
-
-	// Shift it z/y to 0 to -2 space
-	VMatrix addW;
-	addW.Identity();
-	addW[0][3] = -1.0f;
-	addW[1][3] = -1.0f;
-	addW[2][3] = 0.0f;
-	MatrixMultiply( addW, matPerspective, matPerspective );
-
-	// Flip x/y to positive 0 to 1... flip z to negative
-	VMatrix scaleHalf;
-	scaleHalf.Identity();
-	scaleHalf[0][0] = -0.5f;
-	scaleHalf[1][1] = -0.5f;
-	scaleHalf[2][2] = -1.0f;
-	MatrixMultiply( scaleHalf, matPerspective, matPerspective );
-
-	MatrixMultiply( matPerspective, matWorldToShadowView, matWorldToShadow );
-}
-#endif
 
 //-----------------------------------------------------------------------------
 // Compute the shadow origin and attenuation start distance
@@ -3123,11 +2289,7 @@ void CClientShadowMgr::BuildOrthoShadow( IClientRenderable* pRenderable,
 	AngleVectors( pRenderable->GetRenderAngles(), &vec[0], &vec[1], &vec[2] );
 	vec[1] *= -1.0f;
 
-#ifdef OMOD
-	Vector vecShadowDir = GetShadowDirection( handle );
-#else
 	Vector vecShadowDir = GetShadowDirection( pRenderable );
-#endif
 
 	// Project the shadow casting direction into the space of the object
 	Vector localShadowDir;
@@ -3213,11 +2375,7 @@ void CClientShadowMgr::BuildOrthoShadow( IClientRenderable* pRenderable,
 
 	// Compute extra clip planes to prevent poke-thru
 // FIXME!!!!!!!!!!!!!!  Removing this for now since it seems to mess up the blobby shadows.
-#ifdef OMOD
-	ComputeExtraClipPlanes( pRenderable, handle, vec, mins, maxs, localShadowDir );
-#else
 //	ComputeExtraClipPlanes( pEnt, handle, vec, mins, maxs, localShadowDir );
-#endif
 
 	// Add the shadow to the client leaf system so it correctly marks 
 	// leafs as being affected by a particular shadow
@@ -3314,11 +2472,7 @@ void CClientShadowMgr::BuildRenderToTextureShadow( IClientRenderable* pRenderabl
 	AngleVectors( pRenderable->GetRenderAngles(), &vec[0], &vec[1], &vec[2] );
 	vec[1] *= -1.0f;
 
-#ifdef OMOD
-	Vector vecShadowDir = GetShadowDirection( handle );
-#else
 	Vector vecShadowDir = GetShadowDirection( pRenderable );
-#endif
 
 //	Debugging aid
 //	const model_t *pModel = pRenderable->GetModel();
@@ -3710,13 +2864,6 @@ bool CClientShadowMgr::ShouldUseParentShadow( IClientRenderable *pRenderable )
 //-----------------------------------------------------------------------------
 void CClientShadowMgr::PreRender()
 {
-#ifdef OMOD
-	// only update shadows once per frame
-	if( gpGlobals->framecount == m_nPrevFrameCount ) 
-		return;
-	m_nPrevFrameCount = gpGlobals->framecount;
-#endif
-
 	VPROF_BUDGET( "CClientShadowMgr::PreRender", VPROF_BUDGETGROUP_SHADOW_RENDERING );
 	MDLCACHE_CRITICAL_SECTION();
 
@@ -3789,12 +2936,8 @@ void CClientShadowMgr::PreRender()
 	{
 		MDLCACHE_CRITICAL_SECTION();
 		ClientShadowHandle_t& handle = m_DirtyShadows[ i ];
-#ifdef OMOD
-		UpdateDirtyShadow(handle);
-#else
 		Assert( m_Shadows.IsValidIndex( handle ) );
 		UpdateProjectedTextureInternal( handle, false );
-#endif
 		i = m_DirtyShadows.NextInorder(i);
 	}
 	m_DirtyShadows.RemoveAll();
@@ -3810,20 +2953,6 @@ void CClientShadowMgr::PreRender()
 	m_bUpdatingDirtyShadows = false;
 }
 
-#ifdef OMOD
-//-----------------------------------------------------------------------------
-// Updates a single dirty shadow
-//-----------------------------------------------------------------------------
-void CClientShadowMgr::UpdateDirtyShadow( ClientShadowHandle_t handle )
-{
-	Assert( m_Shadows.IsValidIndex( handle ) );
-	if ( IsShadowingFromWorldLights() )
-	{
-		UpdateShadowDirectionFromLocalLightSource( handle );
-	}
-	UpdateProjectedTextureInternal( handle, false );
-}
-#endif
 
 //-----------------------------------------------------------------------------
 // Gets the entity whose shadow this shadow will render into
@@ -3998,11 +3127,7 @@ void CClientShadowMgr::UpdateShadow( ClientShadowHandle_t handle, bool force )
 	const Vector& origin = pRenderable->GetRenderOrigin();
 	const QAngle& angles = pRenderable->GetRenderAngles();
 
-#ifdef OMOD
-	if (force || (origin != shadow.m_LastOrigin) || (angles != shadow.m_LastAngles) || shadow.m_LightPosLerp < 1.0f)
-#else
 	if (force || (origin != shadow.m_LastOrigin) || (angles != shadow.m_LastAngles))
-#endif
 	{
 		// Store off the new pos/orientation
 		VectorCopy( origin, shadow.m_LastOrigin );
@@ -4121,20 +3246,12 @@ void CClientShadowMgr::ComputeBoundingSphere( IClientRenderable* pRenderable, Ve
 //-----------------------------------------------------------------------------
 // Computes a rough AABB encompassing the volume of the shadow
 //-----------------------------------------------------------------------------
-#ifdef OMOD
-void CClientShadowMgr::ComputeShadowBBox( IClientRenderable *pRenderable, ClientShadowHandle_t shadowHandle, const Vector &vecAbsCenter, float flRadius, Vector *pAbsMins, Vector *pAbsMaxs )
-#else
 void CClientShadowMgr::ComputeShadowBBox( IClientRenderable *pRenderable, const Vector &vecAbsCenter, float flRadius, Vector *pAbsMins, Vector *pAbsMaxs )
-#endif
 {
 	// This is *really* rough. Basically we simply determine the
 	// maximum shadow casting length and extrude the box by that distance
 
-#ifdef OMOD
-	Vector vecShadowDir = GetShadowDirection( shadowHandle );
-#else
 	Vector vecShadowDir = GetShadowDirection( pRenderable );
-#endif
 	for (int i = 0; i < 3; ++i)
 	{
 		float flShadowCastDistance = GetShadowDistance( pRenderable );
@@ -4232,11 +3349,7 @@ bool CClientShadowMgr::CullReceiver( ClientShadowHandle_t handle, IClientRendera
 	if (foundSeparatingPlane)
 	{
 		// Compute which side of the plane the renderable is on..
-#ifdef OMOD
-		Vector vecShadowDir = GetShadowDirection( handle );
-#else
 		Vector vecShadowDir = GetShadowDirection( pSourceRenderable );
-#endif
 		float shadowDot = DotProduct( vecShadowDir, plane.normal );
 		float receiverDot = DotProduct( plane.normal, origin );
 		float sourceDot = DotProduct( plane.normal, originSource );
@@ -4723,11 +3836,6 @@ void CClientShadowMgr::AdvanceFrame()
 //-----------------------------------------------------------------------------
 int CClientShadowMgr::BuildActiveShadowDepthList( const CViewSetup &viewSetup, int nMaxDepthShadows, ClientShadowHandle_t *pActiveDepthShadows )
 {
-#ifdef OMOD
-	Frustum_t viewFrustum;
-	GeneratePerspectiveFrustum( viewSetup.origin, viewSetup.angles, viewSetup.zNear, viewSetup.zFar, viewSetup.fov, viewSetup.m_flAspectRatio, viewFrustum );
-#endif
-
 	int nActiveDepthShadowCount = 0;
 	for ( ClientShadowHandle_t i = m_Shadows.Head(); i != m_Shadows.InvalidIndex(); i = m_Shadows.Next(i) )
 	{
@@ -4752,13 +3860,7 @@ int CClientShadowMgr::BuildActiveShadowDepthList( const CViewSetup &viewSetup, i
 
 		// FIXME: Could do other sorts of culling here, such as frustum-frustum test, distance etc.
 		// If it's not in the view frustum, move on
-#ifdef OMOD
-		if ( !flashlightState.m_bAlwaysDraw && !flashlightState.m_bOrtho && R_CullBox( vecAbsMins, vecAbsMaxs, viewFrustum ) )
-#elif OMOD
-		if ( !flashlightState.m_bOrtho && R_CullBox( vecAbsMins, vecAbsMaxs, viewFrustum ) )
-#else
 		if ( R_CullBox( vecAbsMins, vecAbsMaxs, viewFrustum ) )
-#endif
 		{
 			shadowmgr->SetFlashlightDepthTexture( shadow.m_ShadowHandle, NULL, 0 );
 			continue;
@@ -4783,53 +3885,6 @@ int CClientShadowMgr::BuildActiveShadowDepthList( const CViewSetup &viewSetup, i
 }
 
 
-#ifdef OMOD
-//-----------------------------------------------------------------------------
-// Re-render shadow depth textures that lie in the leaf list
-//-----------------------------------------------------------------------------
-int CClientShadowMgr::BuildActiveFlashlightList( const CViewSetup &viewSetup, int nMaxFlashlights, ClientShadowHandle_t *pActiveFlashlights )
-{
-	int nActiveFlashlightCount = 0;
-	for ( ClientShadowHandle_t i = m_Shadows.Head(); i != m_Shadows.InvalidIndex(); i = m_Shadows.Next(i) )
-	{
-		ClientShadow_t& shadow = m_Shadows[i];
-
-		if ( ( shadow.m_Flags & SHADOW_FLAGS_FLASHLIGHT ) == 0 )
-			continue;
-
-		// Calculate an AABB around the shadow frustum
-		Vector vecAbsMins, vecAbsMaxs;
-		CalculateAABBFromProjectionMatrix( shadow.m_WorldToShadow, &vecAbsMins, &vecAbsMaxs );
-
-		Frustum_t viewFrustum;
-		GeneratePerspectiveFrustum( viewSetup.origin, viewSetup.angles, viewSetup.zNear, viewSetup.zFar, viewSetup.fov, viewSetup.m_flAspectRatio, viewFrustum );
-
-		// FIXME: Could do other sorts of culling here, such as frustum-frustum test, distance etc.
-		// If it's not in the view frustum, move on
-		if ( R_CullBox( vecAbsMins, vecAbsMaxs, viewFrustum ) )
-		{
-			continue;
-		}
-
-		if ( nActiveFlashlightCount >= nMaxFlashlights )
-		{
-			static bool s_bOverflowWarning = false;
-			if ( !s_bOverflowWarning )
-			{
-				Warning( "Too many flashlights rendered in a single view!\n" );
-				Assert( 0 );
-				s_bOverflowWarning = true;
-			}
-			//shadowmgr->SetFlashlightDepthTexture( shadow.m_ShadowHandle, NULL, 0 );
-			continue;
-		}
-
-		pActiveFlashlights[nActiveFlashlightCount++] = i;
-	}
-	return nActiveFlashlightCount;
-}
-#endif
-
 //-----------------------------------------------------------------------------
 // Sets the view's active flashlight render state
 //-----------------------------------------------------------------------------
@@ -4853,56 +3908,12 @@ void CClientShadowMgr::SetViewFlashlightState( int nActiveFlashlightCount, Clien
 	}
 }
 
-#ifdef OMOD
-void AddPointToExtentsHelper( const VMatrix &flashlightToWorld, const Vector &vecPos, Vector &vecMin, Vector &vecMax )
-{
-	Vector worldSpacePos;
-
-	Vector3DMultiplyPositionProjective( flashlightToWorld, vecPos, worldSpacePos );
-	VectorMin( vecMin, worldSpacePos, vecMin );
-	VectorMax( vecMax, worldSpacePos, vecMax );
-}
-
-
-void CClientShadowMgr::GetFrustumExtents( ClientShadowHandle_t handle, Vector &vecMin, Vector &vecMax )
-{
-	Assert( m_Shadows.IsValidIndex( handle ) );
-
-	CClientShadowMgr::ClientShadow_t &shadow = m_Shadows[ handle ];
-
-	VMatrix flashlightToWorld;
-	MatrixInverseGeneral( shadow.m_WorldToShadow, flashlightToWorld );
-
-	vecMin = Vector( FLT_MAX, FLT_MAX, FLT_MAX );
-	vecMax = Vector( -FLT_MAX, -FLT_MAX, -FLT_MAX );
-
-	AddPointToExtentsHelper( flashlightToWorld, Vector( 0.0f, 0.0f, 0.0f ), vecMin, vecMax );
-	AddPointToExtentsHelper( flashlightToWorld, Vector( 0.0f, 0.0f, 1.0f ), vecMin, vecMax );
-	AddPointToExtentsHelper( flashlightToWorld, Vector( 0.0f, 1.0f, 0.0f ), vecMin, vecMax );
-	AddPointToExtentsHelper( flashlightToWorld, Vector( 1.0f, 0.0f, 0.0f ), vecMin, vecMax );
-	AddPointToExtentsHelper( flashlightToWorld, Vector( 0.0f, 1.0f, 1.0f ), vecMin, vecMax );
-	AddPointToExtentsHelper( flashlightToWorld, Vector( 1.0f, 0.0f, 1.0f ), vecMin, vecMax );
-	AddPointToExtentsHelper( flashlightToWorld, Vector( 1.0f, 1.0f, 0.0f ), vecMin, vecMax );
-	AddPointToExtentsHelper( flashlightToWorld, Vector( 1.0f, 1.0f, 1.0f ), vecMin, vecMax );
-}
-#endif
 
 //-----------------------------------------------------------------------------
 // Re-render shadow depth textures that lie in the leaf list
 //-----------------------------------------------------------------------------
 void CClientShadowMgr::ComputeShadowDepthTextures( const CViewSetup &viewSetup )
 {
-#ifdef OMOD
-	if ( !r_flashlightdepthtexture.GetBool() )
-	{
-		// Build list of active flashlights
-		ClientShadowHandle_t pActiveFlashlights[16];
-		int nActiveFlashlights = BuildActiveFlashlightList( viewSetup, ARRAYSIZE( pActiveFlashlights ), pActiveFlashlights );
-		SetViewFlashlightState( nActiveFlashlights, pActiveFlashlights );
-		return;
-	}
-#endif
-
 	VPROF_BUDGET( "CClientShadowMgr::ComputeShadowDepthTextures", VPROF_BUDGETGROUP_SHADOW_DEPTH_TEXTURING );
 
 	CMatRenderContextPtr pRenderContext( materials );
@@ -4918,10 +3929,6 @@ void CClientShadowMgr::ComputeShadowDepthTextures( const CViewSetup &viewSetup )
 	{
 		ClientShadow_t& shadow = m_Shadows[ pActiveDepthShadows[j] ];
 
-#ifdef OMOD
-		FlashlightState_t& flashlightState = const_cast<FlashlightState_t&>( shadowmgr->GetFlashlightState( shadow.m_ShadowHandle ) );
-#endif
-
 		CTextureReference shadowDepthTexture;
 		bool bGotShadowDepthTexture = LockShadowDepthTexture( &shadowDepthTexture );
 		if ( !bGotShadowDepthTexture )
@@ -4936,57 +3943,19 @@ void CClientShadowMgr::ComputeShadowDepthTextures( const CViewSetup &viewSetup )
 
 			Assert(0);
 			shadowmgr->SetFlashlightDepthTexture( shadow.m_ShadowHandle, NULL, 0 );
-#ifdef OMOD
-			if ( j <= ( INT_FLASHLIGHT_DEPTHTEXTURE_FALLBACK_LAST - INT_FLASHLIGHT_DEPTHTEXTURE_FALLBACK_FIRST ) )
-			{
-				pRenderContext->SetIntRenderingParameter( INT_FLASHLIGHT_DEPTHTEXTURE_FALLBACK_FIRST + j, 0 );
-			}
-#endif
 			continue;
 		}
 
 		CViewSetup shadowView;
-#ifndef OMOD
 		shadowView.m_flAspectRatio = 1.0f;
-#endif
 		shadowView.x = shadowView.y = 0;
 		shadowView.width = shadowDepthTexture->GetActualWidth();
 		shadowView.height = shadowDepthTexture->GetActualHeight();
-#ifndef OMOD
 		shadowView.m_bOrtho = false;
 		shadowView.m_bDoBloomAndToneMapping = false;
-#ifdef OMOD
-		shadowView.m_flAspectRatio = (flashlightState.m_fHorizontalFOVDegrees / flashlightState.m_fVerticalFOVDegrees);
-#endif // OMOD
-#endif
 
 		// Copy flashlight parameters
-#ifdef OMOD
-		if ( !flashlightState.m_bOrtho )
-		{
-			shadowView.m_bOrtho = false;
-
-#ifdef OMOD
-			shadowView.m_flAspectRatio = (flashlightState.m_fHorizontalFOVDegrees / flashlightState.m_fVerticalFOVDegrees);
-#endif // OMOD
-		}
-		else
-		{
-			shadowView.m_bOrtho = true;
-			shadowView.m_OrthoLeft = flashlightState.m_fOrthoLeft;
-			shadowView.m_OrthoTop = flashlightState.m_fOrthoTop;
-			shadowView.m_OrthoRight = flashlightState.m_fOrthoRight;
-			shadowView.m_OrthoBottom = flashlightState.m_fOrthoBottom;
-
-#ifdef OMOD
-			shadowView.m_flAspectRatio = 1.0f;
-#endif
-		}
-
-		shadowView.m_bDoBloomAndToneMapping = false;
-#else
 		const FlashlightState_t& flashlightState = shadowmgr->GetFlashlightState( shadow.m_ShadowHandle );
-#endif
 		shadowView.fov = shadowView.fovViewmodel = flashlightState.m_fHorizontalFOVDegrees;
 		shadowView.origin = flashlightState.m_vecLightOrigin;
 		QuaternionAngles( flashlightState.m_quatOrientation, shadowView.angles ); // Convert from Quaternion to QAngle
@@ -5006,19 +3975,6 @@ void CClientShadowMgr::ComputeShadowDepthTextures( const CViewSetup &viewSetup )
 
 		// Render to the shadow depth texture with appropriate view
 		view->UpdateShadowDepthTexture( m_DummyColorTexture, shadowDepthTexture, shadowView );
-
-#ifdef OMOD
-		if ( j <= ( INT_FLASHLIGHT_DEPTHTEXTURE_FALLBACK_LAST - INT_FLASHLIGHT_DEPTHTEXTURE_FALLBACK_FIRST ) )
-		{
-			pRenderContext->SetIntRenderingParameter( INT_FLASHLIGHT_DEPTHTEXTURE_FALLBACK_FIRST + j, int((ITexture*)shadowDepthTexture) );
-
-			FlashlightState_t state = shadowmgr->GetFlashlightState( shadow.m_ShadowHandle );
-
-			state.m_nShadowQuality = state.m_nShadowQuality | ( ( j + 1 ) << 16 );
-
-			shadowmgr->UpdateFlashlightState( shadow.m_ShadowHandle, state );
-		}
-#endif
 
 		// Associate the shadow depth texture and stencil bit with the flashlight for use during scene rendering
 		shadowmgr->SetFlashlightDepthTexture( shadow.m_ShadowHandle, shadowDepthTexture, 0 );
@@ -5044,11 +4000,7 @@ void CClientShadowMgr::ComputeShadowTextures( const CViewSetup &view, int leafCo
 	if ( !m_RenderToTextureActive || (r_shadows.GetInt() == 0) || r_shadows_gamecontrol.GetInt() == 0 )
 		return;
 
-#ifdef OMOD
-	m_bThreaded = ( r_threaded_client_shadow_manager.GetBool() && g_pThreadPool->NumIdleThreads() );
-#else
 	m_bThreaded = false;//( r_threaded_client_shadow_manager.GetBool() && g_pThreadPool->NumIdleThreads() );
-#endif
 
 	MDLCACHE_CRITICAL_SECTION();
 	// First grab all shadow textures we may want to render
@@ -5231,28 +4183,6 @@ bool CClientShadowMgr::IsFlashlightTarget( ClientShadowHandle_t shadowHandle, IC
 							
 	return false;
 }
-
-#ifdef OMOD
-void CClientShadowMgr::SetShadowFromWorldLightsEnabled( bool bEnable )
-{
-	bool bIsShadowingFromWorldLights = IsShadowingFromWorldLights();
-	m_bShadowFromWorldLights = bEnable;
-	if ( bIsShadowingFromWorldLights != IsShadowingFromWorldLights() )
-	{
-		UpdateAllShadows();
-	}
-}
-
-void CClientShadowMgr::SuppressShadowFromWorldLights( bool bSuppress )
-{
-	bool bIsShadowingFromWorldLights = IsShadowingFromWorldLights();
-	m_bSuppressShadowFromWorldLights = bSuppress;
-	if ( bIsShadowingFromWorldLights != IsShadowingFromWorldLights() )
-	{
-		UpdateAllShadows();
-	}
-}
-#endif
 
 //-----------------------------------------------------------------------------
 // A material proxy that resets the base texture to use the rendered shadow

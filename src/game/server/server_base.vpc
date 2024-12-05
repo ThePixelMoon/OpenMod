@@ -212,7 +212,6 @@ $Project
 		$File	"ai_utils.h"
 		$File	"ai_waypoint.cpp"
 		$File	"ai_waypoint.h"
-		$File	"env_cascade_light.cpp"
 		$File	"$SRCDIR\game\shared\ammodef.cpp"
 		$File	"$SRCDIR\game\shared\animation.cpp"
 		$File	"$SRCDIR\game\shared\animation.h"

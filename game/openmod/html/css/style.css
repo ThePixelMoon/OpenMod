@@ -111,7 +111,7 @@ body {
 }
 
 .bottom-btn {
-    position: relative;
+    position: relative; /* Ensure button is the positioning context for the tooltip */
 }
 
 .bottom-btn::after {

@@ -18,7 +18,6 @@
 #include "engine/ishadowmgr.h"
 #include "ivrenderview.h"
 #include "toolframework/itoolentity.h"
-#include "igamesystem.h" // CAutoGameSystem
 
 //-----------------------------------------------------------------------------
 // Forward decls
@@ -98,68 +97,16 @@ public:
 	// Set flashlight light world flag
 	virtual void SetFlashlightLightWorld( ClientShadowHandle_t shadowHandle, bool bLightWorld ) = 0;
 
-#ifdef OMOD
-	// Toggle shadow casting from world light sources
-	virtual void SetShadowFromWorldLightsEnabled( bool bEnable ) = 0;
-
-	virtual void GetFrustumExtents( ClientShadowHandle_t handle, Vector &vecMin, Vector &vecMax ) = 0;
-#endif
-
 	virtual void SetShadowsDisabled( bool bDisabled ) = 0;
 
 	virtual void ComputeShadowDepthTextures( const CViewSetup &pView ) = 0;
 
 };
 
-//-----------------------------------------------------------------------------
-// Purpose: 
-//-----------------------------------------------------------------------------
-class CWorldLights : public CAutoGameSystem
-{
-public:
-	CWorldLights();
-	~CWorldLights() { Clear(); }
-
-	//-------------------------------------------------------------------------
-	// Find the brightest light source at a point
-	//-------------------------------------------------------------------------
-	bool GetBrightestLightSource(const Vector& vecPosition, Vector& vecLightPos, Vector& vecLightBrightness);
-	void FindBrightestLightSourceOld(const Vector& vecPosition, Vector& vecLightPos, Vector& vecLightBrightness, int nCluster);
-#ifdef OMOD
-	void FindBrightestLightSourceNew(const Vector& vecPosition, Vector& vecLightPos, Vector& vecLightBrightness, int nCluster);
-	bool GetCumulativeLightSource(const Vector& vecPosition, Vector& vecLightPos, float flMinBrightnessSqr);
-#endif
-
-	// CAutoGameSystem overrides
-public:
-	virtual bool Init();
-	virtual void LevelInitPreEntity();
-	virtual void LevelShutdownPostEntity() { Clear(); }
-
-private:
-	void Clear();
-
-	int m_nWorldLights;
-	dworldlight_t* m_pWorldLights;
-
-#ifdef OMOD
-	int m_iSunIndex = -1; // The sun's personal index
-
-	struct clusterLightList_t
-	{
-		unsigned short	lightCount;
-		unsigned short	firstLight;
-	};
-
-	CUtlVector<clusterLightList_t>		m_WorldLightsInCluster;
-	CUtlVector<unsigned short>			m_WorldLightsIndexList;
-#endif
-};
 
 //-----------------------------------------------------------------------------
-// Singleton exposure
+// Singleton
 //-----------------------------------------------------------------------------
-extern CWorldLights* g_pWorldLights;
 extern IClientShadowMgr* g_pClientShadowMgr;
 
 #endif // ICLIENTSHADOWMGR_H
