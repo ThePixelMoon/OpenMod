@@ -1,0 +1,31 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models/weapons/v_physcannon/v_physgun_sheet"
+	
+	$detail "models/weapons/v_physcannon/v_physgun_detail"
+	$detailscale 1
+	$detailblendfactor 1.0
+	$detailblendmode 0
+	
+	"$bumpmap" "models/weapons/v_physcannon/v_physgun_normal"
+	
+	"$phong" "1"
+	"$phongtint" "[0.9 0.8 0.7]"
+	"$phongboost" "0.8"
+	"$phongexponent" "6"
+	"$phongfresnelranges" "[0.3 0.6 1]"
+	
+	"$rimlight" "0"
+	
+	"$selfillum" "1"
+	"$selfillumtint" "[0.3 1.8 2.1]" // Default
+
+	Proxies
+	{
+		PlayerWeaponColor
+		{
+			resultVar	$selfillumtint
+		}
+	}
+}
+	

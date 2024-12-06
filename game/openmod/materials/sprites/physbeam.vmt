@@ -1,0 +1,32 @@
+"VertexLitGeneric"
+{
+	"$spriteorientation" "parallel_upright"
+	"$spriteorigin" "[ 0.50 0.50 ]"
+	"$basetexture" "sprites/physbeam1/physbeam_active_white"
+	"$spriterendermode" 5
+	
+	"$ignorez" 0
+	"$additive" 1
+	"$vertexcolor" 1
+	"$vertexalpha" 1
+	"$translucent" "1"
+	"$alphatest"    "1"
+   	"$depthbias" 0.01
+
+	$alpha	0.5
+
+	$model 1
+
+	"$rimlight" "0"
+	
+	"$selfillum" "1"
+	"$selfillumtint" "[0.3 1.8 2.1]" // Default
+
+	Proxies
+	{
+		PlayerWeaponColor
+		{
+			resultVar	$selfillumtint
+		}
+	}
+}
