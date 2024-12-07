@@ -156,10 +156,9 @@ private:
 	hlshadowcontrol_params_t	m_shadow;
 };
 
-#if defined( OMOD ) && defined( CLIENT_DLL )
-ConVar physgun_r("physgun_r", "0", FCVAR_CLIENTDLL | FCVAR_ARCHIVE);
-ConVar physgun_g("physgun_g", "255", FCVAR_CLIENTDLL | FCVAR_ARCHIVE);
-ConVar physgun_b("physgun_b", "255", FCVAR_CLIENTDLL | FCVAR_ARCHIVE);
+#if defined(OMOD) && defined(CLIENT_DLL)
+float fadeSpeed = 0.5f;
+bool fadingOut = true;
 
 class PlayerWeaponColorProxy : public IMaterialProxy
 {
@@ -186,9 +185,48 @@ void PlayerWeaponColorProxy::OnBind(void* pC_BaseEntity)
 {
 	if (m_pResultVar)
 	{
-		float r = physgun_r.GetFloat() / 255.0f;
-		float g = physgun_g.GetFloat() / 255.0f;
-		float b = physgun_b.GetFloat() / 255.0f;
+		float originalRed = 0;
+		float originalGreen = 255;
+		float originalBlue = 0;
+
+		float targetRed = originalRed + 50.0f;
+		float targetGreen = originalGreen + 50.0f;
+		float targetBlue = originalBlue + 50.0f;
+
+		static float red = originalRed, green = originalGreen, blue = originalBlue;
+
+		if (fadingOut) {
+			if (red < targetRed) {
+				red += fadeSpeed;
+			}
+			if (green < targetGreen) {
+				green += fadeSpeed;
+			}
+			if (blue < targetBlue) {
+				blue += fadeSpeed;
+			}
+			if (red >= targetRed && green >= targetGreen && blue >= targetBlue) {
+				fadingOut = false;
+			}
+		}
+		else {
+			if (red > originalRed) {
+				red -= fadeSpeed;
+			}
+			if (green > originalGreen) {
+				green -= fadeSpeed;
+			}
+			if (blue > originalBlue) {
+				blue -= fadeSpeed;
+			}
+			if (red <= originalRed && green <= originalGreen && blue <= originalBlue) {
+				fadingOut = true;
+			}
+		}
+
+		float r = red / 255.0f;
+		float g = green / 255.0f;
+		float b = blue / 255.0f;
 
 		m_pResultVar->SetVecValue(r, g, b);
 	}
@@ -469,16 +507,8 @@ public:
 	void ItemPostFrame( void );
 	virtual bool Holster( CBaseCombatWeapon *pSwitchingTo )
 	{
-#if 0
-		if (glowEffectActive) {
-			glowEffectActive = false;
-			physgun_r.SetValue(originalRed);
-			physgun_g.SetValue(originalGreen);
-			physgun_b.SetValue(originalBlue);
-		}
-#endif
 		EffectDestroy();
-		SoundDestroy();
+//		SoundDestroy();
 		return BaseClass::Holster( pSwitchingTo );
 	}
 
@@ -486,7 +516,7 @@ public:
 	void Drop(const Vector &vecVelocity)
 	{
 		EffectDestroy();
-		SoundDestroy();
+//		SoundDestroy();
 
 #ifndef CLIENT_DLL
 		UTIL_Remove( this );
@@ -525,20 +555,6 @@ public:
 
 	
 private:
-#ifdef OMOD
-	CNetworkVar(float, originalRed);
-	CNetworkVar(float, originalGreen);
-	CNetworkVar(float, originalBlue);
-#if 0
-	float targetRed = originalRed + 25.0f;
-	float targetGreen = originalGreen + 25.0f;
-	float targetBlue = originalBlue + 25.0f;
-	const float fadeSpeed = 1.0f;
-	bool fadingOut = true;
-	bool glowEffectActive = true;
-#endif
-#endif
-
 	CNetworkVar( int, m_active );
 	bool		m_useDown;
 	CNetworkHandle( CBaseEntity, m_hObject );
@@ -580,9 +596,6 @@ BEGIN_NETWORK_TABLE( CWeaponPhysicsGun, DT_WeaponPhysicsGun )
 	RecvPropVector( RECVINFO( m_worldPosition ) ),
 	RecvPropInt( RECVINFO(m_active) ),
 #ifdef OMOD
-	RecvPropFloat( RECVINFO(originalRed) ),
-	RecvPropFloat( RECVINFO(originalGreen) ),
-	RecvPropFloat( RECVINFO(originalBlue) ),
 	// adnan
 	// also receive if we're rotating what we're holding (by pressing use)
 	RecvPropBool( RECVINFO( m_bIsCurrentlyRotating ) ),
@@ -595,10 +608,6 @@ BEGIN_NETWORK_TABLE( CWeaponPhysicsGun, DT_WeaponPhysicsGun )
 	SendPropVector(SENDINFO( m_worldPosition ), -1, SPROP_COORD),
 	SendPropInt( SENDINFO(m_active), 1, SPROP_UNSIGNED ),
 #ifdef OMOD
-	SendPropFloat( SENDINFO(originalRed), -1, SPROP_COORD),
-	SendPropFloat( SENDINFO(originalGreen), -1, SPROP_COORD),
-	SendPropFloat( SENDINFO(originalBlue), -1, SPROP_COORD),
-
 	// adnan
 	// need to seind if we're rotating what we're holding
 	SendPropBool( SENDINFO( m_bIsCurrentlyRotating ) ),
@@ -655,12 +664,6 @@ BEGIN_DATADESC( CWeaponPhysicsGun )
 	// Physptrs can't be saved in embedded classes..
 	DEFINE_PHYSPTR( m_gravCallback.m_controller ),
 
-#ifdef OMOD
-	DEFINE_FIELD( originalRed,				FIELD_FLOAT ),
-	DEFINE_FIELD( originalGreen,			FIELD_FLOAT ),
-	DEFINE_FIELD( originalBlue,				FIELD_FLOAT ),
-#endif
-
 END_DATADESC()
 
 
@@ -677,12 +680,6 @@ CWeaponPhysicsGun::CWeaponPhysicsGun()
 	m_bFiresUnderwater = true;
 	m_bInWeapon1 = false;
 	m_bInWeapon2 = false;
-
-#ifdef OMOD // startup
-	originalRed = cvar->FindVar("physgun_r")->GetFloat();
-	originalGreen = cvar->FindVar("physgun_g")->GetFloat();
-	originalBlue = cvar->FindVar("physgun_b")->GetFloat();
-#endif
 }
 
 
@@ -692,7 +689,7 @@ CWeaponPhysicsGun::CWeaponPhysicsGun()
 void CWeaponPhysicsGun::UpdateOnRemove(void)
 {
 	EffectDestroy();
-	SoundDestroy();
+//	SoundDestroy();
 	BaseClass::UpdateOnRemove();
 }
 
@@ -802,25 +799,15 @@ void CWeaponPhysicsGun::Precache( void )
 	g_physgunBeam = PrecacheModel(PHYSGUN_BEAM_SPRITE);
 	g_physgunGlow = PrecacheModel(PHYSGUN_BEAM_GLOW);
 
-	PrecacheScriptSound( "Weapon_Physgun.Scanning" );
+/*	PrecacheScriptSound("Weapon_Physgun.Scanning");
 	PrecacheScriptSound( "Weapon_Physgun.LockedOn" );
 	PrecacheScriptSound( "Weapon_Physgun.Scanning" );
 	PrecacheScriptSound( "Weapon_Physgun.LightObject" );
-	PrecacheScriptSound( "Weapon_Physgun.HeavyObject" );
+	PrecacheScriptSound( "Weapon_Physgun.HeavyObject" ); */
 }
 
 void CWeaponPhysicsGun::EffectCreate( void )
 {
-#ifdef OMOD
-	originalRed = cvar->FindVar("physgun_r")->GetFloat();
-	originalGreen = cvar->FindVar("physgun_g")->GetFloat();
-	originalBlue = cvar->FindVar("physgun_b")->GetFloat();
-#if 0
-	targetRed = originalRed + 25.0f;
-	targetGreen = originalGreen + 25.0f;
-	targetBlue = originalBlue + 25.0f;
-#endif
-#endif
 	EffectUpdate();
 	m_active = true;
 }
@@ -881,13 +868,13 @@ void CWeaponPhysicsGun::EffectUpdate( void )
 #if defined( GLOWS_ENABLE ) && defined( GAME_DLL )
 		CBaseAnimating* pAnimating = dynamic_cast<CBaseAnimating*>(pObject);
 		if (pAnimating) {
-			pAnimating->SetGlowEffectColor(originalRed, originalGreen, originalBlue);
+			pAnimating->SetGlowEffectColor(0, 255, 0);
 			pAnimating->AddGlowEffect();
 		}
 		else { // try converting it into a different type
 			CBaseProp* pProp = dynamic_cast<CBaseProp*>(pObject);
 			if (pProp) {
-				pProp->SetGlowEffectColor(originalRed, originalGreen, originalBlue);
+				pProp->SetGlowEffectColor(0, 255, 0);
 				pProp->AddGlowEffect();
 			}
 		}
@@ -1170,11 +1157,6 @@ void CWeaponPhysicsGun::EffectDestroy( void )
 #endif
 
 #ifdef CLIENT_DLL
-#ifdef OMOD
-	physgun_r.SetValue(originalRed);
-	physgun_g.SetValue(originalGreen);
-	physgun_b.SetValue(originalBlue);
-#endif
 	gHUD.m_bSkipClear = false;
 #endif
 
@@ -1212,50 +1194,71 @@ void CWeaponPhysicsGun::EffectDestroy( void )
 
 void CWeaponPhysicsGun::UpdateObject( void )
 {
-	CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
-	Assert( pPlayer );
+    CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
+    Assert( pPlayer );
 
-	CBaseEntity *pObject = m_hObject;
-	if ( !pObject )
-		return;
+    CBaseEntity *pObject = m_hObject;
+    if ( !pObject )
+        return;
 
-	if ( !m_gravCallback.UpdateObject( pPlayer, pObject ) )
-	{
-		DetachObject();
-		return;
-	}
+    if ( pObject->IsNPC() )
+    {
+		Vector forward;
+		AngleVectors(pPlayer->EyeAngles(), &forward);
+		Vector desiredPosition = pPlayer->Weapon_ShootPosition() + forward * m_distance;
+		pObject->SetAbsOrigin(desiredPosition);
+		//pObject->SetAbsVelocity(vec3_origin);
+    }
+    else
+    {
+        if ( !m_gravCallback.UpdateObject( pPlayer, pObject ) )
+        {
+            DetachObject();
+            return;
+        }
+    }
 }
 
 void CWeaponPhysicsGun::DetachObject( void )
 {
-	if ( m_hObject )
-	{
+    if ( m_hObject )
+    {
+        if ( m_hObject->IsNPC() )
+        {
+			m_hObject->SetAbsVelocity(vec3_origin);
+        }
+        else
+        {
 #ifndef CLIENT_DLL
-		CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
-		Pickup_OnPhysGunDrop( m_hObject, pOwner, DROPPED_BY_CANNON );
+            CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
+            Pickup_OnPhysGunDrop( m_hObject, pOwner, DROPPED_BY_CANNON );
 #endif
 
-		IPhysicsObject *pList[VPHYSICS_MAX_OBJECT_LIST_COUNT];
-		int count = m_hObject->VPhysicsGetObjectList( pList, ARRAYSIZE(pList) );
-		for ( int i = 0; i < count; i++ )
-		{
-			PhysClearGameFlags( pList[i], FVPHYSICS_PLAYER_HELD );
-		}
-		m_gravCallback.DetachEntity();
-		m_hObject = NULL;
-		m_physicsBone = 0;
-	}
+            IPhysicsObject *pList[VPHYSICS_MAX_OBJECT_LIST_COUNT];
+            int count = m_hObject->VPhysicsGetObjectList( pList, ARRAYSIZE(pList) );
+            for ( int i = 0; i < count; i++ )
+            {
+                PhysClearGameFlags( pList[i], FVPHYSICS_PLAYER_HELD );
+            }
+
+            m_gravCallback.DetachEntity();
+        }
+        m_hObject = NULL;
+        m_physicsBone = 0;
+    }
 }
 
-void CWeaponPhysicsGun::AttachObject( CBaseEntity *pObject, IPhysicsObject *pPhysics, short physicsbone, const Vector& start, const Vector &end, float distance )
+void CWeaponPhysicsGun::AttachObject(CBaseEntity* pObject, IPhysicsObject* pPhysics, short physicsbone, const Vector& start, const Vector& end, float distance)
 {
-	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
-	if( !pOwner )
+	CBasePlayer* pOwner = ToBasePlayer(GetOwner());
+	if (!pOwner)
 		return;
 	m_hObject = pObject;
 	m_physicsBone = physicsbone;
 	m_useDown = false;
-	if ( pPhysics && pObject->GetMoveType() == MOVETYPE_VPHYSICS )
+
+	const char* className = pObject->GetClassname();
+	if (pPhysics && (pObject->GetMoveType() == MOVETYPE_VPHYSICS || pObject->IsNPC() && strcmp(className, "npc_turret_floor") != 1))
 	{
 		m_distance = distance;
 
@@ -1295,12 +1298,12 @@ void CWeaponPhysicsGun::PrimaryAttack( void )
 	{
 		SendWeaponAnim( ACT_VM_PRIMARYATTACK );
 		EffectCreate();
-		SoundCreate();
+//		SoundCreate();
 	}
 	else
 	{
 		EffectUpdate();
-		SoundUpdate();
+//		SoundUpdate();
 	}
 }
 
@@ -1377,7 +1380,7 @@ int CWeaponPhysicsGun::DrawModel( int flags )
 		DrawBeamQuadratic( points[0], points[1], points[2], pObject ? 13/3.0f : 13/5.0f, color, -scrollOffset );
 
 		IMaterial *pMaterial = materials->FindMaterial( PHYSGUN_BEAM_GLOW, TEXTURE_GROUP_CLIENT_EFFECTS );
-		color32 clr = { originalRed, originalGreen, originalBlue, 255 };
+		color32 clr = { 0, 255, 0, 255 };
 
 		float scale = random->RandomFloat( 3, 5 ) * ( pObject ? 2 : 2 );
 
@@ -1437,43 +1440,6 @@ void CWeaponPhysicsGun::ViewModelDrawn( C_BaseViewModel *pBaseViewModel )
 			points[2] = tr.endpos;
 	} else
 		points[2] = tr.endpos;
-
-#if 0 // we are not ready yet..
-	if (glowEffectActive) {
-		if (fadingOut) {
-			if (physgun_r.GetFloat() < targetRed) {
-				physgun_r.SetValue(physgun_r.GetFloat() + fadeSpeed);
-			}
-			if (physgun_g.GetFloat() < targetGreen) {
-				physgun_g.SetValue(physgun_g.GetFloat() + fadeSpeed);
-			}
-			if (physgun_b.GetFloat() < targetBlue) {
-				physgun_b.SetValue(physgun_b.GetFloat() + fadeSpeed);
-			}
-			if (physgun_r.GetFloat() >= targetRed &&
-				physgun_g.GetFloat() >= targetGreen &&
-				physgun_b.GetFloat() >= targetBlue) {
-				fadingOut = false;
-			}
-		}
-		else {
-			if (physgun_r.GetFloat() > originalRed) {
-				physgun_r.SetValue(physgun_r.GetFloat() - fadeSpeed);
-			}
-			if (physgun_g.GetFloat() > originalGreen) {
-				physgun_g.SetValue(physgun_g.GetFloat() - fadeSpeed);
-			}
-			if (physgun_b.GetFloat() > originalBlue) {
-				physgun_b.SetValue(physgun_b.GetFloat() - fadeSpeed);
-			}
-			if (physgun_r.GetFloat() <= originalRed &&
-				physgun_g.GetFloat() <= originalGreen &&
-				physgun_b.GetFloat() <= originalBlue) {
-				fadingOut = true;
-			}
-		}
-	}
-#endif
 #endif
 
 	Vector forward, right, up;
@@ -1507,8 +1473,8 @@ void CWeaponPhysicsGun::ViewModelDrawn( C_BaseViewModel *pBaseViewModel )
 
 	IMaterial *pMaterial = materials->FindMaterial( PHYSGUN_BEAM_GLOW, TEXTURE_GROUP_CLIENT_EFFECTS );
 
-	color32 clr = { originalRed, originalGreen, originalBlue, 255 };
-	color32 clr2 = { originalRed, originalGreen, originalBlue, 255 }; // because clr is being rendered
+	color32 clr  = { 0, 255, 0, 255 };
+	color32 clr2 = { 0, 255, 0, 255 }; // because clr is taken
 
 	float scale = random->RandomFloat( 3, 5 )  * ( pObject ? 2 : 2 );
 
@@ -1527,7 +1493,7 @@ void CWeaponPhysicsGun::ViewModelDrawn( C_BaseViewModel *pBaseViewModel )
 
 	IMaterial* pMat1 = materials->FindMaterial("sprites/glow04_noz", TEXTURE_GROUP_CLIENT_EFFECTS, m_active);
 	Vector color1;
-	color1.Init(originalRed, originalGreen, originalBlue);
+	color1.Init(0, 255, 0);
 
 	DrawSprite(points[0], scale1, scale1, clr);
 	pRenderContext->Bind(pMat1);
@@ -1574,11 +1540,6 @@ void CWeaponPhysicsGun::ItemPostFrame( void )
 		return;
 
 #ifdef OMOD
-#ifdef CLIENT_DLL
-	originalRed = cvar->FindVar("physgun_r")->GetFloat();
-	originalGreen = cvar->FindVar("physgun_g")->GetFloat();
-	originalBlue = cvar->FindVar("physgun_b")->GetFloat();
-#endif
 
 	// adnan
 	// this is where we check if we're orbiting the object
@@ -1629,7 +1590,7 @@ void CWeaponPhysicsGun::ItemPostFrame( void )
 			if ( m_active )
 			{
 				EffectDestroy();
-				SoundDestroy();
+//				SoundDestroy();
 			}
 			WeaponIdle( );
 			return;
@@ -1641,7 +1602,7 @@ void CWeaponPhysicsGun::ItemPostFrame( void )
 		if ( m_active )
 		{
 			EffectDestroy();
-			SoundDestroy();
+//			SoundDestroy();
 		}
 		WeaponIdle( );
 		return;

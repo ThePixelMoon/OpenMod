@@ -131,6 +131,9 @@
 #include "c_team.h"
 #include "cstrike15/fatdemo.h"
 #endif
+#ifdef OMOD
+#include <vgui_controls/MessageBox.h>
+#endif
 
 #ifdef GAMEUI_UISYSTEM2_ENABLED
 #include "gameui.h"
@@ -241,6 +244,7 @@ extern void ProcessPortalTeleportations(void);
 #ifdef _WIN32
 #pragma warning( disable : 4005 )
 #include <Windows.h>
+#undef MessageBox
 #include <dwmapi.h>
 #pragma comment( lib, "Dwmapi.lib" )
 #endif
@@ -1435,6 +1439,11 @@ void CHLClient::PostInit()
 #endif
 
 	g_ClientVirtualReality.StartupComplete();
+
+#if !defined( DEBUG ) && defined( OMOD )
+	vgui::MessageBox* pMessageBox = new vgui::MessageBox( "OpenMod", "hi, you're playing OpenMod or a modpack/build based off it.\nthanks for playing :)");
+	pMessageBox->DoModal();
+#endif
 
 #ifdef HL1MP_CLIENT_DLL
 	if ( s_cl_load_hl1_content.GetBool() && steamapicontext && steamapicontext->SteamApps() )
