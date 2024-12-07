@@ -1258,7 +1258,8 @@ void CWeaponPhysicsGun::AttachObject(CBaseEntity* pObject, IPhysicsObject* pPhys
 	m_useDown = false;
 
 	const char* className = pObject->GetClassname();
-	if (pPhysics && (pObject->GetMoveType() == MOVETYPE_VPHYSICS || pObject->IsNPC() && strcmp(className, "npc_turret_floor") != 1))
+	DevMsg("grabbing: %s\n", className);
+	if (pPhysics && (pObject->GetMoveType() == MOVETYPE_VPHYSICS || (pObject->IsNPC() && strcmp(className, "npc_turret_floor") != 0)))
 	{
 		m_distance = distance;
 
@@ -1309,6 +1310,7 @@ void CWeaponPhysicsGun::PrimaryAttack( void )
 
 void CWeaponPhysicsGun::SecondaryAttack( void )
 {
+	SendWeaponAnim( ACT_VM_SECONDARYATTACK );
 	return;
 }
 

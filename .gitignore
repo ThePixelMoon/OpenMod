@@ -72,3 +72,4 @@ mapsrc/*.prt
 mapsrc/*.vmx
 
 addons/
+game/openmod/ep1_gamestats.dat

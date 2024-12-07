@@ -6950,8 +6950,8 @@ bool CBasePlayer::ShouldAutoaim( void )
 	if ( gpGlobals->maxClients > 1 )
 		return false;
 
-	// autoaiming is only for easy and medium skill
-	return ( IsX360() || !g_pGameRules->IsSkillLevel(SKILL_HARD) );
+	// autoaiming yes yes yes
+	return true;
 }
 
 //-----------------------------------------------------------------------------

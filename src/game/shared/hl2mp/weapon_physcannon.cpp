@@ -3375,7 +3375,7 @@ void CWeaponPhysCannon::OpenElements( void )
 
 	DoEffect( EFFECT_READY );
 
-#ifdef CLIENT
+#ifdef CLIENT_DLL
 	// Element prediction 
 	m_ElementParameter.InitFromCurrent( 1.0f, 0.2f, INTERP_SPLINE );
 	m_bOldOpen = true;
