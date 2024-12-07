@@ -86,6 +86,13 @@ public:
 
 	virtual void PostThink( void );
 
+#ifdef OMOD
+	CNetworkVar(float, m_flStartCharge);
+	CNetworkVar(float, m_flAmmoStartCharge);
+	CNetworkVar(float, m_flPlayAftershock);
+	CNetworkVar(float, m_flNextAmmoBurn);
+#endif
+
 private:
 	
 	C_HL2MP_Player( const C_HL2MP_Player & );

@@ -4,13 +4,16 @@
 //
 //=====================================================================================//
 
-
-
 #include "cbase.h"
-// this file contains the definitions for the message ID constants (eg ADVISOR_MSG_START_BEAM etc)
-#include "npc_advisor_shared.h"
-
-#if NPC_ADVISOR_HAS_BEHAVIOR
+// Message ID constants used for communciation between client and server.
+enum
+{
+	ADVISOR_MSG_START_BEAM = 10,
+	ADVISOR_MSG_STOP_BEAM,
+	ADVISOR_MSG_STOP_ALL_BEAMS,
+	ADVISOR_MSG_START_ELIGHT,
+	ADVISOR_MSG_STOP_ELIGHT,
+};
 
 #include "particles_simple.h"
 #include "citadel_effects_shared.h"
@@ -240,9 +243,6 @@ void C_NPC_Advisor::StopElight()
 		el->die = gpGlobals->curtime;
 	}
 }
-
-
-#endif
 
 /******************************************************
  * Tenser, said the Tensor.                           *

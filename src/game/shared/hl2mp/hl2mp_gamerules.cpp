@@ -1243,6 +1243,27 @@ CAmmoDef *GetAmmoDef()
 		def.AddAmmoType("CombineCannon",	DMG_BULLET,					TRACER_LINE,			"sk_npc_dmg_gunship_to_plr", "sk_npc_dmg_gunship", NULL, 1.5 * 750 * 12, 0 ); // hit like a 1.5kg weight at 750 ft/s
 		def.AddAmmoType("AirboatGun",		DMG_AIRBOAT,				TRACER_LINE,			"sk_plr_dmg_airboat",		"sk_npc_dmg_airboat",		NULL,					BULLET_IMPULSE(10, 600), 0 );
 
+#ifdef OMOD
+		/*hls*/
+		def.AddAmmoType("9mmRound", DMG_BULLET | DMG_NEVERGIB, TRACER_LINE, "sk_plr_dmg_9mm_bullet", "sk_npc_dmg_9mm_bullet", "sk_max_9mm_bullet", BULLET_IMPULSE(500, 1325), 0);
+		def.AddAmmoType("357Round", DMG_BULLET | DMG_NEVERGIB, TRACER_NONE, "sk_plr_dmg_357_bullet", NULL, "sk_max_357_bullet", BULLET_IMPULSE(650, 6000), 0);
+		def.AddAmmoType("MP5_Grenade", DMG_BURN | DMG_BLAST, TRACER_NONE, "sk_plr_dmg_mp5_grenade", NULL, "sk_max_mp5_grenade", 0, 0);
+		def.AddAmmoType("RPG_Rocket", DMG_BURN, TRACER_NONE, 0, 180, 3, 0, 0);
+		def.AddAmmoType("Uranium", DMG_ENERGYBEAM, TRACER_NONE, NULL, NULL, "sk_max_uranium", 0, 0);
+		def.AddAmmoType("Hornet", DMG_BULLET, TRACER_NONE, "sk_plr_dmg_hornet", "sk_npc_dmg_hornet", "sk_max_hornet", BULLET_IMPULSE(100, 1200), 0);
+		def.AddAmmoType("Snark", DMG_SLASH, TRACER_NONE, "sk_snark_dmg_bite", NULL, "sk_max_snark", 0, 0);
+		def.AddAmmoType("TripMine", DMG_BURN | DMG_BLAST, TRACER_NONE, "sk_plr_dmg_tripmine", NULL, "sk_max_tripmine", 0, 0);
+		def.AddAmmoType("Satchel", DMG_BURN | DMG_BLAST, TRACER_NONE, "sk_plr_dmg_satchel", NULL, "sk_max_satchel", 0, 0);
+		def.AddAmmoType("12mmRound", DMG_BULLET | DMG_NEVERGIB, TRACER_LINE, NULL, "sk_npc_dmg_12mm_bullet", NULL, BULLET_IMPULSE(300, 1200), 0);
+		def.AddAmmoType("BuckshotHL1", DMG_BULLET | DMG_BUCKSHOT, TRACER_LINE, "sk_plr_dmg_buckshot", NULL, "sk_max_buckshot", BULLET_IMPULSE(200, 1200), 0);
+		def.AddAmmoType("XBowBoltHL1", DMG_BULLET | DMG_NEVERGIB, TRACER_LINE, "sk_plr_dmg_xbow_bolt_plr", NULL, "sk_max_xbow_bolt", BULLET_IMPULSE(200, 1200), 0);
+		def.AddAmmoType("GrenadeHL1", DMG_BURN | DMG_BLAST, TRACER_NONE, "sk_plr_dmg_grenade", NULL, "sk_max_grenade", 0, 0);
+
+		def.AddAmmoType("Hopwire", DMG_BLAST, TRACER_NONE, "sk_plr_dmg_grenade", "sk_npc_dmg_grenade", "sk_max_hopwire", 0, 0);
+		def.AddAmmoType("CombineHeavyCannon", DMG_BULLET, TRACER_LINE, 40, 40, NULL, 10 * 750 * 12, AMMO_FORCE_DROP_IF_CARRIED); // hit like a 10 kg weight at 750 ft/s
+		def.AddAmmoType("ammo_proto1", DMG_BULLET, TRACER_LINE, 0, 0, 10, 0, 0);
+#endif
+
 		//=====================================================================
 		// STRIDER MINIGUN DAMAGE - Pull up a chair and I'll tell you a tale.
 		//
@@ -2567,6 +2588,434 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HACKED_ROLLERMINE, CLASS_PLAYER_ALLY, D_LI, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HACKED_ROLLERMINE, CLASS_PLAYER_ALLY_VITAL, D_LI, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HACKED_ROLLERMINE, CLASS_HACKED_ROLLERMINE, D_LI, 0);
+
+#ifdef OMOD
+	// ------------------------------------------------------------
+	//	> CLASS_HUMAN_PASSIVE
+	// ------------------------------------------------------------
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_NONE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_PLAYER, D_LI, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_HUMAN_PASSIVE, D_LI, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_PLAYER_ALLY, D_LI, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_ALIEN_PREY, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_ALIEN_MILITARY, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_ALIEN_MONSTER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_ALIEN_PREDATOR, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_HUMAN_MILITARY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_MACHINE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_ALIEN_BIOWEAPON, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_PLAYER_BIOWEAPON, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_INSECT, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_ANTLION, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_BARNACLE, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_BULLSEYE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_CITIZEN_PASSIVE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_CITIZEN_REBEL, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_COMBINE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_COMBINE_GUNSHIP, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_COMBINE_HUNTER, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_CONSCRIPT, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_FLARE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_HEADCRAB, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_MANHACK, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_METROPOLICE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_MILITARY, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_MISSILE, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_SCANNER, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_STALKER, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_VORTIGAUNT, D_LI, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_ZOMBIE, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_PROTOSNIPER, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_EARTH_FAUNA, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_PLAYER_ALLY_VITAL, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_PASSIVE, CLASS_HACKED_ROLLERMINE, D_NU, 0);
+
+
+	// ------------------------------------------------------------
+	//	> CLASS_ALIEN_PREY
+	// ------------------------------------------------------------
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_NONE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_PLAYER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_PLAYER_ALLY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_HUMAN_PASSIVE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_ALIEN_PREY, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_ALIEN_MILITARY, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_ALIEN_MONSTER, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_ALIEN_PREDATOR, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_HUMAN_MILITARY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_MACHINE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_ALIEN_BIOWEAPON, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_PLAYER_BIOWEAPON, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_INSECT, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_NONE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_PLAYER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_ANTLION, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_BARNACLE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_BULLSEYE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_CITIZEN_PASSIVE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_CITIZEN_REBEL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_COMBINE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_COMBINE_GUNSHIP, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_COMBINE_HUNTER, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_CONSCRIPT, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_FLARE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_HEADCRAB, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_MANHACK, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_METROPOLICE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_MILITARY, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_MISSILE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_SCANNER, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_STALKER, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_VORTIGAUNT, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_ZOMBIE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_PROTOSNIPER, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_EARTH_FAUNA, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_PLAYER_ALLY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_PLAYER_ALLY_VITAL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREY, CLASS_HACKED_ROLLERMINE, D_FR, 0);
+
+	// ------------------------------------------------------------
+	//	> CLASS_ALIEN_MILITARY
+	// ------------------------------------------------------------
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_NONE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_PLAYER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_PLAYER_ALLY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_HUMAN_PASSIVE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_ALIEN_PREY, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_ALIEN_MILITARY, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_ALIEN_MONSTER, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_ALIEN_PREDATOR, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_HUMAN_MILITARY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_MACHINE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_ALIEN_BIOWEAPON, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_PLAYER_BIOWEAPON, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_INSECT, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_NONE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_PLAYER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_ANTLION, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_BARNACLE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_BULLSEYE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_CITIZEN_PASSIVE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_CITIZEN_REBEL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_COMBINE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_COMBINE_GUNSHIP, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_COMBINE_HUNTER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_CONSCRIPT, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_FLARE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_HEADCRAB, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_MANHACK, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_METROPOLICE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_MILITARY, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_MISSILE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_SCANNER, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_STALKER, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_VORTIGAUNT, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_ZOMBIE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_PROTOSNIPER, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_EARTH_FAUNA, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_PLAYER_ALLY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_PLAYER_ALLY_VITAL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MILITARY, CLASS_HACKED_ROLLERMINE, D_HT, 0);
+
+	// ------------------------------------------------------------
+	//	> CLASS_ALIEN_MONSTER
+	// ------------------------------------------------------------
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_NONE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_PLAYER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_PLAYER_ALLY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_HUMAN_PASSIVE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_ALIEN_PREY, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_ALIEN_MILITARY, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_ALIEN_MONSTER, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_ALIEN_PREDATOR, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_HUMAN_MILITARY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_MACHINE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_ALIEN_BIOWEAPON, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_PLAYER_BIOWEAPON, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_INSECT, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_NONE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_PLAYER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_ANTLION, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_BARNACLE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_BULLSEYE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_CITIZEN_PASSIVE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_CITIZEN_REBEL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_COMBINE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_COMBINE_GUNSHIP, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_COMBINE_HUNTER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_CONSCRIPT, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_FLARE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_HEADCRAB, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_MANHACK, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_METROPOLICE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_MILITARY, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_MISSILE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_SCANNER, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_STALKER, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_VORTIGAUNT, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_ZOMBIE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_PROTOSNIPER, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_EARTH_FAUNA, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_PLAYER_ALLY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_PLAYER_ALLY_VITAL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_MONSTER, CLASS_HACKED_ROLLERMINE, D_HT, 0);
+
+	// ------------------------------------------------------------
+	//	> CLASS_ALIEN_PREDATOR
+	// ------------------------------------------------------------
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_NONE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_PLAYER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_PLAYER_ALLY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_HUMAN_PASSIVE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_ALIEN_PREY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_ALIEN_MILITARY, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_ALIEN_MONSTER, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_ALIEN_PREDATOR, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_HUMAN_MILITARY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_MACHINE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_ALIEN_BIOWEAPON, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_PLAYER_BIOWEAPON, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_INSECT, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_NONE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_PLAYER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_ANTLION, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_BARNACLE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_BULLSEYE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_CITIZEN_PASSIVE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_CITIZEN_REBEL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_COMBINE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_COMBINE_GUNSHIP, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_COMBINE_HUNTER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_CONSCRIPT, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_FLARE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_HEADCRAB, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_MANHACK, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_METROPOLICE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_MILITARY, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_MISSILE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_SCANNER, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_STALKER, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_VORTIGAUNT, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_ZOMBIE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_PROTOSNIPER, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_EARTH_FAUNA, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_PLAYER_ALLY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_PLAYER_ALLY_VITAL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_PREDATOR, CLASS_HACKED_ROLLERMINE, D_HT, 0);
+
+	// ------------------------------------------------------------
+	//	> CLASS_HUMAN_MILITARY
+	// ------------------------------------------------------------
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_NONE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_PLAYER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_PLAYER_ALLY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_HUMAN_PASSIVE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_ALIEN_PREY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_ALIEN_MILITARY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_ALIEN_MONSTER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_ALIEN_PREDATOR, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_HUMAN_MILITARY, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_MACHINE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_ALIEN_BIOWEAPON, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_PLAYER_BIOWEAPON, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_INSECT, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_NONE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_PLAYER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_ANTLION, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_BARNACLE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_BULLSEYE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_CITIZEN_PASSIVE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_CITIZEN_REBEL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_COMBINE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_COMBINE_GUNSHIP, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_COMBINE_HUNTER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_CONSCRIPT, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_FLARE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_HEADCRAB, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_MANHACK, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_METROPOLICE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_MILITARY, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_MISSILE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_SCANNER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_STALKER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_VORTIGAUNT, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_ZOMBIE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_PROTOSNIPER, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_EARTH_FAUNA, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_PLAYER_ALLY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_PLAYER_ALLY_VITAL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HUMAN_MILITARY, CLASS_HACKED_ROLLERMINE, D_HT, 0);
+
+	// ------------------------------------------------------------
+	//	> CLASS_MACHINE
+	// ------------------------------------------------------------
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_NONE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_MACHINE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_PLAYER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_HUMAN_PASSIVE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_HUMAN_MILITARY, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_ALIEN_MILITARY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_ALIEN_MONSTER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_ALIEN_PREY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_ALIEN_PREDATOR, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_PLAYER_ALLY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_ALIEN_BIOWEAPON, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_PLAYER_BIOWEAPON, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_INSECT, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_NONE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_PLAYER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_ANTLION, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_BARNACLE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_BULLSEYE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_CITIZEN_PASSIVE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_CITIZEN_REBEL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_COMBINE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_COMBINE_GUNSHIP, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_COMBINE_HUNTER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_CONSCRIPT, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_FLARE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_HEADCRAB, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_MANHACK, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_METROPOLICE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_MILITARY, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_MISSILE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_SCANNER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_STALKER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_VORTIGAUNT, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_ZOMBIE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_PROTOSNIPER, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_EARTH_FAUNA, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_PLAYER_ALLY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_PLAYER_ALLY_VITAL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MACHINE, CLASS_HACKED_ROLLERMINE, D_HT, 0);
+
+	// ------------------------------------------------------------
+	//	> CLASS_ALIEN_BIOWEAPON
+	// ------------------------------------------------------------
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_NONE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_MACHINE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_PLAYER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_HUMAN_PASSIVE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_HUMAN_MILITARY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_ALIEN_MILITARY, D_LI, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_ALIEN_MONSTER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_ALIEN_PREY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_ALIEN_PREDATOR, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_PLAYER_ALLY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_ALIEN_BIOWEAPON, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_PLAYER_BIOWEAPON, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_INSECT, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_NONE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_PLAYER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_ANTLION, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_BARNACLE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_BULLSEYE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_CITIZEN_PASSIVE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_CITIZEN_REBEL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_COMBINE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_COMBINE_GUNSHIP, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_COMBINE_HUNTER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_CONSCRIPT, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_FLARE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_HEADCRAB, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_MANHACK, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_METROPOLICE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_MILITARY, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_MISSILE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_SCANNER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_STALKER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_VORTIGAUNT, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_ZOMBIE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_PROTOSNIPER, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_EARTH_FAUNA, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_PLAYER_ALLY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_PLAYER_ALLY_VITAL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ALIEN_BIOWEAPON, CLASS_HACKED_ROLLERMINE, D_HT, 0);
+
+	// ------------------------------------------------------------
+	//	> CLASS_PLAYER_BIOWEAPON
+	// ------------------------------------------------------------
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_NONE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_MACHINE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_PLAYER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_HUMAN_PASSIVE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_HUMAN_MILITARY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_ALIEN_MILITARY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_ALIEN_MONSTER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_ALIEN_PREY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_ALIEN_PREDATOR, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_PLAYER_ALLY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_ALIEN_BIOWEAPON, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_PLAYER_BIOWEAPON, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_INSECT, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_NONE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_PLAYER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_ANTLION, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_BARNACLE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_BULLSEYE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_CITIZEN_PASSIVE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_CITIZEN_REBEL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_COMBINE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_COMBINE_GUNSHIP, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_COMBINE_HUNTER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_CONSCRIPT, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_FLARE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_HEADCRAB, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_MANHACK, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_METROPOLICE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_MILITARY, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_MISSILE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_SCANNER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_STALKER, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_VORTIGAUNT, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_ZOMBIE, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_PROTOSNIPER, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_EARTH_FAUNA, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_PLAYER_ALLY, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_PLAYER_ALLY_VITAL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_BIOWEAPON, CLASS_HACKED_ROLLERMINE, D_HT, 0);
+
+
+	// ------------------------------------------------------------
+	//	> CLASS_INSECT
+	// ------------------------------------------------------------
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_NONE, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_MACHINE, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_PLAYER, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_HUMAN_PASSIVE, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_HUMAN_MILITARY, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_ALIEN_MILITARY, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_ALIEN_MONSTER, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_ALIEN_PREY, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_ALIEN_PREDATOR, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_PLAYER_ALLY, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_ALIEN_BIOWEAPON, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_PLAYER_BIOWEAPON, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_INSECT, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_ANTLION, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_BARNACLE, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_BULLSEYE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_CITIZEN_PASSIVE, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_CITIZEN_REBEL, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_COMBINE, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_COMBINE_GUNSHIP, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_COMBINE_HUNTER, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_CONSCRIPT, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_FLARE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_HEADCRAB, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_MANHACK, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_METROPOLICE, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_MILITARY, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_MISSILE, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_SCANNER, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_STALKER, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_VORTIGAUNT, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_ZOMBIE, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_PROTOSNIPER, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_EARTH_FAUNA, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_PLAYER_ALLY_VITAL, D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_INSECT, CLASS_HACKED_ROLLERMINE, D_FR, 0);
+#endif
 }
 
 #endif

@@ -75,6 +75,14 @@ private:
 
 
 friend class CHL2GameMovement;
+
+#ifdef OMOD
+CNetworkVar(float, m_flStartCharge);
+CNetworkVar(float, m_flAmmoStartCharge);
+CNetworkVar(float, m_flPlayAftershock);
+CNetworkVar(float, m_flNextAmmoBurn);
+#endif
+
 };
 
 

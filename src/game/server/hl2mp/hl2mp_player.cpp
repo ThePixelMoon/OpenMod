@@ -96,7 +96,13 @@ IMPLEMENT_SERVERCLASS_ST(CHL2MP_Player, DT_HL2MP_Player)
 	SendPropEHandle( SENDINFO( m_hRagdoll ) ),
 	SendPropInt( SENDINFO( m_iSpawnInterpCounter), 4 ),
 	SendPropInt( SENDINFO( m_iPlayerSoundType), 3 ),
-	
+#ifdef OMOD
+	SendPropFloat(SENDINFO(m_flStartCharge)),
+	SendPropFloat(SENDINFO(m_flAmmoStartCharge)),
+	SendPropFloat(SENDINFO(m_flPlayAftershock)),
+	SendPropFloat(SENDINFO(m_flNextAmmoBurn)),
+#endif
+
 	SendPropExclude( "DT_BaseAnimating", "m_flPoseParameter" ),
 	SendPropExclude( "DT_BaseFlex", "m_viewtarget" ),
 
