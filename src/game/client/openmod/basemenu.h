@@ -22,26 +22,6 @@ namespace vgui
 {
 	class Panel;
 }
-
-//-----------------------------------------------------------------------------
-// Purpose: 
-//-----------------------------------------------------------------------------
-class CMapLoadBG : public vgui::EditablePanel
-{
-	DECLARE_CLASS_SIMPLE(CMapLoadBG, vgui::EditablePanel);
-
-public:
-	CMapLoadBG(char const* panelName);
-	~CMapLoadBG();
-
-	void SetEnable( bool enabled );
-
-protected:
-	void ApplySchemeSettings(vgui::IScheme* pScheme);
-
-private:
-	vgui::HTML *HHPanel;
-};
  
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -87,16 +67,5 @@ extern RootPanel *guiroot;
 extern IOverrideInterface *OverrideUI;
 
 void OverrideRootUI(void);
-
-// spawnmenu
-class SMLPanel
-{
-public:
-	virtual void		Create(vgui::VPANEL parent) = 0;
-	virtual void		Destroy(void) = 0;
-	virtual void		Activate(void) = 0;
-};
-
-extern SMLPanel* smlmenu;
 
 #endif

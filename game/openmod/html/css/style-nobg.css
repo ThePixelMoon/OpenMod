@@ -47,6 +47,7 @@ body {
     height: 6vh;
 }
 
+
 .quit-btn {
     grid-column: 64 / 64;
 }
@@ -60,4 +61,8 @@ body {
 
 .top-btn:hover {
     background: rgba(255, 255, 255, 0.5);
+}
+
+button i {
+    font-size: 3.5vh;
 }

@@ -60,11 +60,6 @@ extern ConVar replay_rendersetting_renderglow;
 #include "econ_item_view.h"
 #endif
 
-#ifdef OMOD
-#include "GameUI/IGameUI.h"
-#include "basemenu.h"
-#endif
-
 #ifdef LUA_SDK
 #include "luamanager.h"
 #include "lbaseentity_shared.h"
@@ -89,10 +84,6 @@ class CHudWeaponSelection;
 class CHudChat;
 class CHudVote;
 
-#ifdef OMOD
-static CDllDemandLoader g_GameUI( "GameUI" );
-#endif
-
 static vgui::HContext s_hVGuiContext = DEFAULT_VGUI_CONTEXT;
 
 ConVar cl_drawhud( "cl_drawhud", "1", FCVAR_CHEAT, "Enable the rendering of the hud" );
@@ -105,10 +96,6 @@ extern ConVar voice_modenable;
 
 extern bool IsInCommentaryMode( void );
 extern const char* GetWearLocalizationString( float flWear );
-
-#ifdef OMOD
-CMapLoadBG *pPanelBg;
-#endif
 
 CON_COMMAND( cl_reload_localization_files, "Reloads all localization files" )
 {
@@ -324,10 +311,6 @@ ClientModeShared::ClientModeShared()
 	m_flReplayStartRecordTime = 0.0f;
 	m_flReplayStopRecordTime = 0.0f;
 #endif
-
-#ifdef OMOD
-	pPanelBg = NULL;
-#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -426,22 +409,6 @@ void ClientModeShared::Init()
 
 	HOOK_MESSAGE( VGUIMenu );
 	HOOK_MESSAGE( Rumble );
-
-#ifdef OMOD
-	CreateInterfaceFn gameUIFactory = g_GameUI.GetFactory();
-	if (gameUIFactory)
-	{
-		IGameUI* pGameUI = (IGameUI*)gameUIFactory(GAMEUI_INTERFACE_VERSION, NULL);
-		if (pGameUI)
-		{
-			pPanelBg = new CMapLoadBG("Background");
-			pPanelBg->InvalidateLayout(false, true);
-			pPanelBg->SetVisible(false);
-			pPanelBg->MakePopup(false);
-			pGameUI->SetLoadingBackgroundDialog(pPanelBg->GetVPanel());
-		}
-	}
-#endif
 }
 
 
@@ -1011,10 +978,6 @@ void ClientModeShared::StartMessageMode( int iMessageModeType )
 //-----------------------------------------------------------------------------
 void ClientModeShared::LevelInit( const char *newmap )
 {
-#ifdef OMOD
-	pPanelBg->SetEnable( true );
-#endif
-
 	m_pViewport->GetAnimationController()->StartAnimationSequence("LevelInit");
 
 	// Tell the Chat Interface

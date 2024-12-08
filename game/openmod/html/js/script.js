@@ -31,3 +31,27 @@ function togglevisible(show) {
 function openPopup(url) {
   alert(`cmd:open "${url}"`);
 }
+
+const playPanel = document.querySelector('.play-panel');
+const newsPanel = document.querySelector('.news-panel');
+const bottomButtons = document.querySelector('.bottom-buttons');
+
+playPanel.style.transition = 'opacity 0.2s';
+newsPanel.style.transition = 'opacity 0.2s';
+bottomButtons.style.transition = 'opacity 0.2s';
+
+function setVisible(huh) {
+  playPanel.style.opacity = huh ? '1' : '0';
+  newsPanel.style.opacity = huh ? '0' : '1';
+  bottomButtons.style.opacity = huh ? '1' : '0';
+
+  if (huh == true) {
+    playPanel.style.display = 'block';
+    bottomButtons.style.display = 'none';
+    newsPanel.style.display = 'none';
+  } else {
+    newsPanel.style.display = 'block';
+    bottomButtons.style.display = 'flex';
+    playPanel.style.display = 'none';
+  }
+}

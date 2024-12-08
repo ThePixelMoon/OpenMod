@@ -25,6 +25,8 @@
 #include "matsys_controls/matsyscontrols.h"
 #ifdef OMOD
 #include "basemenu.h"
+#include "spawnmenu.h"
+#include "newgamemenu.h"
 #endif
 
 #ifdef SIXENSE
@@ -210,6 +212,8 @@ void VGui_CreateGlobalPanels( void )
 #endif
 #ifdef OMOD
 	VPANEL gameParent = enginevgui->GetPanel(PANEL_CLIENTDLL);
+	VPANEL gameUIParent = enginevgui->GetPanel(PANEL_GAMEUIDLL);
+
 #endif
 	// Part of game
 	internalCenterPrint->Create( gameToolParent );
@@ -224,6 +228,7 @@ void VGui_CreateGlobalPanels( void )
 	netgraphpanel->Create( toolParent );
 	debugoverlaypanel->Create( gameToolParent );
 #ifdef OMOD
+	newgame->Create(gameUIParent);
 	smlmenu->Create(gameParent);
 #endif
 
@@ -257,6 +262,7 @@ void VGui_Shutdown()
 
 #ifdef OMOD
 	smlmenu->Destroy();
+	newgame->Destroy();
 #endif
 
 	if ( g_pClientMode )
