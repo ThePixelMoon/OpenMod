@@ -1,3 +1,3 @@
 @echo off
-devtools\bin\vpc.exe /open +game /mksln openmod.sln
+devtools\bin\vpc.exe /open +game +shaders /mksln openmod.sln
 pause
