@@ -73,3 +73,6 @@ mapsrc/*.vmx
 
 addons/
 game/openmod/ep1_gamestats.dat
+game/openmod/shadereditorui/shader_src/filelist.txt
+game/openmod/shadereditorui/editor_config.txt
+game/openmod/shadereditorui/shader_src/uniquefilestocopy.txt
