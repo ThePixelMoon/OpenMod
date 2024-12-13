@@ -1292,8 +1292,12 @@ void CHLClient::PostInit()
 	g_ClientVirtualReality.StartupComplete();
 
 #if !defined( DEBUG ) && defined( OMOD )
-	vgui::MessageBox* pMessageBox = new vgui::MessageBox( "OpenMod", "hi, you're playing OpenMod or a modpack/build based off it.\nthanks for playing :)");
-	pMessageBox->DoModal();
+	bool bCreateEditor = (CommandLine() != NULL) && (CommandLine()->FindParm("-shaderedit") != 0);
+	if (!bCreateEditor)
+	{
+		vgui::MessageBox* pMessageBox = new vgui::MessageBox( "OpenMod", "hi, you're playing OpenMod or a modpack/build based off it.\nthanks for playing :)");
+		pMessageBox->DoModal();
+	}
 #endif
 
 #ifdef HL1MP_CLIENT_DLL
