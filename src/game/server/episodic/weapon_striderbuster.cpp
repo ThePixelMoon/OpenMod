@@ -726,8 +726,8 @@ int CWeaponStriderBuster::OnTakeDamage( const CTakeDamageInfo &info )
 					// Make the buster fall off and break.
 					m_takedamage = DAMAGE_NO;
 
-					CNPC_Strider *pStrider = dynamic_cast<CNPC_Strider *>(GetOwnerEntity());
-					Assert( pStrider != NULL );
+//					CNPC_Strider *pStrider = dynamic_cast<CNPC_Strider *>(GetOwnerEntity());
+//					Assert( pStrider != NULL );
 //					pStrider->StriderBusterDetached( this );
 					DestroyConstraint();
 
