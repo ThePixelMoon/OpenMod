@@ -56,6 +56,17 @@ $Project "Client (OpenMod)"
             $File	"episodic\c_npc_puppet.cpp"
         }
 		
+		$Folder "Metaballs"
+		{
+			$File	"metaballs/c_point_blob_element.cpp"
+			$File	"metaballs/c_point_blob_element.h"
+			$File	"metaballs/c_point_blob_container.cpp"
+			$File	"metaballs/c_point_blob_container.h"
+			$File	"metaballs/cube_grid.cpp"
+			$File	"metaballs/cube_grid.h"
+			$File	"metaballs/metaball.h"
+		}
+		
 		$Folder "Half-Life: Source"
 		{
 			$File	"hl1\hl1_c_rpg_rocket.cpp"

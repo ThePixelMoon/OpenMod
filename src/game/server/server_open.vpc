@@ -71,6 +71,14 @@ $Project "Server (OpenMod)"
 			$File	"portal\portal_radio.cpp"
 		}
 		
+		$Folder "Metaballs"
+		{
+			$File	"metaballs/point_blob_element.cpp"
+			$File	"metaballs/point_blob_element.h"
+			$File	"metaballs/point_blob_container.cpp"
+			$File	"metaballs/point_blob_container.h"
+		}
+		
 		$Folder "Episodic"
         {
             $File	"episodic\prop_scalable.cpp"
