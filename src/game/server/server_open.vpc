@@ -15,7 +15,7 @@ $Configuration
 	$Compiler
 	{
 		$AdditionalIncludeDirectories	"$BASE;$SRCDIR\game\shared\hl2,.\hl2,.\hl2mp,$SRCDIR\game\shared\hl2mp;.\openmod;$SRCDIR\game\shared\openmod;.\portal"
-		$PreprocessorDefinitions		"$BASE;HL2MP;HL2_DLL;OMOD;GLOWS_ENABLE"
+		$PreprocessorDefinitions		"$BASE;HL2MP;HL2_DLL;OMOD;GLOWS_ENABLE;NEXT_BOT"
 	}
 }
 
@@ -78,6 +78,68 @@ $Project "Server (OpenMod)"
 			$File	"metaballs/point_blob_container.cpp"
 			$File	"metaballs/point_blob_container.h"
 		}
+		
+		$Folder "NextBot"
+			{
+				$Folder "Behavior"
+				{
+					$File	"NextBot\Behavior\BehaviorBackUp.h"
+					$File	"NextBot\Behavior\BehaviorMoveTo.h"
+				}
+				$Folder "NavMeshEntities"
+				{
+					$File	"NextBot\NavMeshEntities\func_nav_prerequisite.cpp"
+					$File	"NextBot\NavMeshEntities\func_nav_prerequisite.h"
+				}
+				$Folder "Path"
+				{
+					$File	"NextBot\Path\NextBotChasePath.cpp"
+					$File	"NextBot\Path\NextBotChasePath.h"
+					$File	"NextBot\Path\NextBotPath.cpp"
+					$File	"NextBot\Path\NextBotPath.h"
+					$File	"NextBot\Path\NextBotPathFollow.cpp"
+					$File	"NextBot\Path\NextBotPathFollow.h"
+					$File	"NextBot\Path\NextBotRetreatPath.h"
+				}
+				$Folder "Player"
+				{
+					$File	"NextBot\Player\NextBotPlayer.cpp"
+					$File	"NextBot\Player\NextBotPlayer.h"
+					$File	"NextBot\Player\NextBotPlayerBody.cpp"
+					$File	"NextBot\Player\NextBotPlayerBody.h"
+					$File	"NextBot\Player\NextBotPlayerLocomotion.cpp"
+					$File	"NextBot\Player\NextBotPlayerLocomotion.h"
+				}
+				$File	"NextBot\NextBot.cpp"
+				$File	"NextBot\NextBot.h"
+				$File	"NextBot\NextBotAttentionInterface.cpp"
+				$File	"NextBot\NextBotAttentionInterface.h"
+				$File	"NextBot\NextBotBehavior.h"
+				$File	"NextBot\NextBotBodyInterface.cpp"
+				$File	"NextBot\NextBotBodyInterface.h"
+				$File	"NextBot\NextBotComponentInterface.cpp"
+				$File	"NextBot\NextBotComponentInterface.h"
+				$File	"NextBot\NextBotContextualQueryInterface.h"
+				$File	"NextBot\NextBotDebug.h"
+				$File	"NextBot\NextBotEventResponderInterface.h"
+				$File	"NextBot\NextBotGroundLocomotion.cpp"
+				$File	"NextBot\NextBotGroundLocomotion.h"
+				$File	"NextBot\NextBotHearingInterface.h"
+				$File	"NextBot\NextBotIntentionInterface.cpp"
+				$File	"NextBot\NextBotIntentionInterface.h"
+				$File	"NextBot\NextBotInterface.cpp"
+				$File	"NextBot\NextBotInterface.h"
+				$File	"NextBot\NextBotKnownEntity.h"
+				$File	"NextBot\NextBotLocomotionInterface.cpp"
+				$File	"NextBot\NextBotLocomotionInterface.h"
+				$File	"NextBot\NextBotManager.cpp"
+				$File	"NextBot\NextBotManager.h"
+				$File	"NextBot\NextBotUtil.h"
+				$File	"NextBot\NextBotVisionInterface.cpp"
+				$File	"NextBot\NextBotVisionInterface.cpp"
+				$File	"NextBot\simple_bot.cpp"
+				$File	"NextBot\simple_bot.h"
+			}
 		
 		$Folder "Episodic"
         {

@@ -14,7 +14,7 @@ $Configuration
 	$Compiler
 	{
 		$AdditionalIncludeDirectories		"$BASE;hl2mp\ui,.\hl2mp,$SRCDIR\game\shared\hl2mp,.\hl2,.\hl2\elements,$SRCDIR\game\shared\hl2;.\openmod;$SRCDIR\game\shared\openmod;.\portal"
-		$PreprocessorDefinitions			"$BASE;HL2MP;HL2_CLIENT_DLL;OMOD;GLOWS_ENABLE;SOURCE_2013"
+		$PreprocessorDefinitions			"$BASE;HL2MP;HL2_CLIENT_DLL;OMOD;GLOWS_ENABLE;SOURCE_2013;NEXT_BOT"
 	}
 }
 
@@ -65,6 +65,12 @@ $Project "Client (OpenMod)"
 			$File	"metaballs/cube_grid.cpp"
 			$File	"metaballs/cube_grid.h"
 			$File	"metaballs/metaball.h"
+		}
+		
+		$Folder "NextBot"
+		{
+			$File	"NextBot\c_NextBot.cpp"
+			$File	"NextBot\c_NextBot.h"
 		}
 		
 		$Folder "Half-Life: Source"

@@ -35,11 +35,7 @@ ConVar bot_sendcmd( "bot_sendcmd", "", 0, "Forces bots to send the specified com
 
 ConVar bot_crouch( "bot_crouch", "0", 0, "Bot crouches" );
 
-#ifdef NEXT_BOT
-extern ConVar bot_mimic;
-#else
 ConVar bot_mimic( "bot_mimic", "0", 0, "Bot uses usercmd of player by index." );
-#endif
 
 static int BotNumber = 1;
 static int g_iNextBotTeam = -1;
