@@ -182,6 +182,7 @@ extern vgui::IInputInternal *g_InputInternal;
 #include <Windows.h>
 #undef MessageBox
 #include <dwmapi.h>
+#include <tlhelp32.h>
 #pragma comment( lib, "Dwmapi.lib" )
 #endif
 #endif
@@ -908,20 +909,53 @@ bool IsEngineThreaded()
 	return false;
 }
 
-//-----------------------------------------------------------------------------
-// Constructor
-//-----------------------------------------------------------------------------
-
-CHLClient::CHLClient() 
-{
-	// Kinda bogus, but the logic in the engine is too convoluted to put it there
-	g_bLevelInitialized = false;
-}
-
-
-extern IGameSystem *ViewportClientSystem();
 
 #ifdef _WIN32
+struct EnumData {
+	DWORD processId;
+	HWND hwnd;
+};
+
+BOOL CALLBACK EnumWindowsCallback(HWND hwnd, LPARAM lParam) {
+	EnumData* data = reinterpret_cast<EnumData*>(lParam);
+	DWORD hwndProcessId;
+	GetWindowThreadProcessId(hwnd, &hwndProcessId);
+	if (hwndProcessId == data->processId) {
+		data->hwnd = hwnd;
+		return FALSE;
+	}
+	return TRUE;
+}
+
+HWND GetHWNDFromProcessName(const char* processName) {
+	HWND hwnd = nullptr;
+	DWORD processId = 0;
+
+	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	if (snapshot != INVALID_HANDLE_VALUE) {
+		PROCESSENTRY32 entry = {};
+		entry.dwSize = sizeof(PROCESSENTRY32);
+
+		if (Process32First(snapshot, &entry)) {
+			do {
+				if (_stricmp(entry.szExeFile, processName) == 0) {
+					processId = entry.th32ProcessID;
+					break;
+				}
+			} while (Process32Next(snapshot, &entry));
+		}
+		CloseHandle(snapshot);
+	}
+
+	if (processId) {
+		EnumData data = { processId, nullptr };
+		EnumWindows(EnumWindowsCallback, reinterpret_cast<LPARAM>(&data));
+		hwnd = data.hwnd;
+	}
+
+	return hwnd;
+}
+
 void windowDarkMode(HWND hwnd)
 {
 	BOOL useDarkMode = TRUE;
@@ -938,6 +972,23 @@ void windowDarkMode(HWND hwnd)
 #endif
 
 //-----------------------------------------------------------------------------
+// Constructor
+//-----------------------------------------------------------------------------
+
+CHLClient::CHLClient() 
+{
+	// Kinda bogus, but the logic in the engine is too convoluted to put it there
+	g_bLevelInitialized = false;
+
+#if defined( OMOD ) && defined( _WIN32 )
+	HWND hwnd = GetHWNDFromProcessName("hl2.exe");
+	windowDarkMode(hwnd); // no check?
+#endif
+}
+
+extern IGameSystem *ViewportClientSystem();
+
+//-----------------------------------------------------------------------------
 ISourceVirtualReality *g_pSourceVR = NULL;
 
 // Purpose: Called when the DLL is first loaded.
@@ -946,28 +997,6 @@ ISourceVirtualReality *g_pSourceVR = NULL;
 //-----------------------------------------------------------------------------
 int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physicsFactory, CGlobalVarsBase *pGlobals )
 {
-#if defined( OMOD ) && defined( _WIN32 )
-	const char* baseTitle = "OpenMod"; // who is going to change it?
-	const char* suffixes[] = {
-		"",
-		" - Direct3D 6", " - Direct3D 7", " - Direct3D 8", " - Direct3D 9",
-		" - OpenGL"
-		" - Direct3D" };
-
-	HWND hwnd = nullptr;
-
-	for (int i = 0; i < sizeof(suffixes) / sizeof(suffixes[0]); ++i)
-	{
-		char windowTitle[256];
-		sprintf_s(windowTitle, sizeof(windowTitle), "%s%s", baseTitle, suffixes[i]);
-
-		hwnd = FindWindow(NULL, windowTitle);
-		if (hwnd)  {
-			windowDarkMode(hwnd);
-			break; }
-	}
-#endif
-
 	InitCRTMemDebug();
 	MathLib_Init( 2.2f, 2.2f, 0.0f, 2.0f );
 
