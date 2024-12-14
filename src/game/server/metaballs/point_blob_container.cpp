@@ -1,11 +1,18 @@
+//========= Copyright Valve Corporation, All rights reserved. ============//
+//
+// Purpose: 
+//
+// $NoKeywords: $
+//=============================================================================
 
 #include "cbase.h"
 #include "point_blob_element.h"
 #include "point_blob_container.h"
 
-LINK_ENTITY_TO_CLASS(point_blob_container, CPointBlobContainer);
+// memdbgon must be the last include file in a .cpp file!!! :apple_advertisement:
+#include "tier0/memdbgon.h"
 
-//i should change the way how i do keyvalue shit later
+LINK_ENTITY_TO_CLASS(point_blob_container, CPointBlobContainer);
 
 BEGIN_DATADESC(CPointBlobContainer)
 	DEFINE_KEYFIELD(GridSize, FIELD_INTEGER, "resolution"),
@@ -18,7 +25,7 @@ END_DATADESC()
 
 IMPLEMENT_SERVERCLASS_ST(CPointBlobContainer, DT_PointBlobContainer)
 	SendPropInt(SENDINFO(GridSize)),
-#if HL2MP //idk how is it different, but it is different
+#ifdef HL2MP
 	SendPropVector(SENDINFO(GridBounds), -1, SPROP_COORD_MP),
 #else
 	SendPropVector(SENDINFO(GridBounds), -1, SPROP_COORD),
@@ -28,7 +35,3 @@ IMPLEMENT_SERVERCLASS_ST(CPointBlobContainer, DT_PointBlobContainer)
 	SendPropFloat(SENDINFO(colorBoost)),
 	SendPropStringT(SENDINFO(BlobMaterialName)),
 END_SEND_TABLE()
-
-
-
-

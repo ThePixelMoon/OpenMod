@@ -1,18 +1,25 @@
+//========= Copyright Valve Corporation, All rights reserved. ============//
+//
+// Purpose: 
+//
+// $NoKeywords: $
+//=============================================================================
 
 #include "cbase.h"
 #include "c_props.h"
-#include "METABALL.h"
-#include "CUBE_GRID.h"
+#include "metaball.h"
+#include "cube_grid.h"
 #include "debugoverlay_shared.h"
 #include "c_point_blob_element.h"
 #include "c_point_blob_container.h"
 #include "cdll_util.h"
 
 #include <omp.h>
-
 #include "materialsystem/imesh.h"
-
 #include "mathlib/ssemath.h"
+
+// memdbgon must be the last include file in a .cpp file!!! :apple_advertisement:
+#include "tier0/memdbgon.h"
 
 LINK_ENTITY_TO_CLASS(point_blob_container, C_PointBlobContainer);
 
@@ -29,7 +36,6 @@ END_NETWORK_TABLE()
 
 ConVar r_drawblobs("r_drawblobs", "1", FCVAR_CLIENTDLL);
 ConVar cl_blobs_updatecontainers("cl_blobs_updatecontainers", "1", FCVAR_CLIENTDLL);
-//ConVar cl_blobs_resolution("cl_blobs_resolution", "10", FCVAR_CLIENTDLL);
 ConVar cl_blobthreshold("cl_blobthreshold", "1", FCVAR_CLIENTDLL);
 ConVar cl_blobvaluethreshold("cl_blobvaluethreshold", "0.03", FCVAR_CLIENTDLL);
 
@@ -38,7 +44,6 @@ ConVar cl_blobvaluethreshold("cl_blobvaluethreshold", "0.03", FCVAR_CLIENTDLL);
 void C_PointBlobContainer::Spawn()
 {
 	//get already existed container to save compute resources and just use already existed one.
-	///////
 	size_t count = 0;
 	// Iterate through all the entities in the clientside world
 	for (int i = 0; i < cl_entitylist->GetHighestEntityIndex() + 1; i++)
@@ -53,7 +58,7 @@ void C_PointBlobContainer::Spawn()
 				{
 					//add entity into array
 					parentedContainer = ((C_PointBlobContainer*)(entity));
-					Msg("%u\n", count);
+					DevMsg("%u\n", count);
 				}
 			}
 		}

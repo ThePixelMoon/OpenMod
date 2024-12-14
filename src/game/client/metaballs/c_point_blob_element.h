@@ -1,3 +1,10 @@
+//========= Copyright Valve Corporation, All rights reserved. ============//
+//
+// Purpose:
+//
+// $NoKeywords: $
+//=============================================================================//
+
 #ifndef C_BLOBELEMENT_H
 #define C_BLOBELEMENT_H
 
@@ -21,6 +28,7 @@ public:
 
 	C_PointBlobElement();
 	C_PointBlobElement(int newRadius);
+	void VPhysicsUpdate(IPhysicsObject* pPhysics);
 	~C_PointBlobElement(){}
 
 

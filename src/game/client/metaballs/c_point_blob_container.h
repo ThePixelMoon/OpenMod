@@ -1,10 +1,16 @@
+//========= Copyright Valve Corporation, All rights reserved. ============//
+//
+// Purpose: 
+//
+// $NoKeywords: $
+//=============================================================================
 #ifndef C_BLOBCONTAINER_H
 #define C_BLOBCONTAINER_H
 
 #include "cbase.h"
 #include "c_props.h"
-#include "METABALL.h"
-#include "CUBE_GRID.h"
+#include "metaball.h"
+#include "cube_grid.h"
 #include "c_point_blob_element.h"
 #include "model_types.h"
 #include "studio_stats.h"

@@ -1,3 +1,10 @@
+//========= Copyright Valve Corporation, All rights reserved. ============//
+//
+// Purpose: 
+//
+// $NoKeywords: $
+//=============================================================================
+
 #ifndef C_BLOBCONTAINER_H
 #define C_BLOBCONTAINER_H
 

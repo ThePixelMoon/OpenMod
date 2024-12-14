@@ -1,3 +1,10 @@
+//========= Copyright Valve Corporation, All rights reserved. ============//
+//
+// Purpose: 
+//
+// $NoKeywords: $
+//=============================================================================
+
 #ifndef C_BLOBELEMENT_H
 #define C_BLOBELEMENT_H
 
@@ -28,6 +35,7 @@ public:
     virtual void Spawn()
     {
 		SetTransmitState(FL_EDICT_ALWAYS);
+		SetMoveType(MOVETYPE_VPHYSICS);
 		m_nRenderMode = kRenderNormal;
 		m_nRenderFX = kRenderFxNone;
 

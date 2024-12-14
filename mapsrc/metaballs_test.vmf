@@ -2,7 +2,7 @@ versioninfo
 {
 	"editorversion" "400"
 	"editorbuild" "8869"
-	"mapversion" "8"
+	"mapversion" "16"
 	"formatversion" "100"
 	"prefab" "0"
 }
@@ -89,7 +89,7 @@ bgimages_plus
 world
 {
 	"id" "1"
-	"mapversion" "8"
+	"mapversion" "16"
 	"classname" "worldspawn"
 	"detailmaterial" "detail/detailsprites"
 	"detailvbsp" "detail.vbsp"
@@ -990,17 +990,11 @@ entity
 entity
 {
 	"id" "201"
-	"classname" "game_text"
-	"channel" "1"
-	"color" "100 100 100"
-	"color2" "240 110 0"
-	"fadein" "1.5"
-	"fadeout" "0.5"
-	"fxtime" "0.25"
-	"holdtime" "1.2"
+	"classname" "point_message"
+	"developeronly" "0"
 	"message" "resolution: 15"
-	"x" "-1"
-	"y" "-1"
+	"radius" "128"
+	"spawnflags" "0"
 	"origin" "934.114 322.11 -311.699"
 	editor
 	{
@@ -1158,6 +1152,74 @@ entity
 		"visgroupshown" "1"
 		"visgroupautoshown" "1"
 		"logicalpos" "[0 4000]"
+	}
+}
+entity
+{
+	"id" "282"
+	"classname" "point_blob_element"
+	"parentname" "2"
+	"radius" "10"
+	"targetname" "blob"
+	"origin" "789.785 -60.0348 -283.823"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 4000]"
+	}
+}
+entity
+{
+	"id" "289"
+	"classname" "point_blob_element"
+	"parentname" "1"
+	"radius" "10"
+	"targetname" "blob"
+	"origin" "765.897 -67.4535 -290.929"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 4000]"
+	}
+}
+entity
+{
+	"id" "255"
+	"classname" "point_message"
+	"developeronly" "0"
+	"message" "idk"
+	"radius" "128"
+	"spawnflags" "0"
+	"origin" "768.538 64 -302.837"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 0]"
+	}
+}
+entity
+{
+	"id" "387"
+	"classname" "point_blob_container"
+	"ambientcolor" "88 88 88"
+	"bounds" "150 150 150"
+	"brightness" "1"
+	"color" "255 0 0"
+	"resolution" "15"
+	"targetname" "point"
+	"origin" "704 -128 -348"
+	editor
+	{
+		"color" "220 30 220"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 3500]"
 	}
 }
 cameras
