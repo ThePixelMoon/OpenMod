@@ -1156,10 +1156,13 @@ static int FindPassableSpace( CBasePlayer *pPlayer, const Vector& direction, flo
 	return 0;
 }
 
-
 //------------------------------------------------------------------------------
 // Noclip
 //------------------------------------------------------------------------------
+#ifdef OMOD
+ConVar sbox_allow_noclip("sbox_allow_noclip", "0");
+#endif
+
 void EnableNoClip( CBasePlayer *pPlayer )
 {
 	// Disengage from hierarchy
@@ -1171,7 +1174,11 @@ void EnableNoClip( CBasePlayer *pPlayer )
 
 void CC_Player_NoClip( void )
 {
-	if ( !sv_cheats->GetBool() )
+#ifndef OMOD
+	if (!sv_cheats->GetBool())
+#else
+	if (!sbox_allow_noclip.GetBool())
+#endif
 		return;
 
 	CBasePlayer *pPlayer = ToBasePlayer( UTIL_GetCommandClient() ); 

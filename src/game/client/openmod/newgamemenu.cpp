@@ -16,6 +16,7 @@
 #include <vgui_controls/TextEntry.h>
 #include <vgui_controls/ComboBox.h>
 #include <vgui_controls/Label.h>
+#include <vgui_controls/CheckButton.h>
 
 using namespace vgui;
 
@@ -42,16 +43,16 @@ private:
 	Label* m_pMaxPlayersLabel;
 	Label* m_pMapLabel;
 	Label* m_pGameModeLabel;
+	CheckButton* m_pNoclipCheck;
+	Label* m_pNoclipLabel;
 };
 
 CNewGame::CNewGame(vgui::VPANEL parent)
 	: BaseClass(NULL, "NewGame")
 {
 	SetParent(parent);
-
 	SetKeyBoardInputEnabled(true);
 	SetMouseInputEnabled(true);
-
 	SetProportional(false);
 	SetTitleBarVisible(true);
 	SetMinimizeButtonVisible(false);
@@ -60,11 +61,8 @@ CNewGame::CNewGame(vgui::VPANEL parent)
 	SetSizeable(false);
 	SetMoveable(false);
 	SetVisible(true);
-
 	SetScheme(vgui::scheme()->LoadSchemeFromFile("resource/SourceScheme.res", "SourceScheme"));
-
 	LoadControlSettings("resource/UI/newgamemenu.res");
-
 	vgui::ivgui()->AddTickSignal(GetVPanel(), 100);
 
 	m_pPropertySheet = new PropertySheet(this, "PropertySheet");
@@ -106,9 +104,7 @@ CNewGame::CNewGame(vgui::VPANEL parent)
 	m_pMapComboBox->SetPos(120, 100);
 	m_pMapComboBox->SetSize(150, 20);
 
-	// load maps
 	FileFindHandle_t findHandle = NULL;
-
 	const char* pszFilename = g_pFullFileSystem->FindFirst("maps/*.bsp", &findHandle);
 	while (pszFilename)
 	{
@@ -129,18 +125,24 @@ CNewGame::CNewGame(vgui::VPANEL parent)
 
 		m_pMapComboBox->AddItem(mapname, NULL);
 
-		goto nextFile;
-
 	nextFile:
 		pszFilename = g_pFullFileSystem->FindNext(findHandle);
 	}
-
 	g_pFullFileSystem->FindClose(findHandle);
 
 	m_pMapComboBox->ActivateItemByRow(0);
 
 	Panel* pGameplayTab = new Panel(m_pPropertySheet, "GameplayTab");
 	m_pPropertySheet->AddPage(pGameplayTab, "Gameplay");
+
+	m_pNoclipLabel = new Label(pGameplayTab, "NoclipLabel", "Allow Noclip:");
+	m_pNoclipLabel->SetPos(20, 60);
+	m_pNoclipLabel->SetSize(100, 20);
+
+	m_pNoclipCheck = new CheckButton(pGameplayTab, "NoclipCheck", "");
+	m_pNoclipCheck->SetPos(120, 60);
+	m_pNoclipCheck->SetSize(150, 20);
+	m_pNoclipCheck->SetSelected(true);
 
 	m_pGameModeLabel = new Label(pGameplayTab, "GameModeLabel", "Gamemode:");
 	m_pGameModeLabel->SetPos(20, 20);
@@ -174,10 +176,9 @@ CNewGame::CNewGame(vgui::VPANEL parent)
 	{
 		char itemText[256];
 		m_pGameModeComboBox->GetItemText(i, itemText, sizeof(itemText));
-
 		if (Q_stricmp(itemText, "sandbox") == 0)
 		{
-			m_pGameModeComboBox->ActivateItem(i); // activate sandbox mode
+			m_pGameModeComboBox->ActivateItem(i);
 			break;
 		}
 	}
@@ -191,7 +192,6 @@ CNewGame::CNewGame(vgui::VPANEL parent)
 	m_pCloseButton->SetDepressedSound("common/bugreporter_succeeded.wav");
 	m_pCloseButton->SetReleasedSound("ui/buttonclick.wav");
 
-	// center
 	int screenWide, screenTall;
 	vgui::surface()->GetScreenSize(screenWide, screenTall);
 	int windowWide, windowTall;
@@ -271,11 +271,15 @@ void CNewGame::OnCommand(const char* pcCommand)
 		char szGameMode[256];
 		m_pGameModeComboBox->GetItemText(gamemodeIndex, szGameMode, sizeof(szGameMode));
 
+		bool allowNoclip = m_pNoclipCheck->IsSelected();
+
+#if 0
 		DevMsg("Starting game with:\n");
 		DevMsg("Hostname: %s\n", szHostName);
 		DevMsg("Max players: %s\n", szMaxPlayers);
 		DevMsg("Map: %s\n", szMap);
 		DevMsg("Gamemode: %s\n", szGameMode);
+#endif
 
 		SetVisible(false);
 
@@ -292,6 +296,7 @@ void CNewGame::OnCommand(const char* pcCommand)
 		engine->ClientCmd_Unrestricted(VarArgs("hostname %s", szHostName));
 		engine->ClientCmd_Unrestricted(VarArgs("gamemode %s", szGameMode));
 		engine->ClientCmd_Unrestricted(VarArgs("map %s", szMap));
+		engine->ClientCmd_Unrestricted(VarArgs("sbox_allow_noclip %d", allowNoclip ? 1 : 0));
 		if (Q_stricmp(szGameMode, "sandbox") == 0)
 			engine->ClientCmd_Unrestricted("sv_cheats 1");
 	}
