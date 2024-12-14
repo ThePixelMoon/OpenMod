@@ -107,8 +107,8 @@ static ConVar r_worldlight_mincastintensity( "r_worldlight_mincastintensity", "0
 
 ConVar r_flashlightdepthtexture( "r_flashlightdepthtexture", "1" );
 
-#if defined( _X360 )
-ConVar r_flashlightdepthres( "r_flashlightdepthres", "512" );
+#ifdef OMOD
+ConVar r_flashlightdepthres( "r_flashlightdepthres", "2048" );
 #else
 ConVar r_flashlightdepthres( "r_flashlightdepthres", "1024" );
 #endif
@@ -1303,7 +1303,7 @@ bool CClientShadowMgr::Init()
 	SetShadowBlobbyCutoffArea( 0.005 );
 
 	bool bTools = CommandLine()->CheckParm( "-tools" ) != NULL;
-	m_nMaxDepthTextureShadows = bTools ? 4 : 1;	// Just one shadow depth texture in games, more in tools
+	m_nMaxDepthTextureShadows = bTools ? 32 : 16;	// Just one shadow depth texture in games, more in tools
 
 	bool bLowEnd = ( g_pMaterialSystemHardwareConfig->GetDXSupportLevel() < 80 );
 

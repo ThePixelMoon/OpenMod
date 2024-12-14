@@ -170,10 +170,29 @@ void C_EnvProjectedTexture::UpdateLight( bool bForceUpdate )
 //			VectorNormalize( vUp );
 		}
 	}
+#ifndef OMOD
 	else
 	{
 		AngleVectors( GetAbsAngles(), &vForward, &vRight, &vUp );
 	}
+#else
+	else
+	{
+		// VXP: Fixing targeting
+		Vector vecToTarget;
+		QAngle vecAngles;
+		if ( m_hTargetEntity == NULL )
+		{
+			vecAngles = GetAbsAngles();
+		}
+		else
+		{
+			vecToTarget = m_hTargetEntity->GetAbsOrigin() - GetAbsOrigin();
+			VectorAngles( vecToTarget, vecAngles );
+		}
+		AngleVectors( vecAngles, &vForward, &vRight, &vUp );
+	}
+#endif
 
 	state.m_fHorizontalFOVDegrees = m_flLightFOV;
 	state.m_fVerticalFOVDegrees = m_flLightFOV;
