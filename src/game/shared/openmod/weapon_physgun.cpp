@@ -1310,7 +1310,7 @@ void CWeaponPhysicsGun::PrimaryAttack( void )
 
 void CWeaponPhysicsGun::SecondaryAttack( void )
 {
-	SendWeaponAnim( ACT_VM_SECONDARYATTACK );
+//	SendWeaponAnim( ACT_VM_SECONDARYATTACK );
 	return;
 }
 
