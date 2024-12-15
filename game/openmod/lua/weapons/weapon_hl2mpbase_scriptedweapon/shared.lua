@@ -23,8 +23,6 @@ SWEP.item_flags				= 0
 
 SWEP.damage					= 75
 
-SWEP.UseHands				= true
-
 SWEP.SoundData				=
 {
 	empty					= "Weapon_Pistol.Empty",
@@ -37,6 +35,7 @@ SWEP.AutoSwitchFrom			= true
 SWEP.BuiltRightHanded		= true
 SWEP.AllowFlipping			= true
 SWEP.MeleeWeapon			= false
+SWEP.UseHands				= true
 
 -- TODO; implement Activity enum library!!
 SWEP.m_acttable				=
