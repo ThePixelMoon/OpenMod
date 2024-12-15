@@ -50,7 +50,6 @@ private:
 
 LINK_ENTITY_TO_CLASS(logic_auto, CLogicAuto);
 
-
 BEGIN_DATADESC( CLogicAuto )
 
 	DEFINE_KEYFIELD(m_globalstate, FIELD_STRING, "globalstate"),

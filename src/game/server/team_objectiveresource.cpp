@@ -19,6 +19,7 @@
 
 #define LAZY_UPDATE_TIME		3
 
+#if 0
 // Datatable
 IMPLEMENT_SERVERCLASS_ST_NOBASE(CBaseTeamObjectiveResource, DT_BaseTeamObjectiveResource)
 
@@ -571,3 +572,4 @@ void CBaseTeamObjectiveResource::SetTrackAlarm( int index, bool bAlarm )
 	Assert( index < TEAM_TRAIN_MAX_TEAMS );
 	m_bTrackAlarm.Set( index, bAlarm );
 }
+#endif

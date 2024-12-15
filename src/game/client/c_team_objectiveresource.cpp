@@ -15,6 +15,7 @@
 
 #define RESOURCE_THINK_TIME		0.1
 
+#if 0
 extern ConVar mp_capstyle;
 extern ConVar mp_capdeteriorate_time;
 
@@ -174,17 +175,6 @@ C_BaseTeamObjectiveResource::~C_BaseTeamObjectiveResource()
 void C_BaseTeamObjectiveResource::OnPreDataChanged( DataUpdateType_t updateType )
 {
 	BaseClass::OnPreDataChanged( updateType );
-
-	m_iPrevNumControlPoints = m_iNumControlPoints;
-	m_iOldUpdateCapHudParity = m_iUpdateCapHudParity;
-	m_bOldControlPointsReset = m_bControlPointsReset;
-
-	m_flOldCustomPositionX = m_flCustomPositionX;
-	m_flOldCustomPositionY = m_flCustomPositionY;
-
-	memcpy( m_flOldLazyCapPerc, m_flLazyCapPerc, sizeof(float)*m_iNumControlPoints );
-	memcpy( m_flOldUnlockTimes, m_flUnlockTimes, sizeof(float)*m_iNumControlPoints );
-	memcpy( m_flOldCPTimerTimes, m_flCPTimerTimes, sizeof(float)*m_iNumControlPoints );
 }
 
 //-----------------------------------------------------------------------------
@@ -193,56 +183,6 @@ void C_BaseTeamObjectiveResource::OnPreDataChanged( DataUpdateType_t updateType 
 void C_BaseTeamObjectiveResource::OnDataChanged( DataUpdateType_t updateType )
 {
 	BaseClass::OnDataChanged( updateType );
-
-	if ( m_bOldControlPointsReset != m_bControlPointsReset || m_iNumControlPoints != m_iPrevNumControlPoints )
-	{
-		// Tell everyone we know how many control points we have
-		IGameEvent *event = gameeventmanager->CreateEvent( "controlpoint_initialized" );
-		if ( event )
-		{
-			gameeventmanager->FireEventClientSide( event );
-		}
-	}
-
-	if ( m_iUpdateCapHudParity != m_iOldUpdateCapHudParity )
-	{
-		UpdateControlPoint( "controlpoint_updateimages" );
-	}
-
-	for ( int i = 0; i < m_iNumControlPoints; i++ )
-	{
-		if ( m_flOldLazyCapPerc[i] != m_flLazyCapPerc[i] )
-		{
-			m_flCapTimeLeft[i] = m_flLazyCapPerc[i] * m_flTeamCapTime[ TEAM_ARRAY(i,m_iCappingTeam[i]) ];
-		}
-
-		if ( m_flOldUnlockTimes[i] != m_flUnlockTimes[i] )
-		{
-			IGameEvent *event = gameeventmanager->CreateEvent( "controlpoint_unlock_updated" );
-			if ( event )
-			{
-				event->SetInt( "index", i );
-				event->SetFloat( "time", m_flUnlockTimes[i] );
-				gameeventmanager->FireEventClientSide( event );
-			}
-		}
-
-		if ( m_flOldCPTimerTimes[i] != m_flCPTimerTimes[i] )
-		{
-			IGameEvent *event = gameeventmanager->CreateEvent( "controlpoint_timer_updated" );
-			if ( event )
-			{
-				event->SetInt( "index", i );
-				event->SetFloat( "time", m_flCPTimerTimes[i] );
-				gameeventmanager->FireEventClientSide( event );
-			}
-		}
-	}
-
-	if ( m_flOldCustomPositionX != m_flCustomPositionX || m_flOldCustomPositionY != m_flCustomPositionY )
-	{
-		UpdateControlPoint( "controlpoint_updatelayout" );
-	}
 }
 
 //-----------------------------------------------------------------------------
@@ -250,12 +190,6 @@ void C_BaseTeamObjectiveResource::OnDataChanged( DataUpdateType_t updateType )
 //-----------------------------------------------------------------------------
 void C_BaseTeamObjectiveResource::UpdateControlPoint( const char *pszEvent, int index )
 {
-	IGameEvent *event = gameeventmanager->CreateEvent( pszEvent );
-	if ( event )
-	{
-		event->SetInt( "index", index );
-		gameeventmanager->FireEventClientSide( event );
-	}
 }
 
 //-----------------------------------------------------------------------------
@@ -263,19 +197,7 @@ void C_BaseTeamObjectiveResource::UpdateControlPoint( const char *pszEvent, int 
 //-----------------------------------------------------------------------------
 float C_BaseTeamObjectiveResource::GetCPCapPercentage( int index )
 {
-	Assert( 0 <= index && index <= m_iNumControlPoints );
-
-	float flCapLength = m_flTeamCapTime[ TEAM_ARRAY(index,m_iCappingTeam[index]) ];
-
-	if( flCapLength <= 0 )
-		return 0.0f;
-
-	float flElapsedTime = flCapLength - m_flCapTimeLeft[index];
-
-	if( flElapsedTime > flCapLength )
-		return 1.0f;
-
-	return ( flElapsedTime / flCapLength );
+	return 0.0f;
 }
 
 //-----------------------------------------------------------------------------
@@ -283,20 +205,7 @@ float C_BaseTeamObjectiveResource::GetCPCapPercentage( int index )
 //-----------------------------------------------------------------------------
 int C_BaseTeamObjectiveResource::GetNumControlPointsOwned( void )
 {
-	C_BasePlayer *pPlayer = C_BasePlayer::GetLocalPlayer();
-	if ( !pPlayer )
-		return 0;
-
-	int iTeam = pPlayer->GetTeamNumber();
-	int nOwned = 0;
-	for ( int i = 0; i < GetNumControlPoints(); ++i )
-	{
-		if ( GetOwningTeam( i ) == iTeam )
-		{
-			++nOwned;
-		}
-	}
-	return nOwned;
+	return 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -305,17 +214,6 @@ int C_BaseTeamObjectiveResource::GetNumControlPointsOwned( void )
 //-----------------------------------------------------------------------------
 void C_BaseTeamObjectiveResource::SetOwningTeam( int index, int team )
 {
-	if ( team == m_iCappingTeam[index] )
-	{
-		// successful cap, reset things
-		m_iCappingTeam[index] = TEAM_UNASSIGNED;
-		m_flCapTimeLeft[index] = 0.0f;
-		m_flCapLastThinkTime[index] = 0;
-	}
-
-	m_iOwner[index] = team;
-
-	UpdateControlPoint( "controlpoint_updateowner", index );
 }
 
 //-----------------------------------------------------------------------------
@@ -323,21 +221,6 @@ void C_BaseTeamObjectiveResource::SetOwningTeam( int index, int team )
 //-----------------------------------------------------------------------------
 void C_BaseTeamObjectiveResource::SetCappingTeam( int index, int team )
 {
-	if ( team != GetOwningTeam( index ) && ( team > LAST_SHARED_TEAM ) )
-	{
-		m_flCapTimeLeft[index] = m_flTeamCapTime[ TEAM_ARRAY(index,team) ];
-	}
-	else
-	{
-		m_flCapTimeLeft[index] = 0.0;
-	}
-
-	m_iCappingTeam[index] = team;
-	m_bWarnedOnFinalCap[index] = false;
-
-	m_flCapLastThinkTime[index] = gpGlobals->curtime;
-	SetNextClientThink( gpGlobals->curtime + RESOURCE_THINK_TIME );
-	UpdateControlPoint( "controlpoint_updatecapping", index );
 }
 
 //-----------------------------------------------------------------------------
@@ -345,9 +228,6 @@ void C_BaseTeamObjectiveResource::SetCappingTeam( int index, int team )
 //-----------------------------------------------------------------------------
 void C_BaseTeamObjectiveResource::SetCapLayout( const char *pszLayout )
 {
-	Q_strncpy( m_pszCapLayoutInHUD, pszLayout, MAX_CAPLAYOUT_LENGTH );
-
-	UpdateControlPoint( "controlpoint_updatelayout" );
 }
 
 //-----------------------------------------------------------------------------
@@ -355,15 +235,6 @@ void C_BaseTeamObjectiveResource::SetCapLayout( const char *pszLayout )
 //-----------------------------------------------------------------------------
 bool C_BaseTeamObjectiveResource::CapIsBlocked( int index )
 {
-	Assert( 0 <= index && index <= m_iNumControlPoints );
-
-	if ( m_flCapTimeLeft[index] )
-	{
-		// Blocked caps have capping teams & cap times, but no players on the point
-		if ( GetNumPlayersInArea( index, m_iCappingTeam[index] ) == 0 )
-			return true;
-	}
-
 	return false;
 }
 
@@ -373,92 +244,5 @@ bool C_BaseTeamObjectiveResource::CapIsBlocked( int index )
 void C_BaseTeamObjectiveResource::ClientThink()
 {
 	BaseClass::ClientThink();
-
-	for ( int i = 0; i < MAX_CONTROL_POINTS; i++ )
-	{
-		if ( m_flCapTimeLeft[i] )
-		{
-			if ( !IsCPBlocked(i) )
-			{
-				bool bDeteriorateNormally = true;
-
-				// Make sure there is only 1 team on the cap
-				int iPlayersCapping = GetNumPlayersInArea( i, GetTeamInZone(i) );
-				if ( iPlayersCapping > 0 )
-				{
-					float flReduction = gpGlobals->curtime - m_flCapLastThinkTime[i];
-					if ( mp_capstyle.GetInt() == 1 && m_bCPCapRateScalesWithPlayers[i] )
-					{
-						// Diminishing returns for successive players.
-						for ( int iPlayer = 1; iPlayer < iPlayersCapping; iPlayer++ )
-						{
-							flReduction += ((gpGlobals->curtime - m_flCapLastThinkTime[i]) / (float)(iPlayer+1));
-						}
-					}
-
-					if ( GetTeamInZone(i) == m_iCappingTeam[i] )
-					{
-						bDeteriorateNormally = false;
-						m_flCapTimeLeft[i] -= flReduction;
-
-						if ( !m_bWarnedOnFinalCap[i] )
-						{
-							// If this the local player's team, warn him
-							C_BasePlayer *pPlayer = C_BasePlayer::GetLocalPlayer();
-							if ( pPlayer )
-							{
-								if ( m_iCappingTeam[i] != TEAM_UNASSIGNED && 
-									pPlayer->GetTeamNumber() != m_iCappingTeam[i] && 
-									GetCapWarningLevel( i ) == CP_WARN_FINALCAP )
-								{
-									// Prevent spam
-									if ( gpGlobals->curtime > ( m_flLastCapWarningTime[i] + 5 ) )
-									{
-										pPlayer->EmitSound( GetWarnSound( i ) );
-
-										m_bWarnedOnFinalCap[i] = true;
-										m_flLastCapWarningTime[i] = gpGlobals->curtime;
-									}
-								}
-							}
-						}
-					}
-					else if ( GetOwningTeam(i) == TEAM_UNASSIGNED && GetTeamInZone(i) != TEAM_UNASSIGNED )
-					{
-						bDeteriorateNormally = false;
-						m_flCapTimeLeft[i] += flReduction;
-					}
-				}
-
-				if ( bDeteriorateNormally )
-				{
-					// Caps deteriorate over time
-					// If we're not cappable at all right now, wipe all progress
-					if ( TeamplayRoundBasedRules() && TeamplayRoundBasedRules()->TeamMayCapturePoint(m_iCappingTeam[i],i) )
-					{
-						float flCapLength = m_flTeamCapTime[ TEAM_ARRAY(i,m_iCappingTeam[i]) ];
-						float flDecreaseScale = m_bCPCapRateScalesWithPlayers[i] ? mp_capdeteriorate_time.GetFloat() : flCapLength;
-						float flDecrease = (flCapLength / flDecreaseScale) * (gpGlobals->curtime - m_flCapLastThinkTime[i]);
-						if ( TeamplayRoundBasedRules() && TeamplayRoundBasedRules()->InOvertime() )
-						{
-							flDecrease *= 6;
-						}
-						m_flCapTimeLeft[i] += flDecrease;
-					}
-					else
-					{
-						m_flCapTimeLeft[i] = 0.0;
-					}
-
-					m_bWarnedOnFinalCap[i] = false;
-				}
-			}
-			
-			UpdateControlPoint( "controlpoint_updatelayout", i );
-			m_flCapLastThinkTime[i] = gpGlobals->curtime;
-		}
-	}
-
-
-	SetNextClientThink( gpGlobals->curtime + RESOURCE_THINK_TIME );
 }
+#endif

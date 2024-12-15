@@ -17,6 +17,7 @@
 
 #define TEAM_ARRAY( index, team )		(index + (team * MAX_CONTROL_POINTS))
 
+#if 0
 //-----------------------------------------------------------------------------
 // Purpose: An entity that networks the state of the game's objectives.
 //			May contain data for objectives that aren't used by your mod, but
@@ -345,3 +346,4 @@ inline C_BaseTeamObjectiveResource *ObjectiveResource()
 }
 
 #endif // C_TEAM_OBJECTIVERESOURCE_H
+#endif

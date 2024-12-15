@@ -102,6 +102,9 @@ class CFilterMultiple : public CBaseFilter
 };
 
 LINK_ENTITY_TO_CLASS(filter_multi, CFilterMultiple);
+#ifdef OMOD
+LINK_ENTITY_TO_CLASS(filter_activator_tfteam, CFilterMultiple);
+#endif
 
 BEGIN_DATADESC( CFilterMultiple )
 

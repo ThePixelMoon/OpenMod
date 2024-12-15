@@ -54,8 +54,7 @@ LINK_ENTITY_TO_CLASS( info_player_counterterrorist, CPointEntity );
 LINK_ENTITY_TO_CLASS( info_player_terrorist, CPointEntity );
 LINK_ENTITY_TO_CLASS( info_player_allies, CPointEntity );
 LINK_ENTITY_TO_CLASS( info_player_axis, CPointEntity );
-
-LINK_ENTITY_TO_CLASS( info_observer_point, CPointEntity ); // uhh..
+LINK_ENTITY_TO_CLASS( info_player_teamspawn, CPointEntity );
 #endif
 
 IMPLEMENT_SERVERCLASS_ST(CHL2MP_Player, DT_HL2MP_Player)

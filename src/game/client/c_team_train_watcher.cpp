@@ -50,9 +50,6 @@ C_TeamTrainWatcher::C_TeamTrainWatcher()
 //-----------------------------------------------------------------------------
 C_TeamTrainWatcher::~C_TeamTrainWatcher()
 {
-#ifdef GLOWS_ENABLE
-	DestroyGlowEffect();
-#endif // GLOWS_ENABLE
 }
 
 //-----------------------------------------------------------------------------
@@ -60,14 +57,6 @@ C_TeamTrainWatcher::~C_TeamTrainWatcher()
 //-----------------------------------------------------------------------------
 void C_TeamTrainWatcher::ClientThink()
 {
-#ifdef GLOWS_ENABLE
-	if ( IsDormant() || ( m_hGlowEnt.Get() == NULL ) )
-	{
-		DestroyGlowEffect();
-		m_hOldGlowEnt = NULL;
-		m_hGlowEnt = NULL;
-	}
-#endif // GLOWS_ENABLE
 }
 
 #ifdef GLOWS_ENABLE
@@ -76,21 +65,6 @@ void C_TeamTrainWatcher::ClientThink()
 //-----------------------------------------------------------------------------
 void C_TeamTrainWatcher::UpdateGlowEffect( void )
 {
-	// destroy the existing effect
-	if ( m_pGlowEffect )
-	{
-		DestroyGlowEffect();
-	}
-
-	// create a new effect if we have a cart
-	if ( m_hGlowEnt )
-	{
-#ifndef OMOD
-		float r, g, b;
-		TeamplayRoundBasedRules()->GetTeamGlowColor( GetTeamNumber(), r, g, b );
-		m_pGlowEffect = new CGlowObject( m_hGlowEnt, Vector( r, g, b ), 1.0, true );
-#endif
-	}
 }
 
 //-----------------------------------------------------------------------------
@@ -98,11 +72,6 @@ void C_TeamTrainWatcher::UpdateGlowEffect( void )
 //-----------------------------------------------------------------------------
 void C_TeamTrainWatcher::DestroyGlowEffect( void )
 {
-	if ( m_pGlowEffect )
-	{
-		delete m_pGlowEffect;
-		m_pGlowEffect = NULL;
-	}
 }
 #endif // GLOWS_ENABLE
 
@@ -125,68 +94,6 @@ void C_TeamTrainWatcher::OnPreDataChanged( DataUpdateType_t updateType )
 void C_TeamTrainWatcher::OnDataChanged( DataUpdateType_t updateType )
 {
 	BaseClass::OnDataChanged( updateType );
-
-	if ( updateType == DATA_UPDATE_CREATED )
-	{
-		SetNextClientThink( CLIENT_THINK_ALWAYS );
-	}
-
-	if ( m_iOldTrainSpeedLevel != m_iTrainSpeedLevel || m_nOldNumCappers != m_nNumCappers )
-	{
-		IGameEvent *event = gameeventmanager->CreateEvent( "escort_speed" );
-		if ( event )
-		{
-			event->SetInt( "team", GetTeamNumber() );
-			event->SetInt( "speed", m_iTrainSpeedLevel );
-			event->SetInt( "players", m_nNumCappers );
-			gameeventmanager->FireEventClientSide( event );
-		}
-	}
-
-	if ( m_flOldProgress != m_flTotalProgress )
-	{
-		IGameEvent *event = gameeventmanager->CreateEvent( "escort_progress" );
-		if ( event )
-		{
-			event->SetInt( "team", GetTeamNumber() );
-			event->SetFloat( "progress", m_flTotalProgress );
-
-			if ( m_flOldProgress <= -1 )
-			{
-				event->SetBool( "reset", true );
-			}
-
-			gameeventmanager->FireEventClientSide( event );
-		}
-
-		// check to see if the train is now on a hill
-		if ( ObjectiveResource() )
-		{
-			int nNumHills = ObjectiveResource()->GetNumNodeHillData( GetTeamNumber() );
-			if ( nNumHills > 0 )
-			{
-				float flStart = 0, flEnd = 0;
-				for ( int i = 0 ; i < nNumHills ; i++ )
-				{
-					ObjectiveResource()->GetHillData( GetTeamNumber(), i, flStart, flEnd );
-
-					bool state = ( m_flTotalProgress >= flStart && m_flTotalProgress <= flEnd );
-					ObjectiveResource()->SetTrainOnHill( GetTeamNumber(), i, state );
-				}
-			}
-		}
-	}
-
-	if ( m_flOldRecedeTime != m_flRecedeTime )
-	{
-		IGameEvent *event = gameeventmanager->CreateEvent( "escort_recede" );
-		if ( event )
-		{
-			event->SetInt( "team", GetTeamNumber() );
-			event->SetFloat( "recedetime", m_flRecedeTime );
-			gameeventmanager->FireEventClientSide( event );
-		}
-	}
 #ifdef GLOWS_ENABLE
 	if ( m_hOldGlowEnt != m_hGlowEnt )
 	{
@@ -201,11 +108,6 @@ void C_TeamTrainWatcher::OnDataChanged( DataUpdateType_t updateType )
 void C_TeamTrainWatcher::Spawn( void )
 {
 	BaseClass::Spawn();
-
-	if ( g_hTrainWatchers.Find( this ) == g_hTrainWatchers.InvalidIndex() )
-	{
-		g_hTrainWatchers.AddToTail( this );
-	}
 }
 
 //-----------------------------------------------------------------------------
@@ -214,6 +116,4 @@ void C_TeamTrainWatcher::Spawn( void )
 void C_TeamTrainWatcher::UpdateOnRemove( void )
 {
 	BaseClass::UpdateOnRemove();
-
-	g_hTrainWatchers.FindAndRemove( this );
 }

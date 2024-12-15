@@ -1988,6 +1988,9 @@ int DispatchSpawn( CBaseEntity *pEntity )
 		}
 		else
 		{
+			if (strcmp(pEntity->GetClassname(), "team_control_point") == 0)
+				return 0; // No.
+
 			// Don't allow the PVS check to skip animation setup during spawning
 			pAnimating->SetBoneCacheFlags( BCF_IS_IN_SPAWN );
 			pEntity->Spawn();

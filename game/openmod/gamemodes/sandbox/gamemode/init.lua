@@ -14,6 +14,7 @@ local tSpawnPointClassnames = {
   "info_player_counterterrorist",
   "info_player_axis",
   "info_player_allies",
+  "info_player_teamspawn",
   "info_player_start"
 }
 
