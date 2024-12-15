@@ -527,6 +527,30 @@ void CBasePlayer::CreateViewModel( int index /*=0*/ )
 	}
 }
 
+#ifdef OMOD
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CBasePlayer::CreateHandModel( int index, int iOtherVm )
+{
+	Assert( index >= 0 && index < MAX_VIEWMODELS && iOtherVm >= 0 && iOtherVm < MAX_VIEWMODELS );
+
+	if ( GetViewModel( index ) )
+		return;
+
+	CBaseViewModel *vm = (CBaseViewModel *)CreateEntityByName( "hand_viewmodel" );
+	if ( vm )
+	{
+		vm->SetAbsOrigin( GetAbsOrigin() );
+		vm->SetOwner( this );
+		vm->SetIndex( index );
+		DispatchSpawn( vm );
+		vm->FollowEntity( GetViewModel( iOtherVm ), true );
+		m_hViewModel.Set( index, vm );
+	}
+}
+#endif
+
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
@@ -2130,6 +2154,10 @@ void CBasePlayer::PlayerDeathThink(void)
 			SetAbsVelocity( vecNewVelocity );
 		}
 	}
+
+#ifdef OMOD
+	GetViewModel(1)->SetModel( "" ); // FIX: Removes hand model when the player is dead
+#endif
 
 	if ( HasWeapons() )
 	{
@@ -5041,6 +5069,9 @@ void CBasePlayer::Spawn( void )
 	enginesound->SetPlayerDSP( user, 0, false );
 
 	CreateViewModel();
+#ifdef OMOD
+	CreateHandModel();
+#endif
 
 	SetCollisionGroup( COLLISION_GROUP_PLAYER );
 

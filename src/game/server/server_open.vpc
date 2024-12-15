@@ -252,6 +252,8 @@ $Project "Server (OpenMod)"
 			$File	"$SRCDIR\game\shared\openmod\weapon_toolgun.cpp"
 			$File	"$SRCDIR\game\shared\openmod\weapon_toolgun.h"
 			
+			$File	"$SRCDIR\game\shared\openmod\handviewmodel_shared.cpp"
+			
 			$File	"$SRCDIR\game\shared\Multiplayer\multiplayer_animstate.h"
 			$File	"$SRCDIR\game\shared\Multiplayer\multiplayer_animstate.cpp"
 			$File	"$SRCDIR\game\shared\openmod\mountaddons.cpp"

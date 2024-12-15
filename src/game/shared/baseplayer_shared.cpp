@@ -60,6 +60,10 @@
 #include "mathlib/lvector.h"
 #endif
 
+#ifdef OMOD
+#include "hl2mp_player_shared.h"
+#endif
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -228,6 +232,10 @@ bool CBasePlayer::UsingStandardWeaponsInVehicle( void )
 
 	return true;
 }
+
+#ifdef OMOD
+extern ConVar c_handmodel;
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: Called every usercmd by the player PostThink
@@ -1847,7 +1855,6 @@ void CBasePlayer::MakeTracer( const Vector &vecTracerSrc, const trace_t &tr, int
 
 	BaseClass::MakeTracer( vecTracerSrc, tr, iTracerType );
 }
-
 
 void CBasePlayer::SharedSpawn()
 {

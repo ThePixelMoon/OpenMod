@@ -129,7 +129,13 @@ private:
 	int	  m_iSpawnInterpCounter;
 	int	  m_iSpawnInterpCounterCache;
 
+#ifdef OMOD // workaround for c_hands
+public:
+#endif
 	int	  m_iPlayerSoundType;
+#ifdef OMOD
+private:
+#endif
 
 	void ReleaseFlashlight( void );
 	Beam_t	*m_pFlashlightBeam;

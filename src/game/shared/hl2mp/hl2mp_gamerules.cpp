@@ -137,6 +137,9 @@ static const char *s_PreserveEnts[] =
 	"trigger_soundscape",
 	"viewmodel",
 	"predicted_viewmodel",
+#ifdef OMOD
+	"hand_viewmodel", // Our new viewmodel entity
+#endif
 	"worldspawn",
 	"point_devshot_camera",
 	"", // END Marker
