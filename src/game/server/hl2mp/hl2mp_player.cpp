@@ -55,39 +55,7 @@ LINK_ENTITY_TO_CLASS( info_player_terrorist, CPointEntity );
 LINK_ENTITY_TO_CLASS( info_player_allies, CPointEntity );
 LINK_ENTITY_TO_CLASS( info_player_axis, CPointEntity );
 
-// stolen- i mean borrowed from gmod
-LINK_ENTITY_TO_CLASS( info_player_blue, CPointEntity );
-LINK_ENTITY_TO_CLASS( info_player_red, CPointEntity );
-LINK_ENTITY_TO_CLASS( info_player_coop, CPointEntity ); // Synergy ?
-LINK_ENTITY_TO_CLASS( info_player_deathmatch, CPointEntity );
-LINK_ENTITY_TO_CLASS( info_player_zombiemaster, CPointEntity ); // ZM
-LINK_ENTITY_TO_CLASS( info_spawnpoint, CPointEntity );
-
-LINK_ENTITY_TO_CLASS( info_player_knight, CPointEntity ); // PVKII
-LINK_ENTITY_TO_CLASS( info_player_pirate, CPointEntity ); // PVKII
-LINK_ENTITY_TO_CLASS( info_player_viking, CPointEntity ); // PVKII
-
-LINK_ENTITY_TO_CLASS( info_survivor_position, CPointEntity ); // L4D
-LINK_ENTITY_TO_CLASS( info_survivor_rescue, CPointEntity ); // L4D
-
-LINK_ENTITY_TO_CLASS( info_player_human, CPointEntity ); // ZPS
-LINK_ENTITY_TO_CLASS( info_player_zombie, CPointEntity ); // ZPS
-
-LINK_ENTITY_TO_CLASS( diprip_start_team_red, CPointEntity ); // DIPRIP
-LINK_ENTITY_TO_CLASS( diprip_start_team_blue, CPointEntity ); // DIPRIP
-
-LINK_ENTITY_TO_CLASS( info_player_fof, CPointEntity ); // Firstful of Frags
-LINK_ENTITY_TO_CLASS( info_player_desperado, CPointEntity ); // Firstful of Frags
-LINK_ENTITY_TO_CLASS( info_player_vigilante, CPointEntity ); // Firstful of Frags
-
-LINK_ENTITY_TO_CLASS( info_player_attacker, CPointEntity ); // NEOTOKYO
-LINK_ENTITY_TO_CLASS( info_player_defender, CPointEntity ); // NEOTOKYO
-
-LINK_ENTITY_TO_CLASS( info_coop_spawn, CPointEntity ); // Portal 2 Coop
-LINK_ENTITY_TO_CLASS( ins_spawnpoint, CPointEntity ); // Insurgency
-LINK_ENTITY_TO_CLASS( dys_spawn_point, CPointEntity ); // Dystopia
-LINK_ENTITY_TO_CLASS( aoc_spawnpoint, CPointEntity ); // Age of Chivalry
-LINK_ENTITY_TO_CLASS( info_ff_teamspawn, CPointEntity ); // Fortress Forever
+LINK_ENTITY_TO_CLASS( info_observer_point, CPointEntity ); // uhh..
 #endif
 
 IMPLEMENT_SERVERCLASS_ST(CHL2MP_Player, DT_HL2MP_Player)

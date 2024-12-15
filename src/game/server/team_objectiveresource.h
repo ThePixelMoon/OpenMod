@@ -85,35 +85,30 @@ public:
 	int GetBaseControlPointForTeam( int iTeam ) 
 	{ 
 		Assert( iTeam < MAX_TEAMS );
-		return m_iBaseControlPoints[iTeam]; 
+		return 0;
 	}
 
 	int GetCappingTeam( int index )
 	{
-		if ( index >= m_iNumControlPoints )
-			return TEAM_UNASSIGNED;
-
-		return m_iCappingTeam[index];
+		return 0;
 	}
 
 	void SetTimerInHUD( CBaseEntity *pTimer )
 	{
-		m_iTimerToShowInHUD = pTimer ? pTimer->entindex() : 0;
 	}
 
 
 	void SetStopWatchTimer( CBaseEntity *pTimer )
 	{
-		m_iStopWatchTimer = pTimer ? pTimer->entindex() : 0;
 	}
 
 	int GetTimerInHUD( void ) { return m_iTimerToShowInHUD; }
 
 	// Mini-rounds data
-	void SetPlayingMiniRounds( bool bPlayingMiniRounds ){ m_bPlayingMiniRounds = bPlayingMiniRounds; }
-	bool PlayingMiniRounds( void ){ return m_bPlayingMiniRounds; }
-	void SetInMiniRound( int index, bool bInRound ) { m_bInMiniRound.Set( index, bInRound ); }
-	bool IsInMiniRound( int index ) { return m_bInMiniRound[index]; }
+	void SetPlayingMiniRounds( bool bPlayingMiniRounds ){ }
+	bool PlayingMiniRounds( void ){ return false; }
+	void SetInMiniRound( int index, bool bInRound ) { }
+	bool IsInMiniRound( int index ) { return false; }
 
 	void UpdateCapHudElement( void );
 
@@ -123,48 +118,15 @@ public:
 	bool GetCPLocked( int index )
 	{
 		Assert( index < m_iNumControlPoints );
-		return m_bCPLocked[index];
+		return false;
 	}
 
 	void ResetHillData( int team )
 	{
-		if ( team < TEAM_TRAIN_MAX_TEAMS )
-		{
-			m_nNumNodeHillData.Set( team, 0 );
-
-			int nNumEntriesPerTeam = TEAM_TRAIN_MAX_HILLS * TEAM_TRAIN_FLOATS_PER_HILL; 
-			int iStartingIndex = team * nNumEntriesPerTeam;
-			for ( int i = 0 ; i < nNumEntriesPerTeam ; i++ )
-			{
-				m_flNodeHillData.Set( iStartingIndex + i, 0 );
-			}
-
-			iStartingIndex = team * TEAM_TRAIN_MAX_HILLS;
-			for ( int i = 0; i < TEAM_TRAIN_MAX_HILLS; i++ )
-			{
-				m_bHillIsDownhill.Set( iStartingIndex + i, 0 );
-			}
-		}
 	}
 
 	void SetHillData( int team, float flStart, float flEnd, bool bDownhill )
 	{
-		if ( team < TEAM_TRAIN_MAX_TEAMS )
-		{
-			int index = ( m_nNumNodeHillData[team] * TEAM_TRAIN_FLOATS_PER_HILL ) + ( team * TEAM_TRAIN_MAX_HILLS * TEAM_TRAIN_FLOATS_PER_HILL );
-			if ( index < TEAM_TRAIN_HILLS_ARRAY_SIZE - 1 ) // - 1 because we want to add 2 entries
-			{
-				m_flNodeHillData.Set( index, flStart );
-				m_flNodeHillData.Set( index + 1, flEnd );
-
-				if ( m_nNumNodeHillData[team] < TEAM_TRAIN_MAX_HILLS )
-				{
-					m_bHillIsDownhill.Set( m_nNumNodeHillData[team] + ( team * TEAM_TRAIN_MAX_HILLS ), bDownhill );
-				}
-
-				m_nNumNodeHillData.Set( team, m_nNumNodeHillData[team] + 1);
-			}
-		}
 	}
 
 private:

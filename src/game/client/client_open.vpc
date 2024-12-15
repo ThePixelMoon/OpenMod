@@ -101,8 +101,6 @@ $Project "Client (OpenMod)"
 			{
 				$File	"openmod\spawnmenu.cpp"
 				$File	"openmod\spawnmenu.h"
-				$File	"openmod\newgamemenu.cpp"
-				$File	"openmod\newgamemenu.h"
 				$File	"openmod\basemenu.cpp"
 				$File	"openmod\basemenu.h"
 			}

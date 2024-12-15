@@ -60,8 +60,31 @@ bool mountContent(int nExtraAppId)
 			FileFindHandle_t hFind;
 			const char* pFilename = g_pFullFileSystem->FindFirst(szSearchPath, &hFind);
 
+			DevMsg("mounting path: %s\n", VarArgs("%s/%s", szInstallDir, g_GamePaths[i].m_pPathName));
+			g_pFullFileSystem->AddSearchPath(VarArgs("%s/%s", szInstallDir, g_GamePaths[i].m_pPathName), "GAME");
+
 			if (!pFilename)
 				continue;
+
+			if ( iVal == 360 )
+			{
+				do
+				{
+					char filef[1024];
+					Q_strncpy(filef, pFilename, sizeof(filef));
+
+					filef[strlen(filef) - 8] = '\0';
+
+					char aPath[1024];
+					Q_snprintf(aPath, sizeof(aPath), "%s/hl1/hl1_pak", szInstallDir);
+
+					Q_strcat(aPath, "_dir.vpk", sizeof(aPath));
+					DevMsg("mounting path: %s\n", aPath);
+
+					g_pFullFileSystem->AddSearchPath(aPath, "GAME");
+
+				} while (g_pFullFileSystem->FindNext(hFind));
+			}
 
 			do
 			{
