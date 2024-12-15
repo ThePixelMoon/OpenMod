@@ -79,3 +79,4 @@ game/openmod/shadereditorui/shader_src/uniquefilestocopy.txt
 
 Release/
 Debug/
+*.txt
