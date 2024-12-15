@@ -18,6 +18,9 @@ WeaponData
 	"weight"			"0"
 	"item_flags"			"2"
 
+	"BuiltRightHanded" "0"
+	"AllowFlipping" "1"
+
 	SoundData
 	{
 		"single_shot"		"Weapon_Physgun.On"

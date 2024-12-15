@@ -31,12 +31,12 @@ SWEP.SoundData				=
 	single_shot				= "Weapon_357.Single"
 }
 
-SWEP.showusagehint			= 0
-SWEP.autoswitchto			= 1
-SWEP.autoswitchfrom			= 1
-SWEP.BuiltRightHanded		= 1
-SWEP.AllowFlipping			= 1
-SWEP.MeleeWeapon			= 0
+SWEP.ShowUsageHint			= false
+SWEP.autoswitchto			= true
+SWEP.autoswitchfrom			= true
+SWEP.BuiltRightHanded		= true
+SWEP.AllowFlipping			= true
+SWEP.MeleeWeapon			= false
 
 -- TODO; implement Activity enum library!!
 SWEP.m_acttable				=

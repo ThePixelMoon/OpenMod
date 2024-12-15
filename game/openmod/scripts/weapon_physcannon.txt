@@ -20,6 +20,9 @@ WeaponData
 	"autoswitchfrom"	"0"
 	"item_flags"		"2"
 
+	"BuiltRightHanded" "0"
+	"AllowFlipping" "1"
+
 	SoundData
 	{
 		// launch held object

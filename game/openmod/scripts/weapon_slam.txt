@@ -18,6 +18,9 @@ WeaponData
 	"weight"				"1"
 	"item_flags"			"2"
 
+	"BuiltRightHanded" "0"
+	"AllowFlipping" "1"
+
 	// Weapon Sprite data is loaded by the Client DLL.
 	TextureData
 	{

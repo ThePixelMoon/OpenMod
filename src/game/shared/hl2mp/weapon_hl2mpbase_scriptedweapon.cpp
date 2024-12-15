@@ -365,7 +365,7 @@ void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
 	lua_remove(L, -2);
 	if ( lua_isboolean( L, -1 ) )
 	{
-		UseHands = lua_toboolean(L, -1);						// Use the viewmodel hands or no?
+		UseHands = lua_toboolean( L, -1 );						// Use the viewmodel hands or no?
 	}
 	else
 	{
@@ -424,11 +424,11 @@ void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
 	lua_pop( L, 1 );
 	
 	lua_getref( L, m_nTableReference );
-	lua_getfield( L, -1, "showusagehint" );
+	lua_getfield( L, -1, "ShowUsageHint" );
 	lua_remove( L, -2 );
-	if ( lua_isnumber( L, -1 ) )
+	if ( lua_isboolean( L, -1 ) )
 	{
-		m_pLuaWeaponInfo->bShowUsageHint = (int)lua_tointeger( L, -1 ) != 0 ? true : false;
+		m_pLuaWeaponInfo->bShowUsageHint = lua_toboolean( L, -1 );;
 	}
 	else
 	{
@@ -438,9 +438,9 @@ void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
 	lua_getref( L, m_nTableReference );
 	lua_getfield( L, -1, "autoswitchto" );
 	lua_remove( L, -2 );
-	if ( lua_isnumber( L, -1 ) )
+	if ( lua_isboolean( L, -1 ) )
 	{
-		m_pLuaWeaponInfo->bAutoSwitchTo = (int)lua_tointeger( L, -1 ) != 0 ? true : false;
+		m_pLuaWeaponInfo->bAutoSwitchTo = lua_toboolean( L, -1 );;
 	}
 	else
 	{
@@ -450,9 +450,9 @@ void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
 	lua_getref( L, m_nTableReference );
 	lua_getfield( L, -1, "autoswitchfrom" );
 	lua_remove( L, -2 );
-	if ( lua_isnumber( L, -1 ) )
+	if ( lua_isboolean( L, -1 ) )
 	{
-		m_pLuaWeaponInfo->bAutoSwitchFrom = (int)lua_tointeger( L, -1 ) != 0 ? true : false;
+		m_pLuaWeaponInfo->bAutoSwitchFrom = lua_toboolean( L, -1 );;
 	}
 	else
 	{
@@ -462,9 +462,9 @@ void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
 	lua_getref( L, m_nTableReference );
 	lua_getfield( L, -1, "BuiltRightHanded" );
 	lua_remove( L, -2 );
-	if ( lua_isnumber( L, -1 ) )
+	if ( lua_isboolean( L, -1 ) )
 	{
-		m_pLuaWeaponInfo->m_bBuiltRightHanded = (int)lua_tointeger( L, -1 ) != 0 ? true : false;
+		m_pLuaWeaponInfo->m_bBuiltRightHanded = lua_toboolean( L, -1 );;
 	}
 	else
 	{
@@ -474,9 +474,9 @@ void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
 	lua_getref( L, m_nTableReference );
 	lua_getfield( L, -1, "AllowFlipping" );
 	lua_remove( L, -2 );
-	if ( lua_isnumber( L, -1 ) )
+	if ( lua_isboolean( L, -1 ) )
 	{
-		m_pLuaWeaponInfo->m_bAllowFlipping = (int)lua_tointeger( L, -1 ) != 0 ? true : false;
+		m_pLuaWeaponInfo->m_bAllowFlipping = lua_toboolean( L, -1 );;
 	}
 	else
 	{
@@ -486,9 +486,9 @@ void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
 	lua_getref( L, m_nTableReference );
 	lua_getfield( L, -1, "MeleeWeapon" );
 	lua_remove( L, -2 );
-	if ( lua_isnumber( L, -1 ) )
+	if ( lua_isboolean( L, -1 ) )
 	{
-		m_pLuaWeaponInfo->m_bMeleeWeapon = (int)lua_tointeger( L, -1 ) != 0 ? true : false;
+		m_pLuaWeaponInfo->m_bMeleeWeapon = lua_toboolean( L, -1 );;
 	}
 	else
 	{
