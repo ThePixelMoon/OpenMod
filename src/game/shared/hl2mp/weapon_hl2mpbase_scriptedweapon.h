@@ -35,6 +35,10 @@ public:
 	DECLARE_PREDICTABLE();
 	// DECLARE_ACTTABLE();
 
+#ifdef OMOD
+	bool			UseHands;
+#endif
+
 	acttable_t m_acttable[LUA_MAX_WEAPON_ACTIVITIES];
 	acttable_t *ActivityList( void );
 	int ActivityListCount( void );

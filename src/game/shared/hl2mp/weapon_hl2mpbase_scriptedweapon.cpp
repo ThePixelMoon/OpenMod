@@ -358,6 +358,20 @@ void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
 	{
 		m_pLuaWeaponInfo->iMaxClip2 = WEAPON_NOCLIP;
 	}
+#ifdef OMOD
+	lua_pop(L, 1);
+	lua_getref(L, m_nTableReference);
+	lua_getfield(L, -1, "UseHands");
+	lua_remove(L, -2);
+	if ( lua_isboolean( L, -1 ) )
+	{
+		UseHands = lua_toboolean(L, -1);						// Use the viewmodel hands or no?
+	}
+	else
+	{
+		UseHands = true;
+	}
+#endif
 	lua_pop( L, 1 );
 	lua_getref( L, m_nTableReference );
 	lua_getfield( L, -1, "default_clip" );
@@ -922,6 +936,13 @@ bool CHL2MPScriptedWeapon::Reload( void )
 //-----------------------------------------------------------------------------
 bool CHL2MPScriptedWeapon::Deploy( void )
 {
+#ifdef OMOD
+	if (!UseHands)
+	{
+		ToHL2MPPlayer(GetOwner())->GetViewModel(1)->SetModel(""); // none
+	}
+#endif
+
 #if defined ( LUA_SDK )
 	BEGIN_LUA_CALL_WEAPON_METHOD( "Deploy" );
 	END_LUA_CALL_WEAPON_METHOD( 0, 1 );
@@ -945,12 +966,58 @@ Activity CHL2MPScriptedWeapon::GetDrawActivity( void )
 	return BaseClass::GetDrawActivity();
 }
 
+#ifdef OMOD
+extern ConVar c_handmodel;
+#endif
+
 //-----------------------------------------------------------------------------
 // Purpose: 
 // Output : Returns true on success, false on failure.
 //-----------------------------------------------------------------------------
 bool CHL2MPScriptedWeapon::Holster( CBaseCombatWeapon *pSwitchingTo )
 {
+#ifdef OMOD
+	if ( !UseHands )
+	{
+#ifndef CLIENT_DLL
+		if (strcmp(c_handmodel.GetString(), "default") == 0) {
+			if (ToHL2MPPlayer(GetOwner())->GetPlayerModelType() == PLAYER_SOUNDS_METROPOLICE || ToHL2MPPlayer(GetOwner())->GetPlayerModelType() == PLAYER_SOUNDS_COMBINESOLDIER)
+			{
+				ToHL2MPPlayer(GetOwner())->GetViewModel(1)->SetModel("models/weapons/c_arms_combine.mdl");
+			}
+			else
+			{
+				ToHL2MPPlayer(GetOwner())->GetViewModel(1)->SetModel("models/weapons/c_arms_citizen.mdl");
+			}
+		}
+		else if (strcmp(c_handmodel.GetString(), "citizen") == 0)
+		{
+			ToHL2MPPlayer(GetOwner())->GetViewModel(1)->SetModel("models/weapons/c_arms_citizen.mdl");
+		}
+		else if (strcmp(c_handmodel.GetString(), "combine") == 0)
+		{
+			ToHL2MPPlayer(GetOwner())->GetViewModel(1)->SetModel("models/weapons/c_arms_combine.mdl");
+		}
+		else if (strcmp(c_handmodel.GetString(), "refugee") == 0)
+		{
+			ToHL2MPPlayer(GetOwner())->GetViewModel(1)->SetModel("models/weapons/c_arms_refugee.mdl");
+		}
+		else if (strcmp(c_handmodel.GetString(), "cstrike") == 0) // i actually have NO idea why isn't the materials working, it probably needs cs:s mounted
+		{
+			ToHL2MPPlayer(GetOwner())->GetViewModel(1)->SetModel("models/weapons/c_arms_cstrike.mdl");
+		}
+		else if (strcmp(c_handmodel.GetString(), "dod") == 0)
+		{
+			ToHL2MPPlayer(GetOwner())->GetViewModel(1)->SetModel("models/weapons/c_arms_dod.mdl");
+		}
+		else
+		{
+			ToHL2MPPlayer(GetOwner())->GetViewModel(1)->SetModel("models/weapons/c_arms_citizen.mdl");
+		}
+#endif
+	}
+#endif
+
 #if defined ( LUA_SDK )
 	BEGIN_LUA_CALL_WEAPON_METHOD( "Holster" );
 		lua_pushweapon( L, pSwitchingTo );

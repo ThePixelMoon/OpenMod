@@ -23,6 +23,8 @@ SWEP.item_flags				= 0
 
 SWEP.damage					= 75
 
+SWEP.UseHands				= true
+
 SWEP.SoundData				=
 {
 	empty					= "Weapon_Pistol.Empty",
