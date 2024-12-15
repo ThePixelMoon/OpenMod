@@ -410,7 +410,14 @@ void CHL2MP_Player::Spawn(void)
 
 #ifdef OMOD
 	if (strcmp(c_handmodel.GetString(), "default") == 0) {
-		GetViewModel(1)->SetModel("models/weapons/c_arms_citizen.mdl");
+		if (GetPlayerModelType() == PLAYER_SOUNDS_METROPOLICE || GetPlayerModelType() == PLAYER_SOUNDS_COMBINESOLDIER)
+		{
+			GetViewModel(1)->SetModel("models/weapons/c_arms_combine.mdl");
+		}
+		else
+		{
+			GetViewModel(1)->SetModel("models/weapons/c_arms_citizen.mdl");
+		}
 	}
 	else if (strcmp(c_handmodel.GetString(), "citizen") == 0)
 	{
@@ -420,15 +427,11 @@ void CHL2MP_Player::Spawn(void)
 	{
 		GetViewModel(1)->SetModel("models/weapons/c_arms_combine.mdl");
 	}
-	else if (strcmp(c_handmodel.GetString(), "hev") == 0)
-	{
-		GetViewModel(1)->SetModel("models/weapons/c_arms_hev.mdl");
-	}
 	else if (strcmp(c_handmodel.GetString(), "refugee") == 0)
 	{
 		GetViewModel(1)->SetModel("models/weapons/c_arms_refugee.mdl");
 	}
-	else if (strcmp(c_handmodel.GetString(), "cstrike") == 0)
+	else if (strcmp(c_handmodel.GetString(), "cstrike") == 0) // i actually have NO idea why isn't the materials working, it probably needs cs:s mounted
 	{
 		GetViewModel(1)->SetModel("models/weapons/c_arms_cstrike.mdl");
 	}
