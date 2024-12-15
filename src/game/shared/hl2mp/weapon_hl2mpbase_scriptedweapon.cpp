@@ -436,7 +436,7 @@ void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
 	}
 	lua_pop( L, 1 );
 	lua_getref( L, m_nTableReference );
-	lua_getfield( L, -1, "autoswitchto" );
+	lua_getfield( L, -1, "AutoSwitchTo" );
 	lua_remove( L, -2 );
 	if ( lua_isboolean( L, -1 ) )
 	{
@@ -448,7 +448,7 @@ void CHL2MPScriptedWeapon::InitScriptedWeapon( void )
 	}
 	lua_pop( L, 1 );
 	lua_getref( L, m_nTableReference );
-	lua_getfield( L, -1, "autoswitchfrom" );
+	lua_getfield( L, -1, "AutoSwitchFrom" );
 	lua_remove( L, -2 );
 	if ( lua_isboolean( L, -1 ) )
 	{

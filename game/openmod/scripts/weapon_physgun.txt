@@ -18,7 +18,7 @@ WeaponData
 	"weight"			"0"
 	"item_flags"			"2"
 
-	"BuiltRightHanded" "0"
+	"BuiltRightHanded" "1"
 	"AllowFlipping" "1"
 
 	SoundData

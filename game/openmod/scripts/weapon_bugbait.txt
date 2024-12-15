@@ -24,7 +24,7 @@ WeaponData
 	"weight"				"0"
 	"item_flags"			"0"
 
-	"BuiltRightHanded" "0"
+	"BuiltRightHanded" "1"
 	"AllowFlipping" "1"
 
 	// Weapon Sprite data is loaded by the Client DLL.

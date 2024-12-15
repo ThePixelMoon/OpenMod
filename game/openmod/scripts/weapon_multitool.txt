@@ -18,7 +18,7 @@ WeaponData
 	"item_flags"			"0"
 	"damage"			"8"
 
-	"BuiltRightHanded" "0"
+	"BuiltRightHanded" "1"
 	"AllowFlipping" "1"
 
 	// Sounds for the weapon. There is a max of 16 sounds per category (i.e. max 16 "single_shot" sounds)
