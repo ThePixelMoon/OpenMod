@@ -15,9 +15,9 @@ Scheme
 	Colors
 	{
 		// base colors
-		"Orange"			"255 176 0 255"
-		"OrangeDim"			"255 176 0 120"
-		"LightOrange"		"188 112 0 128"
+		"Orange"			"255 255 0 255"
+		"OrangeDim"			"255 255 0 120"
+		"LightOrange"		"255 255 0 128"
 		
 		"Red"				"192 28 0 140"
 		"Black"				"0 0 0 196"
@@ -36,26 +36,26 @@ Scheme
 	// controls use these to determine their settings
 	BaseSettings
 	{
-		"FgColor"			"255 220 0 100"
+		"FgColor"			"255 255 0 100"
 		"BgColor"			"0 0 0 137"
 
-		"Panel.FgColor"			"255 220 0 100"
+		"Panel.FgColor"			"255 255 0 100"
 		"Panel.BgColor"			"0 0 0 137"
 		
-		"BrightFg"		"255 220 0 255"
+		"BrightFg"		"255 255 0 255"
 
 		"DamagedBg"			"180 0 0 137"
 		"DamagedFg"			"180 0 0 230"
 		"BrightDamagedFg"		"255 0 0 255"
 
 		// weapon selection colors
-		"SelectionNumberFg"		"255 220 0 255"
-		"SelectionTextFg"		"255 220 0 255"
+		"SelectionNumberFg"		"255 255 0 255"
+		"SelectionTextFg"		"255 255 0 255"
 		"SelectionEmptyBoxBg" 	"0 0 0 137"
 		"SelectionBoxBg" 		"0 0 0 137"
 		"SelectionSelectedBoxBg" "0 0 0 137"
 		
-		"ZoomReticleColor"	"255 220 0 255"
+		"ZoomReticleColor"	"255 255 0 255"
 
 		// HL1-style HUD colors
 		"Yellowish"			"255 160 0 255"

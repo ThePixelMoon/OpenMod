@@ -28,7 +28,11 @@ int ScreenTransform( const Vector& point, Vector& screen );
 
 #define	HEALTH_WARNING_THRESHOLD	25
 
+#ifndef OMOD
 static ConVar	hud_quickinfo( "hud_quickinfo", "1", FCVAR_ARCHIVE );
+#else
+static ConVar	hud_quickinfo( "hud_quickinfo", "0", FCVAR_ARCHIVE );
+#endif
 
 extern ConVar crosshair;
 
