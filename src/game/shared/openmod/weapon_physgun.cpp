@@ -871,13 +871,6 @@ void CWeaponPhysicsGun::EffectUpdate( void )
 			pAnimating->SetGlowEffectColor(0, 255, 0);
 			pAnimating->AddGlowEffect();
 		}
-		else { // try converting it into a different type
-			CBaseProp* pProp = dynamic_cast<CBaseProp*>(pObject);
-			if (pProp) {
-				pProp->SetGlowEffectColor(0, 255, 0);
-				pProp->AddGlowEffect();
-			}
-		}
 #endif
 
 		if ( m_useDown )
