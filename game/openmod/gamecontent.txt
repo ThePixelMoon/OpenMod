@@ -2,10 +2,5 @@
 {
 	"FileSystem"
 	{
-		"appid"		"220"
-		"appid"		"360"
-		"appid"		"400"
-		"appid"		"320"
-		"appid"		"440"
 	}
 }
