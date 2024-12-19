@@ -1,7 +1,7 @@
 ![Logo](.github-assets/logo.png?raw=true)
 OpenMod is a **free-to-play**, **FOSS**, and **engaging** Sandbox mod that delivers a unique and creative gameplay experience.
 
-## Features 👽
+## Features 🧰
 - Complete scripting with **Lua**
 - ViewModel Hands
 - A fully functioning **Physics Gun**, just like **Garry's Mod**
@@ -9,6 +9,8 @@ OpenMod is a **free-to-play**, **FOSS**, and **engaging** Sandbox mod that deliv
 - Support for *mounting* games, such as: **Team Fortress 2**, **Half-Life 2: Deathmatch**, and more
 - [Metaballs](https://github.com/celisej567/source-engine-metaballs)
 - **Source Shader Editor** support *(-shaderedit console parameter)*
+- A working **Spawn Menu**
+- Glow Effect straight from **Team Fortess 2**
 
 ## Building 🔨
 
