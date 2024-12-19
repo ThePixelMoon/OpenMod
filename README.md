@@ -1,5 +1,5 @@
 ![Logo](.github-assets/logo.png?raw=true)
-OpenMod is a **free-to-play**, **FOSS**, and **engaging** Sandbox mod that delivers a unique and creative gameplay experience.
+OpenMod is a **FOSS**, and **engaging** Sandbox mod that delivers a unique and creative gameplay experience.
 
 ## Features 🧰
 - Complete scripting with **Lua**
