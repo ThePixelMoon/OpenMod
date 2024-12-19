@@ -32,8 +32,8 @@ SWEP.SoundData				=
 SWEP.ShowUsageHint			= false
 SWEP.AutoSwitchTo			= true
 SWEP.AutoSwitchFrom			= true
-SWEP.BuiltRightHanded		= true
-SWEP.AllowFlipping			= true
+SWEP.BuiltRightHanded		= false
+SWEP.AllowFlipping			= false
 SWEP.MeleeWeapon			= true
 SWEP.UseHands				= true
 
