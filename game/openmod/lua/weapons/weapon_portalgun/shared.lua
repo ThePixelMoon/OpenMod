@@ -40,19 +40,13 @@ SWEP.UseHands				= true
 -- TODO; implement Activity enum library!!
 SWEP.m_acttable				=
 {
-	{ 1048, 977, false },
-	{ 1049, 979, false },
-
-	{ 1058, 978, false },
-	{ 1061, 980, false },
-
-	{ 1073, 981, false },
-	{ 1077, 981, false },
-
-	{ 1090, 982, false },
-	{ 1093, 982, false },
-
-	{ 1064, 983, false },
+	{ ACT_HL2MP_IDLE,					ACT_HL2MP_IDLE_PHYSGUN,					false },
+	{ ACT_HL2MP_RUN,					ACT_HL2MP_RUN_PHYSGUN,					false },
+	{ ACT_HL2MP_IDLE_CROUCH,			ACT_HL2MP_IDLE_CROUCH_PHYSGUN,			false },
+	{ ACT_HL2MP_WALK_CROUCH,			ACT_HL2MP_WALK_CROUCH_PHYSGUN,			false },
+	{ ACT_HL2MP_GESTURE_RANGE_ATTACK,	ACT_HL2MP_GESTURE_RANGE_ATTACK_PHYSGUN,	false },
+	{ ACT_HL2MP_GESTURE_RELOAD,			ACT_HL2MP_GESTURE_RELOAD_PHYSGUN,		false },
+	{ ACT_HL2MP_JUMP,					ACT_HL2MP_JUMP_PHYSGUN,					false },
 };
 
 function SWEP:Initialize()

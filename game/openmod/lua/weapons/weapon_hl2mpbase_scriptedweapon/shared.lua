@@ -37,22 +37,31 @@ SWEP.AllowFlipping			= true
 SWEP.MeleeWeapon			= false
 SWEP.UseHands				= true
 
--- TODO; implement Activity enum library!!
-SWEP.m_acttable				=
+SWEP.m_acttable            =
 {
-	{ 1048, 977, false },
-	{ 1049, 979, false },
+	{ ACT_HL2MP_IDLE,					ACT_HL2MP_IDLE_PISTOL,					false },
+	{ ACT_HL2MP_RUN,					ACT_HL2MP_RUN_PISTOL,					false },
+	{ ACT_HL2MP_IDLE_CROUCH,			ACT_HL2MP_IDLE_CROUCH_PISTOL,			false },
+	{ ACT_HL2MP_WALK_CROUCH,			ACT_HL2MP_WALK_CROUCH_PISTOL,			false },
+	{ ACT_HL2MP_GESTURE_RANGE_ATTACK,	ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL,	false },
+	{ ACT_HL2MP_GESTURE_RELOAD,			ACT_HL2MP_GESTURE_RELOAD_PISTOL,		false },
+	{ ACT_HL2MP_JUMP,					ACT_HL2MP_JUMP_PISTOL,					false },
+	{ ACT_RANGE_ATTACK1,				ACT_RANGE_ATTACK_PISTOL,				false },
 
-	{ 1058, 978, false },
-	{ 1061, 980, false },
-
-	{ 1073, 981, false },
-	{ 1077, 981, false },
-
-	{ 1090, 982, false },
-	{ 1093, 982, false },
-
-	{ 1064, 983, false },
+	{ ACT_IDLE, ACT_IDLE_PISTOL, true },
+	{ ACT_IDLE_ANGRY, ACT_IDLE_ANGRY_PISTOL, true },
+	{ ACT_RANGE_ATTACK1, ACT_RANGE_ATTACK_PISTOL, true },
+	{ ACT_RELOAD, ACT_RELOAD_PISTOL, true },
+	{ ACT_WALK_AIM, ACT_WALK_AIM_PISTOL, true },
+	{ ACT_RUN_AIM, ACT_RUN_AIM_PISTOL, true },
+	{ ACT_GESTURE_RANGE_ATTACK1, ACT_GESTURE_RANGE_ATTACK_PISTOL, true },
+	{ ACT_RELOAD_LOW, ACT_RELOAD_PISTOL_LOW, false },
+	{ ACT_RANGE_ATTACK1_LOW, ACT_RANGE_ATTACK_PISTOL_LOW, false },
+	{ ACT_COVER_LOW, ACT_COVER_PISTOL_LOW, false },
+	{ ACT_RANGE_AIM_LOW, ACT_RANGE_AIM_PISTOL_LOW, false },
+	{ ACT_GESTURE_RELOAD, ACT_GESTURE_RELOAD_PISTOL, false },
+	{ ACT_WALK, ACT_WALK_PISTOL, false },
+	{ ACT_RUN, ACT_RUN_PISTOL, false },
 };
 
 function SWEP:Initialize()

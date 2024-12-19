@@ -31,6 +31,9 @@
 #include "engine/IStaticPropMgr.h"
 #include "particle_parse.h"
 #include "globalstate.h"
+#ifdef LUA_SDK
+#include "luamanager.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -507,7 +510,16 @@ void CWorld::DecalTrace( trace_t *pTrace, char const *decalName)
 
 void CWorld::RegisterSharedActivities( void )
 {
+#ifdef LUA_SDK
+	BEGIN_LUA_SET_ENUM_LIB( L, "Activity" );
+#endif
 	ActivityList_RegisterSharedActivities();
+#ifdef LUA_SDK
+	END_LUA_SET_ENUM_LIB( L );
+#endif
+
+	/* HACKHACK: Set all Activity values as global variables */
+	luasrc_dostring(L, "for k, v in pairs(_E[\"Activity\"]) do _G[k] = v end");
 }
 
 void CWorld::RegisterSharedEvents( void )
