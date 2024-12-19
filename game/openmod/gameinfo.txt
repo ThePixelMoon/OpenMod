@@ -3,7 +3,9 @@
 	game	"OpenMod"
 	title	" "
 	title2	" "
-	type multiplayer_only
+	type 	multiplayer_only
+	icon	"resource/icon"
+
 	nomodels 0
 	nohimodel 1
 	nocrosshair 1
