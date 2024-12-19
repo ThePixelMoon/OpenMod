@@ -76,9 +76,80 @@ BEGIN_NETWORK_TABLE_NOBASE( CHL2MPRules, DT_HL2MPRules )
 
 END_NETWORK_TABLE()
 
-
 LINK_ENTITY_TO_CLASS( hl2mp_gamerules, CHL2MPGameRulesProxy );
 IMPLEMENT_NETWORKCLASS_ALIASED( HL2MPGameRulesProxy, DT_HL2MPGameRulesProxy )
+
+#ifdef OMOD
+// Spawnflags
+#define SF_START_INACTIVE			0x01
+
+
+class CFuncPortalBumper : public CBaseEntity
+{
+public:
+	DECLARE_CLASS( CFuncPortalBumper, CBaseEntity );
+
+	CFuncPortalBumper();
+
+	// Overloads from base entity
+	virtual void	Spawn( void );
+
+	// Inputs to flip functionality on and off
+	void InputActivate( inputdata_t &inputdata );
+	void InputDeactivate( inputdata_t &inputdata );
+	void InputToggle( inputdata_t &inputdata );
+
+	// misc public methods
+	bool IsActive() { return m_bActive; }	// is this area currently bumping portals
+
+	DECLARE_DATADESC();
+
+private:
+	bool					m_bActive;			// are we currently blocking portals
+
+
+};
+
+
+LINK_ENTITY_TO_CLASS( func_portal_bumper, CFuncPortalBumper );
+
+BEGIN_DATADESC( CFuncPortalBumper )
+END_DATADESC()
+
+
+CFuncPortalBumper::CFuncPortalBumper()
+{
+	m_bActive = true;
+}
+
+void CFuncPortalBumper::Spawn()
+{
+	BaseClass::Spawn();
+
+	m_bActive = false;
+
+	// Bind to our model, cause we need the extents for bounds checking
+	SetModel( STRING( GetModelName() ) );
+	SetRenderMode( kRenderNone );	// Don't draw
+	SetSolid( SOLID_VPHYSICS );	// we may want slanted walls, so we'll use OBB
+	AddSolidFlags( FSOLID_NOT_SOLID );
+}
+
+void CFuncPortalBumper::InputActivate( inputdata_t &inputdata )
+{
+	m_bActive = true;
+}
+
+void CFuncPortalBumper::InputDeactivate( inputdata_t &inputdata )
+{
+	m_bActive = false;
+}
+
+void CFuncPortalBumper::InputToggle( inputdata_t &inputdata )
+{
+	m_bActive = !m_bActive;
+}
+#endif
 
 static HL2MPViewVectors g_HL2MPViewVectors(
 	Vector( 0, 0, 64 ),       //VEC_VIEW (m_vView) 

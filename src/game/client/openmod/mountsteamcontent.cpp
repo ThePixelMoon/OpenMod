@@ -86,6 +86,35 @@ bool mountContent(int nExtraAppId)
 				} while (g_pFullFileSystem->FindNext(hFind));
 			}
 
+			if (iVal == 220) // workaround for hl2 anniversary update
+			{
+				struct EpisodeInfo
+				{
+					const char* folder;
+					const char* pakPrefix;
+				};
+
+				EpisodeInfo episodes[] = {
+					{"ep2", "ep2_pak"},
+					{"episodic", "ep1_pak"},
+					{"lostcoast", "lostcoast_pak"}
+				};
+
+				for (const auto& episode : episodes)
+				{
+					g_pFullFileSystem->AddSearchPath(VarArgs("%s/%s", szInstallDir, episode.folder), "GAME");
+
+					do
+					{
+						char aPath[1024];
+						Q_snprintf(aPath, sizeof(aPath), "%s/%s/%s_dir.vpk", szInstallDir, episode.folder, episode.pakPrefix);
+
+						DevMsg("mounting path: %s\n", aPath);
+						g_pFullFileSystem->AddSearchPath(aPath, "GAME");
+					} while (g_pFullFileSystem->FindNext(hFind));
+				}
+			}
+
 			do
 			{
 				char file[1024];

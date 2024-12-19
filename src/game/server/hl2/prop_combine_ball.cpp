@@ -2195,3 +2195,116 @@ BEGIN_DATADESC( CFilterCombineBall )
 	// Keyfields
 	DEFINE_KEYFIELD( m_iBallType,	FIELD_INTEGER,	"balltype" ),
 END_DATADESC()
+
+#ifdef OMOD // portal
+#define IMPACT_DECAL_NAME	"decals/smscorch1model"
+
+class CEnergyBallLauncher : public CPointCombineBallLauncher
+{
+public:
+	DECLARE_CLASS(CEnergyBallLauncher, CPointCombineBallLauncher);
+	DECLARE_DATADESC();
+
+	virtual void SpawnBall();
+	virtual void Precache();
+	virtual void Spawn();
+
+private:
+	float	m_fBallLifetime;
+	float	m_fMinBallLifeAfterPortal;
+
+	COutputEvent		m_OnPostSpawnBall;
+
+
+};
+
+LINK_ENTITY_TO_CLASS(point_energy_ball_launcher, CEnergyBallLauncher);
+
+BEGIN_DATADESC(CEnergyBallLauncher)
+
+DEFINE_KEYFIELD(m_fBallLifetime, FIELD_FLOAT, "BallLifetime"),
+DEFINE_KEYFIELD(m_fMinBallLifeAfterPortal, FIELD_FLOAT, "MinLifeAfterPortal"),
+
+DEFINE_OUTPUT(m_OnPostSpawnBall, "OnPostSpawnBall"),
+
+END_DATADESC()
+
+void CEnergyBallLauncher::Precache()
+{
+	BaseClass::Precache();
+
+	UTIL_PrecacheDecal(IMPACT_DECAL_NAME, false);
+}
+
+void CEnergyBallLauncher::Spawn()
+{
+	Precache();
+
+	BaseClass::Spawn();
+}
+
+
+void CEnergyBallLauncher::SpawnBall()
+{
+	CPropCombineBall* pBall = static_cast<CPropCombineBall*>(CreateEntityByName("prop_combine_ball"));
+
+	if (pBall == NULL)
+		return;
+
+	pBall->SetRadius(m_flBallRadius);
+	Vector vecAbsOrigin = GetAbsOrigin();
+	Vector zaxis;
+
+	pBall->SetAbsOrigin(vecAbsOrigin);
+	pBall->SetSpawner(this);
+
+	pBall->SetSpeed(m_flMaxSpeed);
+	float flSpeed = m_flMaxSpeed;
+
+	Vector vDirection;
+	QAngle qAngle = GetAbsAngles();
+	AngleVectors(qAngle, &vDirection, NULL, NULL);
+
+	vDirection *= flSpeed;
+	pBall->SetAbsVelocity(vDirection);
+
+	DispatchSpawn(pBall);
+	pBall->Activate();
+	pBall->SetState(CPropCombineBall::STATE_LAUNCHED);
+	pBall->SetCollisionGroup(COLLISION_GROUP_PROJECTILE);
+
+	// Additional setup of the physics object for energy ball uses
+	IPhysicsObject* pBallObj = pBall->VPhysicsGetObject();
+
+	if (pBallObj)
+	{
+		// Make sure we dont use air drag
+		pBallObj->EnableDrag(false);
+
+		// Remove damping
+		float speed, rot;
+		speed = rot = 0.0f;
+		pBallObj->SetDamping(&speed, &rot);
+
+		// HUGE rotational inertia, don't allow the ball to have any spin
+		Vector vInertia(1e30, 1e30, 1e30);
+		pBallObj->SetInertia(vInertia);
+
+		// Low mass to let it bounce off of obstructions for certain puzzles.
+		pBallObj->SetMass(1.0f);
+	}
+
+	// Only expire if the lifetme field is positive
+	if (m_fBallLifetime >= 0)
+	{
+		pBall->StartLifetime(m_fBallLifetime);
+	}
+
+	// Think function, used to update time till death and avoid sleeping
+	pBall->SetNextThink(gpGlobals->curtime + 0.1f);
+
+	EmitSound("EnergyBall.Launch");
+
+	m_OnPostSpawnBall.FireOutput(this, this);
+}
+#endif
