@@ -5,11 +5,7 @@
 
 name: Build (Windows)
 
-on:
-  push:
-    branches: [ "master", "feature/msbuild" ]
-  pull_request:
-    branches: [ "master" ]
+on: [push, pull_request]
 
 env:
   # Path to the solution file relative to the root of the project.
