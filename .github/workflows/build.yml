@@ -37,7 +37,7 @@ jobs:
 
     - working-directory: ./src
       shell: cmd
-      run: creategameprojects.bat
+      run: createopenprojects.bat
 
     - working-directory: ./src
       shell: bash
