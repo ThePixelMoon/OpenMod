@@ -51,5 +51,5 @@ jobs:
       with:
         name: build-artifacts
         path: |
-          ./src/bin/${{env.BUILD_CONFIGURATION}}/*
-          ./src/logs/*
+          ./game/openmod/bin/client.dll
+          ./game/openmod/bin/server.dll
