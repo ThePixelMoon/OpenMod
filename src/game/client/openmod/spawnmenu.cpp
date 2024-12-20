@@ -228,7 +228,7 @@ public:
                         if (!Q_stricmp(dat->GetName(), "TF2") && !tf_mounted.GetBool())
                             continue;
 
-                        if (!Q_stricmp(dat->GetName(), "CSS") && !tf_mounted.GetBool())
+                        if (!Q_stricmp(dat->GetName(), "CSS") && !css_mounted.GetBool())
                             continue;
 
                         CSMLPage* page = new CSMLPage(this, dat->GetName());
