@@ -26,10 +26,6 @@ jobs:
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
 
-    # - name: Restore NuGet packages
-    #   working-directory: ${{env.GITHUB_WORKSPACE}}
-    #   run: nuget restore ${{env.SOLUTION_FILE_PATH}}
-
     - run: REG IMPORT .github/workflows/DefaultProjectExtension.reg
 
     - working-directory: ./src
@@ -41,15 +37,14 @@ jobs:
       run: ./devtools/fixsln.sh openmod.sln
 
     - name: Build
-      working-directory: ${{github.workspace}}
-      # Add additional options to the MSBuild command line here (like platform or verbosity level).
-      # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
-      run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
+      run: cd src;devenv openmod.sln /Build Release
 
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
+    - name: Pack
+      shell: bash
+      run: tar cJfv Windows.tar.xz game/openmod/bin
+
+    - name: Upload
+      uses: actions/upload-artifact@v4.4.3
       with:
-        name: build-artifacts
-        path: |
-          ./game/openmod/bin/client.dll
-          ./game/openmod/bin/server.dll
+        name: openmod
+        path: Windows.tar.xz
