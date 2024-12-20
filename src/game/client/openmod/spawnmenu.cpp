@@ -26,6 +26,7 @@ using namespace vgui;
 extern ConVar hl2_mounted;
 extern ConVar tf_mounted;
 extern ConVar portal_mounted;
+extern ConVar css_mounted;
 #endif
 
 class CSMLButton : public MenuButton
@@ -200,6 +201,9 @@ public:
                             continue;
 
                         if (!Q_stricmp(dat->GetName(), "TF2") && !tf_mounted.GetBool())
+                            continue;
+
+                        if (!Q_stricmp(dat->GetName(), "CSS") && !tf_mounted.GetBool())
                             continue;
 
                         CSMLPage* page = new CSMLPage(this, dat->GetName());

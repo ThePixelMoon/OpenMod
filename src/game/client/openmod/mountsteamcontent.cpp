@@ -27,6 +27,7 @@ using namespace vgui;
 ConVar hl2_mounted("hl2_mounted", "0", FCVAR_NONE, "indicates if hl2 is mounted");
 ConVar tf_mounted("tf_mounted", "0", FCVAR_NONE, "indicates if tf2 is mounted");
 ConVar portal_mounted("portal_mounted", "0", FCVAR_NONE, "indicates if portal is mounted");
+ConVar css_mounted("css_mounted", "0", FCVAR_NONE, "indicates if css is mounted");
 #endif
 
 // from HL2SB, because i am a lazy ass
@@ -81,6 +82,9 @@ bool mountContent(int nExtraAppId)
 
 			if ( iVal == 440 )
 				tf_mounted.SetValue(1);
+
+			if ( iVal == 240 )
+				css_mounted.SetValue(1);
 #endif
 
 			if ( iVal == 360 )

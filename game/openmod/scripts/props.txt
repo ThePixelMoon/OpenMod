@@ -2148,6 +2148,1225 @@ SpawnMenu
 			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_ragdoll model models/Humans/Charple04.mdl"
 		}
 	}
+	"CSS"
+	{
+		"CT GIGN"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_ragdoll model models/player/ct_gign.mdl"
+		}
+		"CT GSG 9"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_ragdoll model models/player/ct_gsg9.mdl"
+		}
+		"CT SAS"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_ragdoll model models/player/ct_sas.mdl"
+		}
+		"CT Urban"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_ragdoll model models/player/ct_urban.mdl"
+		}
+		"T Arctic"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_ragdoll model models/player/t_arctic.mdl"
+		}
+		"T Guerilla"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_ragdoll model models/player/t_guerilla.mdl"
+		}
+		"T Leet"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_ragdoll model models/player/t_leet.mdl"
+		}
+		"T Phoenix"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_ragdoll model models/player/t_phoenix.mdl"
+		}
+		"Hostage"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_ragdoll model models/characters/hostage_01.mdl"
+		}
+		"Hostage 2"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_ragdoll model models/characters/hostage_02.mdl"
+		}
+		"Hostage 3"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_ragdoll model models/characters/hostage_03.mdl"
+		}
+		"Hostage 4"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_ragdoll model models/characters/hostage_04.mdl"
+		}
+		"Gift"
+		{
+			"#"	"ent_create prop_physics_override model models/items/cs_gift.mdl"
+		}
+		"C4"
+		{
+			"#"	"prop_physics_create weapons/w_c4.mdl"
+		}
+		"Defuser"
+		{
+			"#"	"prop_physics_create weapons/w_defuser.mdl"
+		}
+		"Holster"
+		{
+			"#"	"prop_physics_create weapons/w_eq_eholster.mdl"
+		}
+		"Holster Gun"
+		{
+			"#"	"prop_physics_create weapons/w_eq_eholster_elite.mdl"
+		}
+		"Flashbang"
+		{
+			"#"	"prop_physics_create weapons/w_eq_flashbang.mdl"
+		}
+		"Frag Grenade"
+		{
+			"#"	"prop_physics_create weapons/w_eq_fraggrenade.mdl"
+		}
+		"Smoke Grenade"
+		{
+			"#"	"prop_physics_create weapons/w_eq_smokegrenade.mdl"
+		}
+		"Knife"
+		{
+			"#"	"prop_physics_create weapons/w_knife_ct.mdl"
+		}
+		"M249"
+		{
+			"#"	"prop_physics_create weapons/w_mach_m249para.mdl"
+		}
+		"Deagle"
+		{
+			"#"	"prop_physics_create weapons/w_pist_deagle.mdl"
+		}
+		"Elite"
+		{
+			"#"	"prop_physics_create weapons/w_pist_elite.mdl"
+		}
+		"Elite Dropped"
+		{
+			"#"	"prop_physics_create weapons/w_pist_elite_dropped.mdl"
+		}
+		"Elite Single"
+		{
+			"#"	"prop_physics_create weapons/w_pist_elite_single.mdl"
+		}
+		"Five-Seven"
+		{
+			"#"	"prop_physics_create weapons/w_pist_fiveseven.mdl"
+		}
+		"Glock 18"
+		{
+			"#"	"prop_physics_create weapons/w_pist_glock18.mdl"
+		}
+		"P228"
+		{
+			"#"	"prop_physics_create weapons/w_pist_p228.mdl"
+		}
+		"USP"
+		{
+			"#"	"prop_physics_create weapons/w_pist_usp.mdl"
+		}
+		"USP Silencer"
+		{
+			"#"	"prop_physics_create weapons/w_pist_usp_silencer.mdl"
+		}
+		"AK 47"
+		{
+			"#"	"prop_physics_create weapons/w_rif_ak47.mdl"
+		}
+		"Steyr AUG"
+		{
+			"#"	"prop_physics_create weapons/w_rif_aug.mdl"
+		}
+		"Famas"
+		{
+			"#"	"prop_physics_create weapons/w_rif_famas.mdl"
+		}
+		"Galil"
+		{
+			"#"	"prop_physics_create weapons/w_rif_galil.mdl"
+		}
+		"M4A1"
+		{
+			"#"	"prop_physics_create weapons/w_rif_m4a1.mdl"
+		}
+		"M4A1 Silencer"
+		{
+			"#"	"prop_physics_create weapons/w_rif_m4a1_silencer.mdl"
+		}
+		"SG 552"
+		{
+			"#"	"prop_physics_create weapons/w_rif_sg552.mdl"
+		}
+		"M3 Super"
+		{
+			"#"	"prop_physics_create weapons/w_shot_m3super90.mdl"
+		}
+		"XM1014"
+		{
+			"#"	"prop_physics_create weapons/w_shot_xm1014.mdl"
+		}
+		"Mac 10"
+		{
+			"#"	"prop_physics_create weapons/w_smg_mac10.mdl"
+		}
+		"Mp5"
+		{
+			"#"	"prop_physics_create weapons/w_smg_mp5.mdl"
+		}
+		"P90"
+		{
+			"#"	"prop_physics_create weapons/w_smg_p90.mdl"
+		}
+		"Tmp"
+		{
+			"#"	"prop_physics_create weapons/w_smg_tmp.mdl"
+		}
+		"Ump 45"
+		{
+			"#"	"prop_physics_create weapons/w_smg_ump45.mdl"
+		}
+		"AWP"
+		{
+			"#"	"prop_physics_create weapons/w_snip_awp.mdl"
+		}
+		"G3SG1"
+		{
+			"#"	"prop_physics_create weapons/w_snip_g3sg1.mdl"
+		}
+		"Scout"
+		{
+			"#"	"prop_physics_create weapons/w_snip_scout.mdl"
+		}
+		"SG 550"
+		{
+			"#"	"prop_physics_create weapons/w_snip_sg550.mdl"
+		}
+		"Predator"
+		{
+			"#"	"ent_create prop_dynamic model models/shadertest/predator.mdl solid 2"
+		}
+		"Shaderslab"
+		{
+			"#"	"ent_create prop_dynamic model models/shadertest/shaderslab2.mdl solid 2"
+		}
+		"Shaderslab 2"
+		{
+			"#"	"ent_create prop_dynamic model models/shadertest/shaderslab3.mdl"
+		}
+		"Shaderslab 3"
+		{
+			"#"	"ent_create prop_dynamic model models/shadertest/shaderslab4.mdl"
+		}
+		"Shaderslab 4"
+		{
+			"#"	"ent_create prop_dynamic model models/shadertest/shaderslab5.mdl solid 2"
+		}
+		"AC Unit"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_assault/acunit01.mdl"
+		}
+		"AC Unit 2"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_assault/acunit02.mdl"
+		}
+		"Wood Barrel"
+		{
+			"#"	"prop_physics_create props_c17/woodbarrel001.mdl"
+		}
+		"Warning Barrel"
+		{
+			"#"	"prop_physics_create props/cs_assault/barrelwarning.mdl"
+		}
+		"Billboard"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_assault/billboard.mdl"
+		}
+		"Box Stack"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_assault/box_stack1.mdl"
+		}
+		"Box Stack 2"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_assault/box_stack2.mdl"
+		}
+		"Camera"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_assault/camera.mdl"
+		}
+		"Console Panel"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_assault/consolepanelloadingbay.mdl"
+		}
+		"Dollar"
+		{
+			"#"	"prop_physics_create props/cs_assault/dollar.mdl"
+		}
+		"Dryer Box"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_assault/dryer_box.mdl"
+		}
+		"Dryer Box 2"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_assault/dryer_box2.mdl"
+		}
+		"Firescape"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_assault/fireescape_bottom.mdl"
+		}
+		"Firescape 2"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_assault/fireescape_repeatable.mdl"
+		}
+		"Firescape 3"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_assault/fireescape_top.mdl"
+		}
+		"Fire Hydrant"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_assault/firehydrant.mdl"
+		}
+		"Fork Lift"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_assault/forklift.mdl"
+		}
+		"Hand Truck"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_assault/handtruck.mdl"
+		}
+		"Barrier"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_assault/meter.mdl"
+		}
+		"Money"
+		{
+			"#"	"prop_physics_create props/cs_assault/money.mdl"
+		}
+		"Money Pallet"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_assault/moneypallet_washerdryer.mdl"
+		}
+		"Money Pallet 2"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_assault/moneypalleta.mdl"
+		}
+		"Money Pallet 3"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_assault/moneypallet02.mdl"
+		}
+		"Money Pallet 4"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_assault/moneypallet03.mdl"
+		}
+		"Stop Sign"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_assault/nostopssign.mdl"
+		}
+		"Stop Light"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_assault/stoplight.mdl"
+		}
+		"Ticket Machine"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_assault/ticketmachine.mdl"
+		}
+		"Washer Box"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_assault/washer_box.mdl"
+		}
+		"Washer Box 2"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_assault/washer_box.mdl"
+		}
+		"Water Tower"
+		{
+			"#"	"prop_dynamic_create props/cs_assault/water_tower.mdl"
+		}
+		"Bookcase Large"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_havana/bookcase_large.mdl"
+		}
+		"Bookcase Small"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_havana/bookcase_small.mdl"
+		}
+		"Gazebo"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_havana/gazebo.mdl"
+		}
+		"Banana"
+		{
+			"#"	"prop_physics_create props/cs_italy/bananna.mdl"
+		}
+		"Banana Bunch"
+		{
+			"#"	"prop_physics_create props/cs_italy/bananna_bunch.mdl"
+		}
+		"Orange"
+		{
+			"#"	"prop_physics_create props/cs_italy/orange.mdl"
+		}
+		"Winerack Large"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_italy/winerack_large.mdl"
+		}
+		"Winerack Small"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_italy/winerack_small.mdl"
+		}
+		"Axe"
+		{
+			"#"	"prop_physics_create props/cs_militia/axe.mdl"
+		}
+		"Bar Counter"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_militia/bar01.mdl"
+		}
+		"Bar Stool"
+		{
+			"#"	"prop_physics_create props/cs_militia/barstool01.mdl"
+		}
+		"Bottle"
+		{
+			"#"	"prop_physics_create props/cs_militia/bottle01.mdl"
+		}
+		"Bottle 2"
+		{
+			"#"	"prop_physics_create props/cs_militia/bottle02.mdl"
+		}
+		"Bottle 3"
+		{
+			"#"	"prop_physics_create props/cs_militia/bottle03.mdl"
+		}
+		"Boxes"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_militia/boxes_frontroom.mdl"
+		}
+		"Bunk Bed"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_militia/bunkbed.mdl"
+		}
+		"Bunk Bed 2"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_militia/bunkbed2.mdl"
+		}
+		"Car (Militia)"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_militia/car_militia.mdl"
+		}
+		"Case of Beer"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/caseofbeer01.mdl"
+		}
+		"Circular Saw"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/circularsaw01.mdl"
+		}
+		"Couch"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/couch.mdl"
+		}
+		"Large Crate"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/crate_extralargemill.mdl"
+		}
+		"Small Crate"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/crate_extrasmallmill.mdl"
+		}
+		"Dryer"
+		{
+			"#"	"prop_physics_create props/cs_militia/dryer.mdl"
+		}
+		"Fern"
+		{
+			"#"	"ent_create prop_dynamic model models/props/cs_militia/fern01.mdl"
+		}
+		"Fertilizer"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/fertilizer.mdl"
+		}
+		"River Fish"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/fishriver01.mdl"
+		}
+		"Food Stack"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/food_stack.mdl"
+		}
+		"Footlocker Closed"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/footlocker01_closed.mdl"
+		}
+		"Footlocker Open"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/footlocker01_open.mdl"
+		}
+		"Shelf"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/furniture_shelf01a.mdl"
+		}
+		"Grate"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/grate.mdl"
+		}
+		"Gun Cabinet"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/gun_cabinet.mdl"
+		}
+		"Haybale Target"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/haybale_target.mdl"
+		}
+		"Haybale Target 2"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/haybale_target_02.mdl"
+		}
+		"Haybale Target 3"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/haybale_target_03.mdl"
+		}
+		"Wooden Door"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/housefence_door.mdl"
+		}
+		"Log Pile"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/logpile2.mdl"
+		}
+		"Mailbox"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/mailbox01.mdl"
+		}
+		"Microwave"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/microwave01.mdl"
+		}
+		"Breakable Window"
+		{
+			"#"	"prop_physics_create props/cs_militia/militiawindow02_breakable.mdl"
+		}
+		"Newspaper Stack"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/newspaperstack01.mdl"
+		}
+		"Old Phone"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/oldphone01.mdl"
+		}
+		"Paint Bucket"
+		{
+			"#"	"prop_physics_create props/cs_militia/paintbucket01.mdl"
+		}
+		"Refrigerator"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/refrigerator01.mdl"
+		}
+		"Sawhorse"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/sawhorse.mdl"
+		}
+		"Shelves"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/shelves.mdl"
+		}
+		"Wooden Shelves"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/shelves_wood.mdl"
+		}
+		"Stove"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/stove01.mdl"
+		}
+		"Kitchen Table"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/table_kitchen.mdl"
+		}
+		"Shed Table"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/table_shed.mdl"
+		}
+		"Television Console"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/television_console01.mdl"
+		}
+		"Toilet"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/toilet.mdl"
+		}
+		"Toothbrush Set"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/toothbrushset01.mdl"
+		}
+		"Large Tree(Militia)"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/tree_large_militia.mdl"
+		}
+		"Trees"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/trees1.mdl"
+		}
+		"Trees 2"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/trees2.mdl"
+		}
+		"Trees 3"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/trees3.mdl"
+		}
+		"TV Console"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/tv_console.mdl"
+		}
+		"Van"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/van.mdl"
+		}
+		"Van Glass"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/van_glass.mdl"
+		}
+		"Wood Bench"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/wood_bench.mdl"
+		}
+		"Wood Table"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_militia/wood_table.mdl"
+		}
+		"Book Shelf"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/bookshelf1.mdl"
+		}
+		"Book Shelf 2"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/bookshelf2.mdl"
+		}
+		"Book Shelf 3"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/bookshelf3.mdl"
+		}
+		"Cardboard Box"
+		{
+			"#"	"prop_physics_create props/cs_office/cardboard_box01.mdl"
+		}
+		"Cardboard Box 2"
+		{
+			"#"	"prop_physics_create props/cs_office/cardboard_box02.mdl"
+		}
+		"Cardboard Box 3"
+		{
+			"#"	"prop_physics_create props/cs_office/cardboard_box03.mdl"
+		}
+		"Office Chair"
+		{
+			"#"	"prop_physics_create props/cs_office/chair_office.mdl"
+		}
+		"Coffee Mug"
+		{
+			"#"	"prop_physics_create props/cs_office/coffee_mug.mdl"
+		}
+		"Coffee Mug 2"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/coffee_mug2.mdl"
+		}
+		"Coffee Mug 3"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/coffee_mug3.mdl"
+		}
+		"Computer"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/computer.mdl"
+		}
+		"Computer Case"
+		{
+			"#"	"prop_physics_create props/cs_office/computer_caseb.mdl"
+		}
+		"Computer Keyboard"
+		{
+			"#"	"prop_physics_create props/cs_office/computer_keyboard.mdl"
+		}
+		"Computer Monitor"
+		{
+			"#"	"prop_physics_create props/cs_office/computer_monitor.mdl"
+		}
+		"Computer Mouse"
+		{
+			"#"	"prop_physics_create props/cs_office/computer_mouse.mdl"
+		}
+		"Boxes (Office)"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_office/crates_indoor.mdl"
+		}
+		"Boxes 2 (Office)"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_physics_override model models/props/cs_office/crates_outdoor.mdl"
+		}
+		"File Box"
+		{
+			"#"	"prop_physics_create props/cs_office/file_box.mdl"
+		}
+		"File Cabinet"
+		{
+			"#"	"prop_physics_create props/cs_office/file_cabinet1.mdl"
+		}
+		"File Cabinet 2"
+		{
+			"#"	"prop_physics_create props/cs_office/file_cabinet2.mdl"
+		}
+		"File Cabinet 3"
+		{
+			"#"	"prop_physics_create props/cs_office/file_cabinet3.mdl"
+		}
+		"Fire Extinguisher"
+		{
+			"#"	"prop_physics_create props/cs_office/fire_extinguisher.mdl"
+		}
+		"Microwave"
+		{
+			"#"	"prop_physics_create props/cs_office/microwave.mdl"
+		}
+		"Certificate"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/offcertificatea.mdl"
+		}
+		"Board"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/offcorkboarda.mdl"
+		}
+		"Painting"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/offinspa.mdl"
+		}
+		"Painting 2"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/offinspb.mdl"
+		}
+		"Painting 3"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/offinspc.mdl"
+		}
+		"Painting 4"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/offinspd.mdl"
+		}
+		"Painting 5"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/offinspf.mdl"
+		}
+		"Painting 6"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/offinspg.mdl"
+		}
+		"Painting 7"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/offpaintinga.mdl"
+		}
+		"Painting 8"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/offpaintingb.mdl"
+		}
+		"Painting 9"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/offpaintingc.mdl"
+		}
+		"Painting 10"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/offpaintingd.mdl"
+		}
+		"Painting 11"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/offpaintinge.mdl"
+		}
+		"Painting 12"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/offpaintingf.mdl"
+		}
+		"Painting 13"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/offpaintingg.mdl"
+		}
+		"Painting 14"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/offpaintingh.mdl"
+		}
+		"Painting 15"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/offpaintingi.mdl"
+		}
+		"Painting 16"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/offpaintingj.mdl"
+		}
+		"Painting 17"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/offpaintingk.mdl"
+		}
+		"Painting 18"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/offpaintingl.mdl"
+		}
+		"Painting 19"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/offpaintingm.mdl"
+		}
+		"Painting 20"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/offpaintingn.mdl"
+		}
+		"Painting 21"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/offpaintingo.mdl"
+		}
+		"Paper Towels"
+		{
+			"#"	"prop_physics_create props/cs_office/paper_towels.mdl"
+		}
+		"Paperbox Pile"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/paperbox_pile_01.mdl"
+		}
+		"Phone"
+		{
+			"#"	"prop_physics_create props/cs_office/phone.mdl"
+		}
+		"Plant"
+		{
+			"#"	"prop_physics_create props/cs_office/plant01.mdl"
+		}
+		"Projector"
+		{
+			"#"	"prop_physics_create props/cs_office/projector.mdl"
+		}
+		"Projector Remote"
+		{
+			"#"	"prop_physics_create props/cs_office/projector_remote.mdl"
+		}
+		"Radio"
+		{
+			"#"	"prop_physics_create props/cs_office/radio.mdl"
+		}
+		"Metal Shelves"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/shelves_metal1.mdl"
+		}
+		"Metal Shelves 2"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/shelves_metal2.mdl"
+		}
+		"Metal Shelves 3"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/shelves_metal3.mdl"
+		}
+		"Snowman Arm"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/snowman_arm.mdl"
+		}
+		"Snowman Body"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/snowman_body.mdl"
+		}
+		"Snowman Eye"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/snowman_eye1.mdl"
+		}
+		"Snowman Eye 2"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/snowman_eye2.mdl"
+		}
+		"Snowman Face"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/snowman_face.mdl"
+		}
+		"Snowman Hat"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/snowman_hat.mdl"
+		}
+		"Snowman Head"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/snowman_head.mdl"
+		}
+		"Snowman Mouth"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/snowman_mouth1.mdl"
+		}
+		"Snowman Nose"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/snowman_nose.mdl"
+		}
+		"Sofa"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/sofa.mdl"
+		}
+		"Sofa Chair"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/sofa_chair.mdl"
+		}
+		"Coffee Table"
+		{
+			"#"	"prop_physics_create props/cs_office/table_coffee.mdl"
+		}
+		"Meeting Table"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/table_meeting.mdl"
+		}
+		"Trash Can"
+		{
+			"#"	"prop_physics_create props/cs_office/trash_can.mdl"
+		}
+		"TV Plasma"
+		{
+			"#"	"prop_physics_create props/cs_office/tv_plasma.mdl"
+		}
+		"Vending Machine"
+		{
+			"#"	"ent_create prop_physics_override model models/props/cs_office/vending_machine.mdl"
+		}
+		"Water Bottle"
+		{
+			"#"	"prop_physics_create props/cs_office/water_bottle.mdl"
+		}
+		"Chandelier"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_chateau/light_chandelier02.mdl"
+		}
+		"Crate (Dust)"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_dust/du_crate_64x64.mdl"
+		}
+		"Stone Crate"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_dust/du_crate_64x64_stone.mdl"
+		}
+		"Grain Basket"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_dust/grainbasket01a.mdl"
+		}
+		"Grain Basket 2"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_dust/grainbasket01b.mdl"
+		}
+		"Grain Basket 3"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_dust/grainbasket01c.mdl"
+		}
+		"Wagon (Dust)"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_dust/wagon.mdl"
+		}
+		"Bed"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_inferno/bed.mdl"
+		}
+		"Concrete Bench"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_inferno/bench_concrete.mdl"
+		}
+		"Wood Bench"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_inferno/bench_wood.mdl"
+		}
+		"Roof"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_inferno/bombsiteroof.mdl"
+		}
+		"Cactus"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_inferno/cactus.mdl"
+		}
+		"Cactus 2"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_inferno/cactus2.mdl"
+		}
+		"Cannon Base"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_inferno/cannon_base.mdl"
+		}
+		"Cannon Gun"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_inferno/cannon_gun.mdl"
+		}
+		"Wheel Cart"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_inferno/cart_wheel.mdl"
+		}
+		"Antique Chair"
+		{
+			"#"	"prop_physics_create props/de_inferno/chairantique.mdl"
+		}
+		"Clay Pot"
+		{
+			"#"	"prop_physics_create props/de_inferno/claypot01.mdl"
+		}
+		"Clay Pot 2"
+		{
+			"#"	"prop_physics_create props/de_inferno/claypot02.mdl"
+		}
+		"Clay Pot 3"
+		{
+			"#"	"prop_physics_create props/de_inferno/claypot03.mdl"
+		}
+		"Clock"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_inferno/clock01.mdl"
+		}
+		"Confessional"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_inferno/confessional.mdl"
+		}
+		"Fruit Crate"
+		{
+			"#"	"prop_physics_create props/de_inferno/crate_fruit_break.mdl"
+		}
+		"Fruit Crate 2"
+		{
+			"#"	"prop_physics_create props/de_inferno/crates_fruit1.mdl"
+		}
+		"Fruit Crate 3"
+		{
+			"#"	"prop_physics_create props/de_inferno/crates_fruit2.mdl"
+		}
+		"Flower Barrel"
+		{
+			"#"	"prop_physics_create props/de_inferno/flower_barrel.mdl"
+		}
+		"Gold Fish"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_inferno/goldfish.mdl"
+		}
+		"Big Pot"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_inferno/pot_big.mdl"
+		}
+		"Potted Plant"
+		{
+			"#"	"prop_physics_create props/de_inferno/potted_plant1.mdl"
+		}
+		"Potted Plant 2"
+		{
+			"#"	"prop_physics_create props/de_inferno/potted_plant2.mdl"
+		}
+		"Potted Plant 3"
+		{
+			"#"	"prop_physics_create props/de_inferno/potted_plant3.mdl"
+		}
+		"Antique Table"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_inferno/tableantique.mdl"
+		}
+		"Coffee Table (Inferno)"
+		{
+			"#"	"prop_physics_create props/de_inferno/tablecoffee.mdl"
+		}
+		"Large Tree"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_inferno/tree_large.mdl"
+		}
+		"Small Tree"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_inferno/tree_small.mdl"
+		}
+		"Wine Barrel"
+		{
+			"#"	"prop_physics_create props/de_inferno/wine_barrel.mdl"
+		}
+		"Cinderblock Stack"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_nuke/cinderblock_stack.mdl"
+		}
+		"Car (Nuke)"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_nuke/car_nuke.mdl"
+		}
+		"Black Car"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_nuke/car_nuke_black.mdl"
+		}
+		"Red Car"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_nuke/car_nuke_red.mdl"
+		}
+		"Car Window"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_nuke/car_nuke_glass.mdl"
+		}
+		"Truck (Nuke)"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_nuke/truck_nuke.mdl"
+		}
+		"Truck Window (Nuke)"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_nuke/truck_nuke_glass.mdl"
+		}
+		"APC"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_piranesi/pi_apc.mdl"
+		}
+		"Boat"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_piranesi/pi_boat.mdl"
+		}
+		"Boat Equipment"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_piranesi/pi_boat_metal.mdl"
+		}
+		"Boat Equipment 2"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_piranesi/pi_boat_wood.mdl"
+		}
+		"Bench"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_piranesi/pi_bench.mdl"
+		}
+		"Bucket"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_piranesi/pi_bucket.mdl"
+		}
+		"Cargo Container"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_port/cargo_container01.mdl"
+		}
+		"Ammo Box"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_prodigy/ammo_can_02.mdl"
+		}
+		"Ammo Stack"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_prodigy/ammo_can_01.mdl"
+		}
+		"Ammo Stack 2"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_prodigy/ammo_can_03.mdl"
+		}
+		"Concrete Bags"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_prodigy/concretebags.mdl"
+		}
+		"Concrete Bags 2"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_prodigy/concretebags2.mdl"
+		}
+		"Concrete Bags 3"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_prodigy/concretebags3.mdl"
+		}
+		"Wood Pallet"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_prodigy/wood_pallet_01.mdl"
+		}
+		"Menu Stand"
+		{
+			"#"	"prop_physics_create props/de_tides/menu_stand.mdl"
+		}
+		"Patio Chair"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_tides/patio_chair.mdl"
+		}
+		"Patio Chair 2"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_tides/patio_chair2.mdl"
+		}
+		"Patio Table"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_tides/patio_table.mdl"
+		}
+		"Patio Table 2"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_tides/patio_table2.mdl"
+		}
+		"Reustarant Table"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_tides/restaurant_table.mdl"
+		}
+		"Street Light"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_tides/tides_streetlight.mdl"
+		}
+		"Vending Cart"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_tides/vending_cart.mdl"
+		}
+		"Hat"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_tides/vending_hat.mdl"
+		}
+		"T-Shirt"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_tides/vending_tshirt.mdl"
+		}
+		"Turtle"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_tides/vending_turtle.mdl"
+		}
+		"Toxic Barrel"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_train/barrel.mdl"
+		}
+		"Biohazard Tank"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_train/biohazardtank.mdl"
+		}
+		"Diesel"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_train/diesel.mdl"
+		}
+		"Flatcar"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_train/flatcar.mdl"
+		}
+		"Utility Truck"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_train/utility_truck.mdl"
+		}
+		"Utility Truck Windows"
+		{
+			"#"	"ent_create prop_physics_override model models/props/de_train/utility_truck_windows.mdl"
+		}
+		"Pottery Large"
+		{
+			"#"	"prop_physics_create props_c17/pottery_large01a.mdl"
+		}
+		"Pottery"
+		{
+			"#"	"prop_physics_create props_c17/pottery01a.mdl"
+		}
+		"Pottery 2"
+		{
+			"#"	"prop_physics_create props_c17/pottery02a.mdl"
+		}
+		"Pottery 3"
+		{
+			"#"	"prop_physics_create props_c17/pottery03a.mdl"
+		}
+		"Pottery 4"
+		{
+			"#"	"prop_physics_create props_c17/pottery04a.mdl"
+		}
+		"Pottery 5"
+		{
+			"#"	"prop_physics_create props_c17/pottery05a.mdl"
+		}
+		"Pottery 6"
+		{
+			"#"	"prop_physics_create props_c17/pottery06a.mdl"
+		}
+		"Pottery 7"
+		{
+			"#"	"prop_physics_create props_c17/pottery07a.mdl"
+		}
+		"Pottery 8"
+		{
+			"#"	"prop_physics_create props_c17/pottery08a.mdl"
+		}
+		"Pottery 9"
+		{
+			"#"	"prop_physics_create props_c17/pottery09a.mdl"
+		}
+	}
 	"NPCs"
 	{
 		"Kleiner"
