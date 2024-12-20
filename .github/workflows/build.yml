@@ -9,7 +9,7 @@ on: [push, pull_request]
 
 env:
   # Path to the solution file relative to the root of the project.
-  SOLUTION_FILE_PATH: ./src/games.sln
+  SOLUTION_FILE_PATH: ./src/openmod.sln
 
   # Configuration type to build.
   # You can convert this to a build matrix if you need coverage of multiple configuration types.
@@ -41,7 +41,7 @@ jobs:
 
     - working-directory: ./src
       shell: bash
-      run: ./devtools/fixsln.sh games.sln
+      run: ./devtools/fixsln.sh openmod.sln
 
     - name: Build
       working-directory: ${{github.workspace}}
