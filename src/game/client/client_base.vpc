@@ -66,8 +66,9 @@ $Configuration
 		$SystemFrameworks				"Carbon" [$OSXALL]
 		$SystemLibraries				"rt" [$LINUXALL]
 		$IgnoreImportLibrary			"TRUE"
-		$AdditionalDependencies			"$BASE winmm.lib"	[$WIN32]
+		$AdditionalDependencies			"$BASE winmm.lib legacy_stdio_definitions.lib"	[$WIN32]
 		$AdditionalDependencies			"$BASE wsock32.lib Ws2_32.lib" [$BUILD_REPLAY]
+		$ForceFileOutput				"Multiply Defined Symbol Only (/FORCE:MULTIPLE)" [$VS2022]
 	}
 }
 

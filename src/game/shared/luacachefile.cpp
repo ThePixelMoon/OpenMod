@@ -74,7 +74,7 @@ LUA_API void luasrc_ExtractLcf ()
 				engine->GetGameDir( gamePath, 256 );
 #endif
 				Q_strncpy( cachePath, gamePath, sizeof( cachePath ) );
-				Q_strncat( cachePath, "\\"LUA_PATH_CACHE, sizeof( cachePath ), COPY_ALL_CHARACTERS );
+				Q_strncat( cachePath, "\\" LUA_PATH_CACHE, sizeof( cachePath ), COPY_ALL_CHARACTERS );
 				V_SetCurrentDirectory( cachePath );
 			}
 

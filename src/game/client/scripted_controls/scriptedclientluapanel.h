@@ -19,6 +19,7 @@ class CScriptedClientLuaPanel : public vgui::EditablePanel
 
 public: 
 	CScriptedClientLuaPanel();
+	virtual ~CScriptedClientLuaPanel() {};
 
 	virtual void CreateDefaultPanels( void );
 

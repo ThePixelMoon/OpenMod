@@ -160,6 +160,7 @@ public:
 		m_pList->AddColumnHeader( 1, "Artist", "Artist", 150, ListPanel::COLUMN_RESIZEWITHWINDOW );
 		m_pList->AddColumnHeader( 2, "Album", "Album", 150, ListPanel::COLUMN_RESIZEWITHWINDOW );
 	}
+	~CMP3FileListPage() {};
 
 	void Reset()
 	{
@@ -311,6 +312,7 @@ public:
 		m_pList->AddColumnHeader( 1, "Artist", "Artist", 150, ListPanel::COLUMN_RESIZEWITHWINDOW );
 		m_pList->AddColumnHeader( 2, "Album", "Album", 150, ListPanel::COLUMN_RESIZEWITHWINDOW );
 	}
+	~CMP3PlayListPage() {};
 
 	void Reset()
 	{
@@ -497,6 +499,7 @@ class CMP3FileSheet : public PropertySheet
 public:
 
 	CMP3FileSheet( CMP3Player *player, char const *panelName );
+	~CMP3FileSheet() {};
 
 	void		ResetFileList()
 	{
@@ -573,7 +576,8 @@ class CMP3TreeControl : public TreeView
 public:
 
 	CMP3TreeControl( CMP3Player *player, char const *panelName );
-
+	~CMP3TreeControl() {};
+	
 	int GetSelectedSongIndex();
 
 	MESSAGE_FUNC( OnTreeViewItemSelected, "TreeViewItemSelected" )
@@ -676,6 +680,7 @@ public:
 		SetPaintEnabled( false );
 		SetRange( 0, 100 );
 	}
+	~CMP3SongProgress() {};
 
 	void	SetProgress( float frac )
 	{

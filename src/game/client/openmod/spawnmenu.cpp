@@ -38,6 +38,15 @@ public:
         : BaseClass(parent, panelName, text), m_pMenu(nullptr)
     {}
 
+    ~CSMLButton() override
+    {
+        if (m_pMenu)
+        {
+            delete m_pMenu;
+            m_pMenu = nullptr;
+        }
+    }
+
 private:
     Menu* m_pMenu;
 };
@@ -58,6 +67,11 @@ public:
     {
         engine->ClientCmd((char*)command);
     }
+
+    ~CSMLCommandButton() override
+    {
+        // No resources to free, but destructor added for consistency
+    }
 };
 
 class CSMLPage : public PropertyPage
@@ -69,6 +83,16 @@ public:
         : BaseClass(parent, panelName)
     {
         vgui::ivgui()->AddTickSignal(GetVPanel(), 250);
+    }
+
+    ~CSMLPage() override
+    {
+        for (int i = 0; i < m_LayoutItems.Count(); ++i)
+        {
+            Panel* p = m_LayoutItems[i];
+            delete p;
+        }
+        m_LayoutItems.RemoveAll();
     }
 
     void OnTick() override
@@ -130,6 +154,7 @@ public:
                  !Q_stricmp(label + Q_strlen(label) - 12, "(Lost Coast)") || 
                  !Q_stricmp(label + Q_strlen(label) - 7, "(Portal)") ||
                  !Q_stricmp(label + Q_strlen(label) - 5, "(TF2)")))
+
             {
                 if (!hl2_mounted.GetBool() == true && 
                     !Q_stricmp(label + Q_strlen(label) - 5, "(EP2)") && 
@@ -223,6 +248,11 @@ public:
         SetSizeable(false); /* don't allow resizing */
     }
 
+    ~CSMLMenu() override
+    {
+        // Destructor added for cleanup purposes
+    }
+
     void OnTick() override
     {
         BaseClass::OnTick();
@@ -247,6 +277,11 @@ private:
 
 public:
     CSMLPanelInterface() : SMLPanel(nullptr) {}
+
+    ~CSMLPanelInterface()
+    {
+        Destroy();
+    }
 
     void Create(vgui::VPANEL parent)
     {

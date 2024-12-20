@@ -161,6 +161,7 @@ class CDragDropHelperPanel : public Panel
 	DECLARE_CLASS_SIMPLE( CDragDropHelperPanel, Panel );
 public:
 	CDragDropHelperPanel();
+	virtual ~CDragDropHelperPanel() {}
 
 	virtual VPANEL IsWithinTraverse(int x, int y, bool traversePopups);
 	virtual void PostChildPaint();
@@ -8583,7 +8584,7 @@ PanelKeyBindingMap *CPanelKeyBindingMapDictionary::FindOrAddPanelKeyBindingMap( 
 
 	PanelKeyBindingMapDictionaryEntry entry;
 	// use the alloc in place method of new
-	entry.map = new (m_PanelKeyBindingMapPool.Alloc(sizeof(PanelKeyBindingMap))) PanelKeyBindingMap;
+    entry.map = new (m_PanelKeyBindingMapPool.Alloc(sizeof(PanelKeyBindingMap))) PanelKeyBindingMap();
 	Construct(entry.map);
 	m_MessageMaps.Insert( StripNamespace( className ), entry );
 	return entry.map;

@@ -61,6 +61,7 @@ class CHudCredits : public CHudElement, public vgui::Panel
 
 public:
 	CHudCredits( const char *pElementName );
+	virtual ~CHudCredits() {}
 	virtual void Init( void );
 	virtual void LevelShutdown( void );
 

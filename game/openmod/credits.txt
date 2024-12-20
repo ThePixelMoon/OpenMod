@@ -1,5 +1,6 @@
 CREDITS -
 YourLocalMoon - lead developer
+Andrew McWatters - visual studio 2022 fix
 
 PROJECTS THAT MADE OPENMOD POSSIBLE -
 ARGG

@@ -55,6 +55,7 @@ class CHudWeaponSelection : public CBaseHudWeaponSelection, public vgui::Panel
 
 public:
 	CHudWeaponSelection(const char *pElementName );
+	virtual ~CHudWeaponSelection() {}
 
 	virtual bool ShouldDraw();
 	virtual void OnWeaponPickup( C_BaseCombatWeapon *pWeapon );

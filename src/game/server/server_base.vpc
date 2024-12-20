@@ -60,7 +60,7 @@ $Configuration
 
 	$Linker
 	{
-		$AdditionalDependencies			"$BASE winmm.lib" [$WIN32]
+		$AdditionalDependencies			"$BASE winmm.lib legacy_stdio_definitions.lib" [$WIN32]
 		$SystemLibraries                                                        "iconv" [$OSXALL]
 	}
 }

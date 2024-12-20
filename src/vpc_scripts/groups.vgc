@@ -20,6 +20,9 @@ $Group "game"
 	"server"
 	"vgui_controls"
 //	"game_shader_dx9"
+	"mathlib"
+	"raytrace"
+	"tier1"
 }
 
 $Group "shaders"
@@ -30,5 +33,7 @@ $Group "shaders"
 $Group "dedicated"
 {
 	"server"
+	"mathlib"
+	"tier1"
 }
 
