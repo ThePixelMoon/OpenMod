@@ -24,10 +24,10 @@
 using namespace vgui;
 
 #ifdef OMOD
-ConVar hl2_mounted("hl2_mounted", "0", FCVAR_NONE, "indicates if hl2 is mounted");
-ConVar tf_mounted("tf_mounted", "0", FCVAR_NONE, "indicates if tf2 is mounted");
-ConVar portal_mounted("portal_mounted", "0", FCVAR_NONE, "indicates if portal is mounted");
-ConVar css_mounted("css_mounted", "0", FCVAR_NONE, "indicates if css is mounted");
+ConVar hl2_mounted("hl2_mounted", "0", FCVAR_DEVELOPMENTONLY, "indicates if hl2 is mounted");
+ConVar tf_mounted("tf_mounted", "0", FCVAR_DEVELOPMENTONLY, "indicates if tf2 is mounted");
+ConVar portal_mounted("portal_mounted", "0", FCVAR_DEVELOPMENTONLY, "indicates if portal is mounted");
+ConVar css_mounted("css_mounted", "0", FCVAR_DEVELOPMENTONLY, "indicates if css is mounted");
 #endif
 
 // from HL2SB, because i am a lazy ass
