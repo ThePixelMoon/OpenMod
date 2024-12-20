@@ -11,6 +11,7 @@ OpenMod is a **FOSS**, and **engaging** Sandbox mod that delivers a unique and c
 - **Source Shader Editor** support *(-shaderedit console parameter)*
 - A working **Spawn Menu**
 - Glow Effect straight from **Team Fortess 2**
+- **CoPlay** by **CoaXioN**
 
 ## Building 🔨
 
