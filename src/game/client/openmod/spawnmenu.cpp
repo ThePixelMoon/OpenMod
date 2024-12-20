@@ -22,228 +22,254 @@
 
 using namespace vgui;
 
+#ifdef OMOD
+extern ConVar hl2_mounted;
+extern ConVar tf_mounted;
+extern ConVar portal_mounted;
+#endif
+
 class CSMLButton : public MenuButton
 {
-	typedef MenuButton BaseClass;
+    typedef MenuButton BaseClass;
+
 public:
-	CSMLButton(Panel* parent, const char* panelName, const char* text);
+    CSMLButton(Panel* parent, const char* panelName, const char* text)
+        : BaseClass(parent, panelName, text), m_pMenu(nullptr)
+    {}
 
 private:
-	Menu* m_pMenu;
+    Menu* m_pMenu;
 };
 
-class CSMLCommandButton : public vgui::Button
+class CSMLCommandButton : public Button
 {
-	typedef vgui::Button BaseClass;
+    typedef Button BaseClass;
 
 public:
-	CSMLCommandButton(vgui::Panel* parent, const char* panelName, const char* labelText, const char* command)
-		: BaseClass(parent, panelName, labelText)
-	{
-		AddActionSignalTarget(this);
-		SetCommand(command);
-	}
+    CSMLCommandButton(Panel* parent, const char* panelName, const char* labelText, const char* command)
+        : BaseClass(parent, panelName, labelText)
+    {
+        AddActionSignalTarget(this);
+        SetCommand(command);
+    }
 
-	virtual void OnCommand(const char* command)
-	{
-		engine->ClientCmd((char*)command);
-	}
-
-	virtual void OnTick(void)
-	{
-	}
+    void OnCommand(const char* command) override
+    {
+        engine->ClientCmd((char*)command);
+    }
 };
 
-class CSMLPage : public vgui::PropertyPage
+class CSMLPage : public PropertyPage
 {
-	typedef vgui::PropertyPage BaseClass;
+    typedef PropertyPage BaseClass;
+
 public:
-	CSMLPage(vgui::Panel* parent, const char* panelName)
-		: BaseClass(parent, panelName)
-	{
-		vgui::ivgui()->AddTickSignal(GetVPanel(), 250);
-	}
+    CSMLPage(Panel* parent, const char* panelName)
+        : BaseClass(parent, panelName)
+    {
+        vgui::ivgui()->AddTickSignal(GetVPanel(), 250);
+    }
 
-	virtual void OnTick(void)
-	{
-		BaseClass::OnTick();
+    void OnTick() override
+    {
+        BaseClass::OnTick();
 
-		if (!IsVisible())
-			return;
+        if (!IsVisible())
+            return;
 
-		int c = m_LayoutItems.Count();
-		for (int i = 0; i < c; i++)
-		{
-			vgui::Panel* p = m_LayoutItems[i];
-			p->OnTick();
-		}
-	}
+        for (int i = 0; i < m_LayoutItems.Count(); ++i)
+        {
+            Panel* p = m_LayoutItems[i];
+            p->OnTick();
+        }
+    }
 
-	virtual void PerformLayout()
-	{
-		BaseClass::PerformLayout();
-		int x = 5;
-		int y = 5;
-		int w = 150;
-		int h = 18;
-		int gap = 2;
+    void PerformLayout() override
+    {
+        BaseClass::PerformLayout();
 
-		int c = m_LayoutItems.Count();
-		int tall = GetTall();
+        int x = 5, y = 5, w = 150, h = 18, gap = 2;
+        int c = m_LayoutItems.Count();
+        int tall = GetTall();
 
-		for (int i = 0; i < c; i++)
-		{
-			vgui::Panel* p = m_LayoutItems[i];
-			p->SetBounds(x, y, w, h);
+        for (int i = 0; i < c; ++i)
+        {
+            Panel* p = m_LayoutItems[i];
+            p->SetBounds(x, y, w, h);
 
-			y += (h + gap);
-			if (y >= tall - h)
-			{
-				x += (w + gap);
-				y = 5;
-			}
-		}
-	}
+            y += (h + gap);
+            if (y >= tall - h)
+            {
+                x += (w + gap);
+                y = 5;
+            }
+        }
+    }
 
-	void Init(KeyValues* kv)
-	{
-		for (KeyValues* control = kv->GetFirstSubKey(); control != NULL; control = control->GetNextKey())
-		{
-			int iType = control->GetInt("imagebutton", 0);
+    void Init(KeyValues* kv)
+    {
+        for (KeyValues* control = kv->GetFirstSubKey(); control != nullptr; control = control->GetNextKey())
+        {
+            const char* m = control->GetString("#", "");
+            if (m && m[0])
+            {
+                CreateButton(control->GetName(), m);
+            }
+        }
+    }
 
-			if (iType == 1)
-			{
-				const char* a, * b, * c, * t;
-				//command
-				t = control->GetString("#", "");
-				a = control->GetString("normal", "");
-				b = control->GetString("overimage", "");
-				c = control->GetString("mouseclick", "");
+    void CreateButton(const char* label, const char* command)
+    {
+        if (label && command && label[0] && command[0])
+        {
+#ifdef OMOD
+            if (Q_strlen(label) > 4 &&
+                (!Q_stricmp(label + Q_strlen(label) - 5, "(EP2)") || 
+                 !Q_stricmp(label + Q_strlen(label) - 5, "(EP1)") || 
+                 !Q_stricmp(label + Q_strlen(label) - 12, "(Lost Coast)") || 
+                 !Q_stricmp(label + Q_strlen(label) - 7, "(Portal)") ||
+                 !Q_stricmp(label + Q_strlen(label) - 5, "(TF2)")))
+            {
+                if (!hl2_mounted.GetBool() == true && 
+                    !Q_stricmp(label + Q_strlen(label) - 5, "(EP2)") && 
+                    !Q_stricmp(label + Q_strlen(label) - 5, "(EP1)") && 
+                    !Q_stricmp(label + Q_strlen(label) - 12, "(Lost Coast)"))
+                {
+                    DevMsg("HL2 not mounted, skipping..\n");
+                    return;
+                }
+                else if (!portal_mounted.GetBool() == true && 
+                         !Q_stricmp(label + Q_strlen(label) - 7, "(Portal)"))
+                {
+                    DevMsg("Portal not mounted, skipping..\n");
+                    return;
+                }
+                else if (!tf_mounted.GetBool() == true && 
+                         !Q_stricmp(label + Q_strlen(label) - 5, "(TF2)"))
+                {
+                    DevMsg("TF2 not mounted, skipping..\n");
+                    return;
+                }
+            }
+#endif
 
-				if (t, a, b, c && t[0], a[0], b[0], c[0])
-				{
+            CSMLCommandButton* btn = new CSMLCommandButton(this, label, label, command);
+            m_LayoutItems.AddToTail(btn);
+        }
+    }
 
-				}
-			}
-			else
-			{
-				const char* m;
-
-				//command
-				m = control->GetString("#", "");
-				if (m && m[0])
-				{
-					CSMLCommandButton* btn = new CSMLCommandButton(this, "CommandButton", control->GetName(), m);
-					m_LayoutItems.AddToTail(btn);
-					continue;
-				}
-			}
-		}
-	}
 private:
-	CUtlVector< vgui::Panel* >		m_LayoutItems;
+    CUtlVector<Panel*> m_LayoutItems;
 };
 
 ConVar spawn("cl_propmenu", "0", FCVAR_CLIENTDLL, "spawn menu");
 
-class CSMLMenu : public vgui::PropertyDialog
+class CSMLMenu : public PropertyDialog
 {
-	typedef vgui::PropertyDialog BaseClass;
+    typedef PropertyDialog BaseClass;
+
 public:
+    CSMLMenu(vgui::VPANEL* parent, const char* panelName)
+        : BaseClass(nullptr, "SMLenu")
+    {
+        SetTitle("SPAWN MENU", true);
+        SetPos(0, 0);
 
-	CSMLMenu(vgui::VPANEL* parent, const char* panelName)
-		: BaseClass(NULL, "SMLenu")
-	{
-		SetTitle("SPAWN MENU", true);
-		SetPos(325, 100);
+        /* size */
+        SetWide(ScreenWidth());
+        SetTall(ScreenHeight());
 
-		KeyValues* kv = new KeyValues("SMLenu");
-		if (kv)
-		{
-			if (kv->LoadFromFile(g_pFullFileSystem, "scripts/props.txt"))
-			{
-				for (KeyValues* dat = kv->GetFirstSubKey(); dat != NULL; dat = dat->GetNextKey())
-				{
-					if (!Q_strcasecmp(dat->GetName(), "width"))
-					{
-						SetWide(dat->GetInt());
-						continue;
-					}
-					else if (!Q_strcasecmp(dat->GetName(), "height"))
-					{
-						SetTall(dat->GetInt());
-						continue;
-					}
+        KeyValues* kv = new KeyValues("SMLenu");
+        if (kv)
+        {
+            if (kv->LoadFromFile(g_pFullFileSystem, "scripts/props.txt"))
+            {
+                for (KeyValues* dat = kv->GetFirstSubKey(); dat != nullptr; dat = dat->GetNextKey())
+                {
+                    if (!Q_strcasecmp(dat->GetName(), "width"))
+                    {
+                        SetWide(dat->GetInt());
+                    }
+                    else if (!Q_strcasecmp(dat->GetName(), "height"))
+                    {
+                        SetTall(dat->GetInt());
+                    }
+                    else
+                    {
+                        if (!Q_stricmp(dat->GetName(), "Portal") && !portal_mounted.GetBool())
+                            continue;
 
-					CSMLPage* page = new CSMLPage(this, dat->GetName());
-					page->Init(dat);
+                        if (!Q_stricmp(dat->GetName(), "TF2") && !tf_mounted.GetBool())
+                            continue;
 
-					AddPage(page, dat->GetName());
-				}
-			}
-			kv->deleteThis();
-		}
+                        CSMLPage* page = new CSMLPage(this, dat->GetName());
+                        page->Init(dat);
+                        AddPage(page, dat->GetName());
+                    }
+                }
+            }
+            kv->deleteThis();
+        }
 
-		vgui::ivgui()->AddTickSignal(GetVPanel(), 100);
-		//oh ok
-		GetPropertySheet()->SetTabWidth(72);
-		SetVisible(true);
-		SetMouseInputEnabled(true);
-		SetSizeable(true);
-	}
+        vgui::ivgui()->AddTickSignal(GetVPanel(), 100);
+        GetPropertySheet()->SetTabWidth(72);
+        SetVisible(true);
+        SetMouseInputEnabled(true);
+        SetKeyBoardInputEnabled(false); /* allow movement */
+        SetSizeable(false); /* don't allow resizing */
+    }
 
-	void Init(KeyValues* kv);
+    void OnTick() override
+    {
+        BaseClass::OnTick();
 
-	void OnTick()
-	{
-		BaseClass::OnTick();
-		SetVisible(spawn.GetBool());
-	}
+        /* size */
+        SetWide(ScreenWidth());
+        SetTall(ScreenHeight());
 
-	void OnCommand(const char* command)
-	{
-		BaseClass::OnCommand(command);
+        SetVisible(spawn.GetBool());
+    }
 
-		//if (!Q_stricmp(command, "Close"))
-		//{
-		//	spawn.SetValue(0);
-		//}
-	}
-
+    void OnCommand(const char* command) override
+    {
+        BaseClass::OnCommand(command);
+    }
 };
-
-void CSMLMenu::Init(KeyValues* kv)
-{
-}
 
 class CSMLPanelInterface : public SMLPanel
 {
 private:
-	CSMLMenu* SMLPanel;
+    CSMLMenu* SMLPanel;
+
 public:
-	CSMLPanelInterface()
-	{
-		SMLPanel = NULL;
-	}
-	void Create(vgui::VPANEL parent)
-	{
-		SMLPanel = new CSMLMenu(&parent, "SMenu");
-	}
-	void Destroy()
-	{
-		if (SMLPanel)
-		{
-			SMLPanel->SetParent((vgui::Panel*)NULL);
-			delete SMLPanel;
-		}
-	}
-	void Activate(void)
-	{
-		if (SMLPanel)
-		{
-			SMLPanel->Activate();
-		}
-	}
+    CSMLPanelInterface() : SMLPanel(nullptr) {}
+
+    void Create(vgui::VPANEL parent)
+    {
+        if (!SMLPanel)
+        {
+            SMLPanel = new CSMLMenu(&parent, "SMenu");
+        }
+    }
+
+    void Destroy()
+    {
+        if (SMLPanel)
+        {
+            SMLPanel->SetParent(nullptr);
+            delete SMLPanel;
+            SMLPanel = nullptr;
+        }
+    }
+
+    void Activate()
+    {
+        if (SMLPanel)
+        {
+            SMLPanel->Activate();
+        }
+    }
 };
+
 static CSMLPanelInterface g_SMLPanel;
 SMLPanel* smlmenu = (SMLPanel*)&g_SMLPanel;

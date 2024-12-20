@@ -5866,8 +5866,6 @@ void CC_Prop_Dynamic_Create( const CCommand &args )
 
 static ConCommand prop_dynamic_create("prop_dynamic_create", CC_Prop_Dynamic_Create, "Creates a dynamic prop with a specific .mdl aimed away from where the player is looking.\n\tArguments: {.mdl name}", FCVAR_CHEAT);
 
-
-
 //------------------------------------------------------------------------------
 // Purpose: Create a prop of the given type
 //------------------------------------------------------------------------------
@@ -5944,6 +5942,37 @@ CPhysicsProp* CreatePhysicsProp( const char *pModelName, const Vector &vTraceSta
 		pProp->Precache();
 		DispatchSpawn( pProp );
 		pProp->Activate();
+
+		int iResult = pProp->ParsePropData();
+		if (!pProp->OverridePropdata())
+		{
+			if (iResult == PARSE_FAILED_NO_DATA)
+			{
+				vcollide_t* pVCollide = mdlcache->GetVCollide(h);
+				CDynamicProp* pProp2 = dynamic_cast<CDynamicProp*>(CreateEntityByName("dynamic_prop"));
+				if (pProp2)
+				{
+					char buf[512];
+					// Pass in standard key values
+					Q_snprintf(buf, sizeof(buf), "%.10f %.10f %.10f", tr.endpos.x, tr.endpos.y, tr.endpos.z);
+					pProp2->KeyValue("origin", buf);
+					Q_snprintf(buf, sizeof(buf), "%.10f %.10f %.10f", angles.x, angles.y, angles.z);
+					pProp2->KeyValue("angles", buf);
+					pProp2->KeyValue("model", pModelName);
+					pProp2->KeyValue("solid", pVCollide ? "6" : "2");
+					pProp2->KeyValue("fademindist", "-1");
+					pProp2->KeyValue("fademaxdist", "0");
+					pProp2->KeyValue("fadescale", "1");
+					pProp2->KeyValue("MinAnimTime", "5");
+					pProp2->KeyValue("MaxAnimTime", "10");
+					pProp2->Precache();
+					DispatchSpawn(pProp2);
+					pProp2->Activate();
+				}
+				CBaseEntity::SetAllowPrecache(bAllowPrecache);
+				return pProp;
+			}
+		}
 	}
 	CBaseEntity::SetAllowPrecache( bAllowPrecache );
 

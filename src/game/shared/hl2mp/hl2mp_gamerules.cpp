@@ -24,6 +24,29 @@
 #include "mathlib/lvector.h"
 #endif
 
+#ifdef OMOD
+#include "filesystem.h"
+#include "datacache\imdlcache.h"
+#include "tier3/tier3.h"
+
+#ifdef GAME_DLL
+#include "props.h"
+
+// taken from cdll_util.cpp
+char* VarArgs(const char* format, ...)
+{
+	va_list		argptr;
+	static char		string[1024];
+
+	va_start(argptr, format);
+	Q_vsnprintf(string, sizeof(string), format, argptr);
+	va_end(argptr);
+
+	return string;
+}
+#endif
+#endif
+
 #ifdef CLIENT_DLL
 #include "c_hl2mp_player.h"
 #else
@@ -217,6 +240,48 @@ static const char *s_PreserveEnts[] =
 };
 
 
+#ifndef CLIENT_DLL
+#ifdef OMOD
+#define PORTAL_WEIGHT_BOX_MODEL_NAME "models/props/metal_box.mdl"
+
+// Create the box used for portal puzzles, named 'box'. Used for easy debugging of portal puzzles.
+void CC_Create_PortalWeightBox(void)
+{
+	bool allowPrecache = CBaseEntity::IsPrecacheAllowed();
+	CBaseEntity::SetAllowPrecache(true);
+
+	// Try to create entity
+	CBaseEntity *entity = dynamic_cast< CBaseEntity * >(CreateEntityByName("prop_physics"));
+	if (entity)
+	{
+		entity->PrecacheModel(PORTAL_WEIGHT_BOX_MODEL_NAME);
+		entity->SetModel(PORTAL_WEIGHT_BOX_MODEL_NAME);
+		entity->SetName(MAKE_STRING("box"));
+		entity->AddSpawnFlags(0x000100); // SF_PHYSPROP_ENABLE_PICKUP_OUTPUT
+		entity->Precache();
+		DispatchSpawn(entity);
+
+		// Now attempt to drop into the world
+		CBasePlayer* pPlayer = UTIL_GetCommandClient();
+		trace_t tr;
+		Vector forward;
+		pPlayer->EyeVectors(&forward);
+		UTIL_TraceLine(pPlayer->EyePosition(),
+			pPlayer->EyePosition() + forward * MAX_TRACE_LENGTH, MASK_SOLID,
+			pPlayer, COLLISION_GROUP_NONE, &tr);
+		if (tr.fraction != 1.0)
+		{
+			tr.endpos.z += 12;
+			entity->Teleport(&tr.endpos, NULL, NULL);
+			UTIL_DropToFloor(entity, MASK_SOLID);
+		}
+	}
+	CBaseEntity::SetAllowPrecache(allowPrecache);
+}
+
+static ConCommand ent_create_portal_weight_box("ent_create_portal_weight_box", CC_Create_PortalWeightBox, "Creates a weight box used in portal puzzles at the location the player is looking.", FCVAR_GAMEDLL | FCVAR_CHEAT);
+#endif
+#endif
 
 #ifdef CLIENT_DLL
 	void RecvProxy_HL2MPRules( const RecvProp *pProp, void **pOut, void *pData, int objectID )

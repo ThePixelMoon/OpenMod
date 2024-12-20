@@ -1124,7 +1124,9 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 #endif
 
 #ifdef OMOD
-	MountAddons(); // addons...
+	// mounting..
+	mountGames();
+	MountAddons();
 #endif
 
 #if defined( ALLOW_TEXT_MODE )
@@ -1343,10 +1345,6 @@ void CHLClient::PostInit()
 			g_pFullFileSystem->AddSearchPath( szPath, "GAME" );
 		}
 	}
-#endif
-
-#ifdef OMOD
-	mountGames();
 #endif
 }
 
