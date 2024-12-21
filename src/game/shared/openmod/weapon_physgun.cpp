@@ -47,12 +47,17 @@ static int g_physgunGlow;
 #define	PHYSGUN_SKIN	1
 
 #ifdef CLIENT_DLL
-CLIENTEFFECT_REGISTER_BEGIN( PrecacheEffectGravityGun )
-	CLIENTEFFECT_MATERIAL( "sprites/physbeam1" )
-	CLIENTEFFECT_MATERIAL( "sprites/physbeam" )
-	CLIENTEFFECT_MATERIAL( "sprites/physglow" )
+CLIENTEFFECT_REGISTER_BEGIN(PrecacheEffectGravityGun)
+	CLIENTEFFECT_MATERIAL("sprites/physbeam1")
+	CLIENTEFFECT_MATERIAL("sprites/physbeam")
+	CLIENTEFFECT_MATERIAL("sprites/physglow")
 CLIENTEFFECT_REGISTER_END()
 #endif
+
+/* use these cvars to change the physics gun color */
+ConVar physgun_r("physgun_r", "0", FCVAR_DEVELOPMENTONLY);
+ConVar physgun_g("physgun_g", "255", FCVAR_DEVELOPMENTONLY);
+ConVar physgun_b("physgun_b", "0", FCVAR_DEVELOPMENTONLY);
 
 IPhysicsObject* GetPhysObjFromPhysicsBone(CBaseEntity* pEntity, short physicsbone)
 {
@@ -185,9 +190,9 @@ void PlayerWeaponColorProxy::OnBind(void* pC_BaseEntity)
 {
 	if (m_pResultVar)
 	{
-		float originalRed = 0;
-		float originalGreen = 255;
-		float originalBlue = 0;
+		float originalRed = physgun_r.GetInt();
+		float originalGreen = physgun_g.GetInt();
+		float originalBlue = physgun_b.GetInt();
 
 		float targetRed = originalRed + 50.0f;
 		float targetGreen = originalGreen + 50.0f;
@@ -868,7 +873,7 @@ void CWeaponPhysicsGun::EffectUpdate( void )
 #if defined( GLOWS_ENABLE ) && defined( GAME_DLL )
 		CBaseAnimating* pAnimating = dynamic_cast<CBaseAnimating*>(pObject);
 		if (pAnimating) {
-			pAnimating->SetGlowEffectColor(0, 255, 0);
+			pAnimating->SetGlowEffectColor(physgun_r.GetInt(), physgun_g.GetInt(), physgun_b.GetInt());
 			pAnimating->AddGlowEffect();
 		}
 #endif
@@ -1375,7 +1380,7 @@ int CWeaponPhysicsGun::DrawModel( int flags )
 		DrawBeamQuadratic( points[0], points[1], points[2], pObject ? 13/3.0f : 13/5.0f, color, -scrollOffset );
 
 		IMaterial *pMaterial = materials->FindMaterial( PHYSGUN_BEAM_GLOW, TEXTURE_GROUP_CLIENT_EFFECTS );
-		color32 clr = { 0, 255, 0, 255 };
+		color32 clr = { physgun_r.GetInt(), physgun_g.GetInt(), physgun_b.GetInt(), 255 };
 
 		float scale = random->RandomFloat( 3, 5 ) * ( pObject ? 2 : 2 );
 
@@ -1396,9 +1401,10 @@ int CWeaponPhysicsGun::DrawModel( int flags )
 //-----------------------------------------------------------------------------
 void CWeaponPhysicsGun::ViewModelDrawn( C_BaseViewModel *pBaseViewModel )
 {
-	if ( !m_active )
+#ifndef OMOD
+	if (!m_active)
 		return;
-
+#endif
 	// Render our effects
 	C_BasePlayer *pOwner = ToBasePlayer( GetOwner() );
 
@@ -1427,14 +1433,18 @@ void CWeaponPhysicsGun::ViewModelDrawn( C_BaseViewModel *pBaseViewModel )
 	else
 		pObject->EntityToWorldSpace(m_worldPosition, &points[2]);
 #else
-	if (pObject) {
-		const char* className = pObject->GetClassname();
-		if (!FStrEq(className, "class C_ServerRagdoll"))
-			pObject->EntityToWorldSpace(m_worldPosition, &points[2]);
+	if (m_active)
+	{
+		if (pObject) {
+			const char* className = pObject->GetClassname();
+			if (!FStrEq(className, "class C_ServerRagdoll"))
+				pObject->EntityToWorldSpace(m_worldPosition, &points[2]);
+			else
+				points[2] = tr.endpos;
+		}
 		else
 			points[2] = tr.endpos;
-	} else
-		points[2] = tr.endpos;
+	}
 #endif
 
 	Vector forward, right, up;
@@ -1443,11 +1453,12 @@ void CWeaponPhysicsGun::ViewModelDrawn( C_BaseViewModel *pBaseViewModel )
 	Vector vecSrc = pOwner->Weapon_ShootPosition( );
 	points[1] = vecSrc + 0.5f * (forward * points[2].DistTo(points[0]));
 	
-	IMaterial* pMat = materials->FindMaterial( PHYSGUN_BEAM_SPRITE1, TEXTURE_GROUP_CLIENT_EFFECTS );
+	IMaterial* pMat = materials->FindMaterial(PHYSGUN_BEAM_SPRITE1, TEXTURE_GROUP_CLIENT_EFFECTS);
 	if (pObject)
-		pMat = materials->FindMaterial( PHYSGUN_BEAM_SPRITE, TEXTURE_GROUP_CLIENT_EFFECTS );
+		pMat = materials->FindMaterial(PHYSGUN_BEAM_SPRITE, TEXTURE_GROUP_CLIENT_EFFECTS);
+
 	Vector color;
-	color.Init(1,1,1);
+	color.Init(1, 1, 1);
 
 	// Now draw it.
 	CViewSetup beamView = *view->GetPlayerViewSetup();
@@ -1457,26 +1468,34 @@ void CWeaponPhysicsGun::ViewModelDrawn( C_BaseViewModel *pBaseViewModel )
 
 	float scrollOffset = gpGlobals->curtime - (int)gpGlobals->curtime;
 	CMatRenderContextPtr pRenderContext( materials );
-	pRenderContext->Bind( pMat );
+	if (m_active)
+	{
+		pRenderContext->Bind(pMat);
 #if 1
-	// HACK HACK:  Munge the depth range to prevent view model from poking into walls, etc.
-	// Force clipped down range
-	pRenderContext->DepthRange( 0.1f, 0.2f );
+		// HACK HACK:  Munge the depth range to prevent view model from poking into walls, etc.
+		// Force clipped down range
+		pRenderContext->DepthRange(0.1f, 0.2f);
 #endif
-	DrawBeamQuadratic( points[0], points[1], points[2], 13/3.0f, color, scrollOffset );
-	DrawBeamQuadratic( points[0], points[1], points[2], 13/3.0f, color, -scrollOffset );
+	}
+	if (m_active)
+	{
+		DrawBeamQuadratic(points[0], points[1], points[2], 13 / 3.0f, color, scrollOffset);
+		DrawBeamQuadratic(points[0], points[1], points[2], 13 / 3.0f, color, -scrollOffset);
+	}
 
 	IMaterial *pMaterial = materials->FindMaterial( PHYSGUN_BEAM_GLOW, TEXTURE_GROUP_CLIENT_EFFECTS );
 
-	color32 clr  = { 0, 255, 0, 255 };
-	color32 clr2 = { 0, 255, 0, 255 }; // because clr is taken
+	color32 clr  = { physgun_r.GetInt(), physgun_g.GetInt(), physgun_b.GetInt(), 255 };
 
 	float scale = random->RandomFloat( 3, 5 )  * ( pObject ? 2 : 2 );
 
-	// Draw the sprite
-	pRenderContext->Bind( pMaterial );
-	for ( int i = 0; i < 3; i++ )
-		DrawSprite( points[2], scale, scale, clr );
+	if (m_active)
+	{
+		// Draw the sprite
+		pRenderContext->Bind(pMaterial);
+		for (int i = 0; i < 3; i++)
+			DrawSprite(points[2], scale, scale, clr);
+	}
 
 #if 1
 	pRenderContext->DepthRange( 0.0f, 1.0f );
@@ -1486,7 +1505,7 @@ void CWeaponPhysicsGun::ViewModelDrawn( C_BaseViewModel *pBaseViewModel )
 	// funny glow
 	float scale1 = random->RandomFloat(15, 20) * 2;
 
-	IMaterial* pMat1 = materials->FindMaterial("sprites/glow04_noz", TEXTURE_GROUP_CLIENT_EFFECTS, m_active);
+	IMaterial* pMat1 = materials->FindMaterial("sprites/glow04_noz", TEXTURE_GROUP_PARTICLE, true);
 	Vector color1;
 	color1.Init(0, 255, 0);
 
@@ -1535,8 +1554,8 @@ void CWeaponPhysicsGun::ItemPostFrame( void )
 		return;
 
 #ifdef OMOD
-
-	// adnan
+    
+    // adnan
 	// this is where we check if we're orbiting the object
 	
 	// if we're holding something and pressing use,
