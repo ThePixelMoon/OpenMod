@@ -3614,117 +3614,105 @@ SpawnMenu
 	
 	"Weapons"
 	{
-		"Crowbar"
+		"Physics Gun"
 		{
-			"#"	"give weapon_crowbar"
-		}
-		"Pistol"
-		{
-			"#"	"give weapon_pistol"
-		}
-		"Sub Machine Gun"
-		{
-			"#"	"give weapon_smg1"
-		}
-		"Shotgun"
-		{
-			"#"	"give weapon_shotgun"
-		}
-		"Pulse Rifle"
-		{
-			"#"	"give weapon_ar2"
-		}
-		"357 Magnum"
-		{
-			"#"	"give weapon_357"
-		}
-		"Crossbow"
-		{
-			"#"	"give weapon_crossbow"
-		}
-		"Frag Grenade"
-		{
-			"#"	"give weapon_frag"
-		}
-		"Rocket Launcher"
-		{
-			"#"	"give weapon_rpg"
-		}
-		"Bugbait"
-		{
-			"#"	"give weapon_bugbait"
+			"#" "give weapon_physgun; use weapon_physgun"
 		}
 		"Gravity Gun"
 		{
-			"#"	"give weapon_physcannon"
+			"#" "give weapon_physcannon; use weapon_physcannon"
 		}
-		"Annabelle"
+		"Crowbar"
 		{
-			"#"	"give weapon_annabelle"
+			"#" "give weapon_crowbar; use weapon_crowbar"
 		}
-		"Cubemap"
+		"Stunstick"
 		{
-			"#"	"give weapon_cubemap"
+			"#" "give weapon_stunstick; use weapon_stunstick"
 		}
-		"Suitcase"
+		"Pistol"
 		{
-			"#"	"give weapon_citizensuitcase"
+			"#" "give weapon_pistol; use weapon_pistol"
 		}
-		"Package"
+		".357 Magnum"
 		{
-			"#"	"give weapon_citizenpackage"
+			"#" "give weapon_357; use weapon_357"
+		}       
+		"SMG1"
+		{
+			"#" "give weapon_smg1; use weapon_smg1"
 		}
-		"Pistol Ammo"
+		"Shotgun"
 		{
-			"#"	"give item_ammo_pistol"
+			"#" "give weapon_shotgun; use weapon_shotgun"
 		}
-		"Smg1 Ammo"
+		"Pulse Rifle"
 		{
-			"#"	"give item_ammo_smg1"
+			"#" "give weapon_ar2; use weapon_ar2"
 		}
-		"Shotgun Ammo"
+		"Crossbow"
 		{
-			"#"	"give item_box_buckshot"
+			"#" "give weapon_crossbow; use weapon_crossbow"
 		}
-		"Pulse Ammo"
+		"S.L.A.M"
 		{
-			"#"	"give item_ammo_ar2"
+			"#" "give weapon_slam; use weapon_slam"
 		}
-		"357 Ammo"
+		"Rocket Launcher"
 		{
-			"#"	"give item_ammo_357"
+			"#" "give weapon_rpg; use weapon_rpg"
 		}
-		"Crossbow Bolts"
+		"Bugbait"
 		{
-			"#"	"give item_ammo_crossbow"
+			"#" "give weapon_bugbait; use weapon_bugbait"
 		}
-		"RPG Round"
+		"Medkit"
 		{
-			"#"	"give item_rpg_round"
+			"#" "give weapon_medkit; use weapon_medkit"
 		}
-		"Smg1 Grenade"
+		"Flechette Gun (EP2)"
 		{
-			"#"	"give item_ammo_smg1_grenade"
+			"#" "give weapon_flechettegun; use weapon_flechettegun"
 		}
-		"Combine Ball"
+		"MP5 (HL1)"
 		{
-			"#"	"give item_ammo_ar2_altfire"
+			"#" "give weapon_mp5_hl1; use weapon_mp5_hl1"
 		}
-		"Health Kit"
+		"9mm Handgun (HL1)"
 		{
-			"#"	"give item_healthkit"
+			"#" "give weapon_glock_hl1; use weapon_glock_hl1"
 		}
-		"Health Vial"
+		"Hand Grenade (HL1)"
 		{
-			"#"	"give item_healthvial"
+			"#" "give weapon_handgrenade_hl1; use weapon_handgrenade_hl1"
 		}
-		"Suit Battery"
+		"Gauss Gun (HL1)"
 		{
-			"#"	"give item_battery"
+			"#" "give weapon_gauss_hl1; use weapon_gauss_hl1"
 		}
-		"Suit"
+		"Gluon gun (HL1)"
 		{
-			"#"	"give item_suit"
+			"#" "give weapon_egon_hl1; use weapon_egon_hl1"
+		}
+		"Snark (HL1)"
+		{
+			"#" "give weapon_snark_hl1; use weapon_snark_hl1"
+		}
+		"Tripmine (HL1)"
+		{
+			"#" "give weapon_tripmine_hl1; use weapon_tripmine_hl1"
+		}
+		"Satchel Charge (HL1)"
+		{
+			"#" "give weapon_satchel_hl1; use weapon_satchel_hl1"
+		}
+		".357 Magnum (HL1)"
+		{
+			"#" "give weapon_357_hl1; use weapon_357_hl1"
+		}
+		"Hornet Gun (HL1)"
+		{
+			"#" "give weapon_hornetgun_hl1; use weapon_hornetgun_hl1"
 		}
 	}
 	

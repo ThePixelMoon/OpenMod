@@ -1199,12 +1199,12 @@ void CWeaponPhysicsGun::UpdateObject( void )
     if ( !pObject )
         return;
 
-    if ( pObject->IsNPC() )
+    if ( pObject->IsNPC() || strcmp(pObject->GetClassname(), "prop_dynamic") == 0 )
     {
 		Vector forward;
 		AngleVectors(pPlayer->EyeAngles(), &forward);
 		Vector desiredPosition = pPlayer->Weapon_ShootPosition() + forward * m_distance;
-		pObject->SetAbsOrigin(desiredPosition);
+		pObject->SetLocalOrigin(desiredPosition);
 		//pObject->SetAbsVelocity(vec3_origin);
     }
     else
@@ -1221,7 +1221,7 @@ void CWeaponPhysicsGun::DetachObject( void )
 {
     if ( m_hObject )
     {
-        if ( m_hObject->IsNPC() )
+        if ( m_hObject->IsNPC() || strcmp(m_hObject->GetClassname(), "prop_dynamic") == 0 )
         {
 			m_hObject->SetAbsVelocity(vec3_origin);
         }
@@ -1257,7 +1257,7 @@ void CWeaponPhysicsGun::AttachObject(CBaseEntity* pObject, IPhysicsObject* pPhys
 
 	const char* className = pObject->GetClassname();
 	DevMsg("grabbing: %s\n", className);
-	if (pPhysics && (pObject->GetMoveType() == MOVETYPE_VPHYSICS || (pObject->IsNPC() && strcmp(className, "npc_turret_floor") != 0)))
+	if (pPhysics && (pObject->GetMoveType() == MOVETYPE_VPHYSICS || strcmp(pObject->GetClassname(), "prop_dynamic") == 0 || (pObject->IsNPC() && strcmp(className, "npc_turret_floor"))))
 	{
 		m_distance = distance;
 
@@ -1433,17 +1433,17 @@ void CWeaponPhysicsGun::ViewModelDrawn( C_BaseViewModel *pBaseViewModel )
 	else
 		pObject->EntityToWorldSpace(m_worldPosition, &points[2]);
 #else
-	if (m_active)
-	{
+	if (m_active) {
 		if (pObject) {
 			const char* className = pObject->GetClassname();
-			if (!FStrEq(className, "class C_ServerRagdoll"))
+			if ((!FStrEq(className, "class C_ServerRagdoll") && !FStrEq(className, "class C_DynamicProp") && !pObject->IsNPC()))
 				pObject->EntityToWorldSpace(m_worldPosition, &points[2]);
 			else
 				points[2] = tr.endpos;
 		}
-		else
+		else {
 			points[2] = tr.endpos;
+		}
 	}
 #endif
 

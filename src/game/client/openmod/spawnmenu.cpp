@@ -27,6 +27,7 @@ extern ConVar hl2_mounted;
 extern ConVar tf_mounted;
 extern ConVar portal_mounted;
 extern ConVar css_mounted;
+extern ConVar hl1_mounted;
 #endif
 
 class CSMLButton : public MenuButton
@@ -146,31 +147,37 @@ public:
         {
 #ifdef OMOD
             if (Q_strlen(label) > 4 &&
-                (!Q_stricmp(label + Q_strlen(label) - 5, "(EP2)") || 
-                 !Q_stricmp(label + Q_strlen(label) - 5, "(EP1)") || 
-                 !Q_stricmp(label + Q_strlen(label) - 12, "(Lost Coast)") || 
-                 !Q_stricmp(label + Q_strlen(label) - 7, "(Portal)") ||
-                 !Q_stricmp(label + Q_strlen(label) - 5, "(TF2)")))
-
+                (!Q_stricmp(label + Q_strlen(label) - 5, "(EP2)") ||
+                    !Q_stricmp(label + Q_strlen(label) - 5, "(EP1)") ||
+                    !Q_stricmp(label + Q_strlen(label) - 12, "(Lost Coast)") ||
+                    !Q_stricmp(label + Q_strlen(label) - 7, "(Portal)") ||
+                    !Q_stricmp(label + Q_strlen(label) - 5, "(TF2)") ||
+                    !Q_stricmp(label + Q_strlen(label) - 5, "(HL1)")))
             {
-                if (!hl2_mounted.GetBool() == true && 
-                    !Q_stricmp(label + Q_strlen(label) - 5, "(EP2)") && 
-                    !Q_stricmp(label + Q_strlen(label) - 5, "(EP1)") && 
-                    !Q_stricmp(label + Q_strlen(label) - 12, "(Lost Coast)"))
+                if (!hl2_mounted.GetBool() &&
+                    (!Q_stricmp(label + Q_strlen(label) - 5, "(EP2)") ||
+                        !Q_stricmp(label + Q_strlen(label) - 5, "(EP1)") ||
+                        !Q_stricmp(label + Q_strlen(label) - 12, "(Lost Coast)")))
                 {
                     DevMsg("HL2 not mounted, skipping..\n");
                     return;
                 }
-                else if (!portal_mounted.GetBool() == true && 
-                         !Q_stricmp(label + Q_strlen(label) - 7, "(Portal)"))
+                else if (!portal_mounted.GetBool() &&
+                    !Q_stricmp(label + Q_strlen(label) - 7, "(Portal)"))
                 {
                     DevMsg("Portal not mounted, skipping..\n");
                     return;
                 }
-                else if (!tf_mounted.GetBool() == true && 
-                         !Q_stricmp(label + Q_strlen(label) - 5, "(TF2)"))
+                else if (!tf_mounted.GetBool() &&
+                    !Q_stricmp(label + Q_strlen(label) - 5, "(TF2)"))
                 {
                     DevMsg("TF2 not mounted, skipping..\n");
+                    return;
+                }
+                else if (!hl1_mounted.GetBool() &&
+                    !Q_stricmp(label + Q_strlen(label) - 5, "(HL1)"))
+                {
+                    DevMsg("HL1 not mounted, skipping..\n");
                     return;
                 }
             }
