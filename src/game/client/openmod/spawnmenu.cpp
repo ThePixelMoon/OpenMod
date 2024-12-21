@@ -68,10 +68,7 @@ public:
         engine->ClientCmd((char*)command);
     }
 
-    ~CSMLCommandButton() override
-    {
-        // No resources to free, but destructor added for consistency
-    }
+    ~CSMLCommandButton() override {};
 };
 
 class CSMLPage : public PropertyPage
@@ -248,10 +245,7 @@ public:
         SetSizeable(false); /* don't allow resizing */
     }
 
-    ~CSMLMenu() override
-    {
-        // Destructor added for cleanup purposes
-    }
+    ~CSMLMenu() override {};
 
     void OnTick() override
     {

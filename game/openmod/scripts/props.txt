@@ -1694,13 +1694,6 @@ SpawnMenu
 		"#"    "prop_physics_create props/water_bottle/water_bottle.mdl"
 		}
 	}
-	"TF2"
-	{
-		"RED Scout"
-		{
-		"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_ragdoll model models/player/scout.mdl"
-		}
-	}
 	"Ragdolls"
 	{
 		"Kleiner"

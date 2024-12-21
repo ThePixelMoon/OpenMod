@@ -101,9 +101,9 @@ BEGIN_PREDICTION_DATA( CWeaponHgun )
 #endif
 END_PREDICTION_DATA()
 
-LINK_ENTITY_TO_CLASS( weapon_hornetgun, CWeaponHgun );
+LINK_ENTITY_TO_CLASS( weapon_hornetgun_hl1, CWeaponHgun );
 
-PRECACHE_WEAPON_REGISTER( weapon_hornetgun );
+PRECACHE_WEAPON_REGISTER( weapon_hornetgun_hl1 );
 
 //IMPLEMENT_SERVERCLASS_ST( CWeaponHgun, DT_WeaponHgun )
 //END_SEND_TABLE()

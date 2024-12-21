@@ -264,9 +264,9 @@ BEGIN_PREDICTION_DATA( CWeaponHandGrenade )
 #endif
 END_PREDICTION_DATA()
 
-LINK_ENTITY_TO_CLASS( weapon_handgrenade, CWeaponHandGrenade );
+LINK_ENTITY_TO_CLASS( weapon_handgrenade_hl1, CWeaponHandGrenade );
 
-PRECACHE_WEAPON_REGISTER( weapon_handgrenade );
+PRECACHE_WEAPON_REGISTER( weapon_handgrenade_hl1 );
 
 //IMPLEMENT_SERVERCLASS_ST( CWeaponHandGrenade, DT_WeaponHandGrenade )
 //END_SEND_TABLE()

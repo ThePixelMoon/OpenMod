@@ -123,8 +123,8 @@ BEGIN_PREDICTION_DATA( CWeaponGauss )
 #endif
 END_PREDICTION_DATA()
 
-LINK_ENTITY_TO_CLASS( weapon_gauss, CWeaponGauss );
-PRECACHE_WEAPON_REGISTER( weapon_gauss );
+LINK_ENTITY_TO_CLASS( weapon_gauss_hl1, CWeaponGauss );
+PRECACHE_WEAPON_REGISTER( weapon_gauss_hl1 );
 
 //IMPLEMENT_SERVERCLASS_ST( CWeaponGauss, DT_WeaponGauss )
 //END_SEND_TABLE()

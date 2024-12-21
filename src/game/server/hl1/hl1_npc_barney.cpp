@@ -102,8 +102,11 @@ void CNPC_Barney_HL1::Spawn()
 {
 	Precache( );
 
+#ifndef OMOD
 	SetModel( "models/barney.mdl");
-
+#else
+	SetModel( "models/barney_hl1.mdl" );
+#endif
 	SetRenderColor( 255, 255, 255, 255 );
 	
 	SetHullType(HULL_HUMAN);

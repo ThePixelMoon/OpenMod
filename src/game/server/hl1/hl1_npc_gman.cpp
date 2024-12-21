@@ -118,7 +118,11 @@ void CNPC_GMan_HL1::Spawn()
 
 	BaseClass::Spawn();
 
+#ifndef OMOD
 	SetModel( "models/gman.mdl" );
+#else
+	SetModel( "models/gman_hl1.mdl" );
+#endif
 
 	SetHullType(HULL_HUMAN);
 	SetHullSizeNormal();

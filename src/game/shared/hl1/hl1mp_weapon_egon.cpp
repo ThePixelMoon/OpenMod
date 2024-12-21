@@ -117,8 +117,8 @@ END_NETWORK_TABLE()
 BEGIN_PREDICTION_DATA( CWeaponEgon )
 END_PREDICTION_DATA()
 
-LINK_ENTITY_TO_CLASS( weapon_egon, CWeaponEgon );
-PRECACHE_WEAPON_REGISTER( weapon_egon );
+LINK_ENTITY_TO_CLASS( weapon_egon_hl1, CWeaponEgon );
+PRECACHE_WEAPON_REGISTER( weapon_egon_hl1 );
 
 #ifndef CLIENT_DLL
 acttable_t	CWeaponEgon::m_acttable[] = 
@@ -133,24 +133,6 @@ acttable_t	CWeaponEgon::m_acttable[] =
 };
 IMPLEMENT_ACTTABLE(CWeaponEgon);
 #endif
-
-/*
-IMPLEMENT_SERVERCLASS_ST( CWeaponEgon, DT_WeaponEgon )
-END_SEND_TABLE()
-*/
-
-    /*
-BEGIN_DATADESC( CWeaponEgon )
-	DEFINE_FIELD( m_fireState, FIELD_INTEGER ),
-	DEFINE_FIELD( m_flAmmoUseTime, FIELD_TIME ),
-	DEFINE_FIELD( m_flShakeTime, FIELD_TIME ),
-	DEFINE_FIELD( m_flStartFireTime, FIELD_TIME ),
-	DEFINE_FIELD( m_flDmgTime, FIELD_TIME ),
-	DEFINE_FIELD( m_hSprite, FIELD_EHANDLE ),
-	DEFINE_FIELD( m_hBeam, FIELD_EHANDLE ),
-	DEFINE_FIELD( m_hNoise, FIELD_EHANDLE ),
-END_DATADESC()
-    */
 
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
