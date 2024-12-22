@@ -110,17 +110,20 @@ void CWeaponMultitool::PrimaryAttack(void)
     // sparks..
     g_pEffects->Sparks(tr.endpos);
 
-    // spawn beam
-    CBeam* pBeam = CBeam::BeamCreate(BEAM_SPRITE1, 2.0f);
-    pBeam->PointEntInit(tr.endpos, this);
-    pBeam->SetEndAttachment(1);
+	if (gpGlobals->maxClients == 1)
+	{
+		// spawn beam
+		CBeam* pBeam = CBeam::BeamCreate(BEAM_SPRITE1, 2.0f);
+		pBeam->PointEntInit(tr.endpos, this);
+		pBeam->SetEndAttachment(1);
 
-    // beam color
-    pBeam->SetColor(48, 179, 215);
+		// beam color
+		pBeam->SetColor(48, 179, 215);
 
-    pBeam->SetBrightness(255);
-    pBeam->SetNoise(0);
-    pBeam->LiveForTime(0.1f);
+		pBeam->SetBrightness(255);
+		pBeam->SetNoise(0);
+		pBeam->LiveForTime(0.1f);
+	};
 
     // other stuff
     WeaponSound(SINGLE);
