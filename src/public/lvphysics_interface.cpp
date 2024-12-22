@@ -1029,7 +1029,6 @@ static int IPhysicsObject___tostring (lua_State *L) {
   return 1;
 }
 
-
 static const luaL_Reg IPhysicsObjectmeta[] = {
   {"AddVelocity", IPhysicsObject_AddVelocity},
   {"ApplyForceCenter", IPhysicsObject_ApplyForceCenter},

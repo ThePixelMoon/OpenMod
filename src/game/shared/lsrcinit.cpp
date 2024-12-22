@@ -102,6 +102,7 @@ static const luaL_Reg luasrclibs[] = {
   {LUA_VGUILIBNAME, luaopen_vgui},
 #endif
   {LUA_VMATRIXLIBNAME, luaopen_VMatrix},
+  {LUA_COLLISION_GROUPNAME, luaopen_COLLISION_GROUP},
   {NULL, NULL}
 };
 

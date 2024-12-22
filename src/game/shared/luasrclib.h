@@ -136,6 +136,9 @@ LUALIB_API int (luaopen_KeyValues) (lua_State *L);
 #define LUA_MASKLIBNAME					"MASK"
 LUALIB_API int (luaopen_MASK) (lua_State *L);
 
+#define LUA_COLLISION_GROUPNAME			"COLLISION_GROUP"
+LUALIB_API int (luaopen_COLLISION_GROUP) (lua_State *L);
+
 #define LUA_MATHLIBLIBNAME				"mathlib"
 LUALIB_API int (luaopen_mathlib) (lua_State *L);
 

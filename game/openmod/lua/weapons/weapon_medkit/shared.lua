@@ -5,9 +5,9 @@
 --===========================================================================--
 
 SWEP.printname				= "MEDKIT"
-SWEP.viewmodel				= "models/weapons/v_357.mdl"
-SWEP.playermodel			= "models/weapons/w_smg1.mdl"
-SWEP.anim_prefix			= "python"
+SWEP.viewmodel				= "models/weapons/v_medkit.mdl"
+SWEP.playermodel			= "models/weapons/w_medkit.mdl"
+SWEP.anim_prefix			= "anim"
 SWEP.bucket					= 5
 SWEP.bucket_position		= 3
 
