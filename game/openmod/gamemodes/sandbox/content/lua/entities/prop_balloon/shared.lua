@@ -10,7 +10,7 @@ local Warning = dbg.Warning
 local Msg = dbg.Msg
 
 local physObj
-local velocity = 2
+local PI = 3.14159265359
 
 function ENT:Initialize()
 	if ( not _CLIENT ) then
@@ -31,7 +31,13 @@ function ENT:Initialize()
 		physObj:Wake()
 		physObj:EnableGravity(false)
 		
-		self:SetRenderColor(255,0,0,255)
+		-- get keyvalue color
+		local r = self:GetKeyValue("red") or 255
+		local g = self:GetKeyValue("green") or 255
+		local b = self:GetKeyValue("blue") or 255
+		
+		-- coloring
+		self:SetRenderColor(r,g,b,0)
 	end
 end
 
@@ -45,11 +51,5 @@ function ENT:EndTouch( pEntity )
 end
 
 function ENT:VPhysicsUpdate( pPhysics )
-	-- i know this will be unoptimized, but as far as i know this is the only way to do this
-	velocity = velocity + 2
-	if velocity >= 256 then
-		velocity = 256
-	end
-	
-	physObj:SetVelocity(Vector(0,0,velocity), Vector(0,0,0))
+	physObj:SetVelocity(Vector(0,0,physObj:GetMass()*PI), Vector(0,0,0))
 end

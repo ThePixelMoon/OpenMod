@@ -10,13 +10,13 @@ GM.Developer	= " "
 GM.Manual		= nil
 
 function GM:Initialize()
-if ( not _CLIENT ) then
-  engine.ServerCommand( "mp_falldamage 1\n" )
-  engine.ServerCommand( "mp_flashlight 1\n" )
-else
-  -- Andrew; not the right place to put this, but oh well.
-  self:CreateDefaultPanels()
-end
+  if ( not _CLIENT ) then
+    engine.ServerCommand( "mp_falldamage 1\n" )
+    engine.ServerCommand( "mp_flashlight 1\n" )
+  else
+    -- Andrew; not the right place to put this, but oh well.
+    self:CreateDefaultPanels()
+  end
 end
 
 function GM:FlWeaponRespawnTime( pWeapon )

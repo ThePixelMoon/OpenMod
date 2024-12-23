@@ -23,6 +23,18 @@ function GM:AddLevelDesignerPlacedObject( pEntity )
 end
 
 function GM:GiveDefaultItems( pPlayer )
+  -- give basically everything
+  _R.CBasePlayer.GiveAmmo( pPlayer, 255,	"Pistol");
+  _R.CBasePlayer.GiveAmmo( pPlayer, 255,	"SMG1");
+  _R.CBasePlayer.GiveAmmo( pPlayer, 3,		"smg1_grenade");
+  _R.CBasePlayer.GiveAmmo( pPlayer, 3,		"grenade" );
+  _R.CBasePlayer.GiveAmmo( pPlayer, 255,	"Buckshot");
+  _R.CBasePlayer.GiveAmmo( pPlayer, 32,		"357" );
+  _R.CBasePlayer.GiveAmmo( pPlayer, 255,	"AR2" );
+  _R.CBasePlayer.GiveAmmo( pPlayer, 5,		"AR2AltFire" );
+  _R.CBasePlayer.GiveAmmo( pPlayer, 3,		"rpg_round" );
+  _R.CBasePlayer.GiveAmmo( pPlayer, 3,		"slam" );
+  
   pPlayer:GiveNamedItem( "weapon_physgun" )
   pPlayer:GiveNamedItem( "weapon_crowbar" )
   pPlayer:GiveNamedItem( "weapon_stunstick" )
@@ -38,8 +50,7 @@ function GM:GiveDefaultItems( pPlayer )
   pPlayer:GiveNamedItem( "weapon_physcannon" )
   pPlayer:GiveNamedItem( "weapon_bugbait" )
   pPlayer:GiveNamedItem( "weapon_multitool" )
-  
-  self.BaseClass.GiveDefaultItems( self, pPlayer ) -- fallback..
+ 
 end
 
 function GM:ItemShouldRespawn( pItem )
