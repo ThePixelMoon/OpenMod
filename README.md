@@ -16,14 +16,14 @@ OpenMod is a **FOSS**, and **engaging** Sandbox mod that delivers a unique and c
 ## Building 🔨
 
 ### Windows 🤓
-1. get Visual Studio 2013
-2. run `createopenprojects.bat`
-3. open the `.sln` file and build the solution
+1. Get Visual Studio 2013
+2. Run `createopenprojects.bat`
+3. Open the `.sln` file and build the solution
 
 ### Linux 👽
-1. install all Source SDK dependencies
-2. run `./createopenprojects.sh`
-3. build with `make`
+1. Install all Source SDK dependencies
+2. Run `./createopenprojects.sh`
+3. Build with `make`
 
 ## Contributing 🧑
 
