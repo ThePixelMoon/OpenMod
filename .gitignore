@@ -79,8 +79,8 @@ game/openmod/shadereditorui/shader_src/uniquefilestocopy.txt
 
 Release/
 Debug/
+Release_openmod/
+Debug_openmod/
 
 save/
 gamecontent.txt
-src/game/client/Release_openmod/client.vcxproj.FileListAbsolute.txt
-src/game/server/Release_openmod/server.vcxproj.FileListAbsolute.txt
