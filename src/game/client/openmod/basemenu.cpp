@@ -173,8 +173,6 @@ IOverrideInterface *OverrideUI = ( IOverrideInterface * )&g_SMenu;
 // commands
 void openURL(const CCommand& args)
 {
-	// FIXME::
-#ifdef _WIN32
 	if (args.ArgC() < 2)
 	{
 		Msg("usage: open <URL>\n");
@@ -182,20 +180,7 @@ void openURL(const CCommand& args)
 	}
 
 	const char* url = args.Arg(1);
-
-	size_t commandSize = strlen("/C start ") + strlen(url) + strlen(" && exit") + 1;
-	char* command = new char[commandSize];
-
-	strcpy(command, "/C start ");
-	strcat(command, url);
-	strcat(command, " && exit");
-	
-	ShellExecuteA(NULL, "open", "cmd.exe", command, NULL, SW_SHOWMINIMIZED);
-
-	delete[] command;
-#else
-	// WIP
-#endif
+	steamapicontext->SteamFriends()->ActivateGameOverlayToWebPage(url);
 }
 
 CON_COMMAND(open, "haha open url go brr")
