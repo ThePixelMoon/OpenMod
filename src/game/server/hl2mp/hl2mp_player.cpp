@@ -81,10 +81,6 @@ END_SEND_TABLE()
 BEGIN_DATADESC( CHL2MP_Player )
 END_DATADESC()
 
-#ifdef OMOD
-extern ConVar c_handmodel;
-#endif
-
 const char *g_ppszRandomCitizenModels[] = 
 {
 	"models/player/humans/group03/male_01.mdl",
@@ -376,7 +372,10 @@ void CHL2MP_Player::Spawn(void)
 	SetPlayerUnderwater(false);
 
 #ifdef OMOD
-	if (strcmp(c_handmodel.GetString(), "default") == 0) {
+	const char* c_handmodel = engine->GetClientConVarValue( ENTINDEX( edict() ), "c_handmodel" );
+
+	if (strcmp(c_handmodel, "default") == 0)
+	{
 		if (GetPlayerModelType() == PLAYER_SOUNDS_METROPOLICE || GetPlayerModelType() == PLAYER_SOUNDS_COMBINESOLDIER)
 		{
 			GetViewModel(1)->SetModel("models/weapons/c_arms_combine.mdl");
@@ -386,29 +385,37 @@ void CHL2MP_Player::Spawn(void)
 			GetViewModel(1)->SetModel("models/weapons/c_arms_citizen.mdl");
 		}
 	}
-	else if (strcmp(c_handmodel.GetString(), "citizen") == 0)
+	else if (strcmp(c_handmodel, "citizen") == 0)
 	{
 		GetViewModel(1)->SetModel("models/weapons/c_arms_citizen.mdl");
 	}
-	else if (strcmp(c_handmodel.GetString(), "combine") == 0)
+	else if (strcmp(c_handmodel, "combine") == 0)
 	{
 		GetViewModel(1)->SetModel("models/weapons/c_arms_combine.mdl");
 	}
-	else if (strcmp(c_handmodel.GetString(), "refugee") == 0)
+	else if (strcmp(c_handmodel, "refugee") == 0)
 	{
 		GetViewModel(1)->SetModel("models/weapons/c_arms_refugee.mdl");
 	}
-	else if (strcmp(c_handmodel.GetString(), "cstrike") == 0) // i actually have NO idea why isn't the materials working, it probably needs cs:s mounted
+	else if (strcmp(c_handmodel, "cstrike") == 0) // needs css mounted
 	{
 		GetViewModel(1)->SetModel("models/weapons/c_arms_cstrike.mdl");
 	}
-	else if (strcmp(c_handmodel.GetString(), "dod") == 0)
+	else if (strcmp(c_handmodel, "dod") == 0)
 	{
 		GetViewModel(1)->SetModel("models/weapons/c_arms_dod.mdl");
 	}
 	else
 	{
-		GetViewModel(1)->SetModel("models/weapons/c_arms_citizen.mdl");
+		// stick to the default
+		if (GetPlayerModelType() == PLAYER_SOUNDS_METROPOLICE || GetPlayerModelType() == PLAYER_SOUNDS_COMBINESOLDIER)
+		{
+			GetViewModel(1)->SetModel("models/weapons/c_arms_combine.mdl");
+		}
+		else
+		{
+			GetViewModel(1)->SetModel("models/weapons/c_arms_citizen.mdl");
+		}
 	}
 #endif
 

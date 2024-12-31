@@ -1,0 +1,97 @@
+
+VERSION 1.0
+
+DESCRIPTION INFO_OPTIONS
+{
+
+	"cl_playermodel"
+	{
+		"#GameUI_PlayerModel"
+		{
+
+			LIST
+			"combine_soldier" "models/player/combine_soldier.mdl"
+			"combine_soldier_prisonguard" "models/player/combine_soldier_prisonguard.mdl"
+			"combine_super_soldier" "models/player/combine_super_soldier.mdl"
+			"female_01" "models/player/group03/female_01.mdl"
+			"female_02" "models/player/group03/female_02.mdl"
+			"female_03" "models/player/group03/female_03.mdl"
+			"female_04" "models/player/group03/female_04.mdl"
+			"female_05" "models/player/group03/female_06.mdl"
+			"female_06" "models/player/group03/female_07.mdl"
+			"male_01" "models/player/group03/male_01.mdl"
+			"male_02" "models/player/group03/male_02.mdl"
+			"male_03" "models/player/group03/male_03.mdl"
+			"male_04" "models/player/group03/male_04.mdl"
+			"male_05" "models/player/group03/male_05.mdl"
+			"male_06" "models/player/group03/male_06.mdl"
+			"male_07" "models/player/group03/male_07.mdl"
+			"male_08" "models/player/group03/male_08.mdl"
+			"male_09" "models/player/group03/male_09.mdl"
+			"police" "models/player/police.mdl"
+		}
+
+		{ "1" }
+
+	}
+	
+	"physgun_r"
+	{
+		"#GameUI_PhysGunvalue_R"
+		{ SLIDER 0 255 }
+		{ "1" }
+	}	
+	
+	"physgun_g"
+	{
+		"#GameUI_PhysGunvalue_G"
+		{ SLIDER 0 255 }
+		{ "1" }
+	}	
+	
+	"physgun_b"
+	{
+		"#GameUI_PhysGunvalue_B"
+		{ SLIDER 0 255 }
+		{ "1" }
+	}
+	
+	"c_handmodel"
+	{
+		"#GameUI_HandModel"
+		{
+
+			LIST
+			"default" "default"
+			"citizen" "citizen"
+			"combine" "combine"
+			"refugee" "refugee"
+			"cstrike" "cstrike"
+			"dod" "dod"
+		}
+
+		{ "1" }
+
+	}
+	
+	"handmodel_r"
+	{
+		"#GameUI_Handmdlvalue_R"
+		{ SLIDER 0 255 }
+		{ "1" }
+	}
+
+	"handmodel_g"
+	{
+		"#GameUI_Handmdlvalue_G"
+		{ SLIDER 0 255 }
+		{ "1" }
+	}
+
+	"handmodel_b"
+	{
+		"#GameUI_Handmdlvalue_B"
+		{ SLIDER 0 255 }
+		{ "1" }
+	}
+}

@@ -15,28 +15,27 @@
 #define CHandViewModel C_HandViewModel
 #endif
 
-#ifndef CLIENT_DLL
-ConVar c_handmodel("c_handmodel", "default", FCVAR_ARCHIVE);
-#endif
+#ifdef CLIENT_DLL
+ConVar c_handmodel("c_handmodel", "default", FCVAR_USERINFO | FCVAR_ARCHIVE | FCVAR_CLIENTDLL);
 
-ConVar handmodel_r("handmodel_r", "0", FCVAR_REPLICATED | FCVAR_ARCHIVE);
-ConVar handmodel_g("handmodel_g", "255", FCVAR_REPLICATED | FCVAR_ARCHIVE);
-ConVar handmodel_b("handmodel_b", "0", FCVAR_REPLICATED | FCVAR_ARCHIVE);
+ConVar handmodel_r("handmodel_r", "0", FCVAR_USERINFO | FCVAR_CLIENTDLL | FCVAR_ARCHIVE);
+ConVar handmodel_g("handmodel_g", "255", FCVAR_USERINFO | FCVAR_CLIENTDLL | FCVAR_ARCHIVE);
+ConVar handmodel_b("handmodel_b", "0", FCVAR_USERINFO | FCVAR_CLIENTDLL | FCVAR_ARCHIVE);
 
 class HandColorProxy : public IMaterialProxy
 {
 public:
-	virtual bool Init(IMaterial *pMaterial, KeyValues *pKeyValues);
-	virtual void OnBind(void *pC_BaseEntity);
+	virtual bool Init(IMaterial* pMaterial, KeyValues* pKeyValues);
+	virtual void OnBind(void* pC_BaseEntity);
 	virtual void Release();
-	virtual IMaterial *GetMaterial();
+	virtual IMaterial* GetMaterial();
 
 private:
-	IMaterial *m_pMaterial;
-	IMaterialVar *m_pResultVar;
+	IMaterial* m_pMaterial;
+	IMaterialVar* m_pResultVar;
 };
 
-bool HandColorProxy::Init(IMaterial *pMaterial, KeyValues *pKeyValues)
+bool HandColorProxy::Init(IMaterial* pMaterial, KeyValues* pKeyValues)
 {
 	bool foundVar;
 	m_pResultVar = pMaterial->FindVar("$color2", &foundVar, false);
@@ -44,7 +43,7 @@ bool HandColorProxy::Init(IMaterial *pMaterial, KeyValues *pKeyValues)
 	return foundVar;
 }
 
-void HandColorProxy::OnBind(void *pC_BaseEntity)
+void HandColorProxy::OnBind(void* pC_BaseEntity)
 {
 	if (m_pResultVar)
 	{
@@ -59,12 +58,13 @@ void HandColorProxy::OnBind(void *pC_BaseEntity)
 void HandColorProxy::Release()
 {}
 
-IMaterial *HandColorProxy::GetMaterial()
+IMaterial* HandColorProxy::GetMaterial()
 {
 	return m_pMaterial;
 }
 
 EXPOSE_INTERFACE(HandColorProxy, IMaterialProxy, "HandColor" IMATERIAL_PROXY_INTERFACE_VERSION);
+#endif
 
 class CHandViewModel : public CBaseViewModel
 {

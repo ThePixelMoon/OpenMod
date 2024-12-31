@@ -54,10 +54,11 @@ CLIENTEFFECT_REGISTER_BEGIN(PrecacheEffectGravityGun)
 CLIENTEFFECT_REGISTER_END()
 #endif
 
-/* use these cvars to change the physics gun color */
-ConVar physgun_r("physgun_r", "0", FCVAR_DEVELOPMENTONLY);
-ConVar physgun_g("physgun_g", "255", FCVAR_DEVELOPMENTONLY);
-ConVar physgun_b("physgun_b", "0", FCVAR_DEVELOPMENTONLY);
+#ifdef CLIENT_DLL
+ConVar physgun_r("physgun_r", "0", FCVAR_USERINFO | FCVAR_ARCHIVE | FCVAR_CLIENTDLL );
+ConVar physgun_g("physgun_g", "255", FCVAR_USERINFO | FCVAR_ARCHIVE | FCVAR_CLIENTDLL );
+ConVar physgun_b("physgun_b", "0", FCVAR_USERINFO |  FCVAR_ARCHIVE | FCVAR_CLIENTDLL );
+#endif
 
 IPhysicsObject* GetPhysObjFromPhysicsBone(CBaseEntity* pEntity, short physicsbone)
 {
@@ -164,6 +165,7 @@ private:
 #if defined(OMOD) && defined(CLIENT_DLL)
 float fadeSpeed = 0.5f;
 bool fadingOut = true;
+static float lastPhysgunR = -1.0f, lastPhysgunG = -1.0f, lastPhysgunB = -1.0f;
 
 class PlayerWeaponColorProxy : public IMaterialProxy
 {
@@ -190,15 +192,24 @@ void PlayerWeaponColorProxy::OnBind(void* pC_BaseEntity)
 {
 	if (m_pResultVar)
 	{
-		float originalRed = physgun_r.GetInt();
-		float originalGreen = physgun_g.GetInt();
-		float originalBlue = physgun_b.GetInt();
+		float currentR = physgun_r.GetFloat();
+		float currentG = physgun_g.GetFloat();
+		float currentB = physgun_b.GetFloat();
 
-		float targetRed = originalRed + 50.0f;
-		float targetGreen = originalGreen + 50.0f;
-		float targetBlue = originalBlue + 50.0f;
+		float targetRed = currentR + 50.0f;
+		float targetGreen = currentG + 50.0f;
+		float targetBlue = currentB + 50.0f;
 
-		static float red = originalRed, green = originalGreen, blue = originalBlue;
+		static float red = currentR, green = currentG, blue = currentB;
+
+		if (currentR != lastPhysgunR || currentG != lastPhysgunG || currentB != lastPhysgunB) {
+			red = currentR;
+			green = currentG;
+			blue = currentB;
+			lastPhysgunR = currentR;
+			lastPhysgunG = currentG;
+			lastPhysgunB = currentB;
+		}
 
 		if (fadingOut) {
 			if (red < targetRed) {
@@ -213,18 +224,17 @@ void PlayerWeaponColorProxy::OnBind(void* pC_BaseEntity)
 			if (red >= targetRed && green >= targetGreen && blue >= targetBlue) {
 				fadingOut = false;
 			}
-		}
-		else {
-			if (red > originalRed) {
+		} else {
+			if (red > currentR) {
 				red -= fadeSpeed;
 			}
-			if (green > originalGreen) {
+			if (green > currentG) {
 				green -= fadeSpeed;
 			}
-			if (blue > originalBlue) {
+			if (blue > currentB) {
 				blue -= fadeSpeed;
 			}
-			if (red <= originalRed && green <= originalGreen && blue <= originalBlue) {
+			if (red <= currentR && green <= currentG && blue <= currentB) {
 				fadingOut = true;
 			}
 		}
@@ -873,7 +883,11 @@ void CWeaponPhysicsGun::EffectUpdate( void )
 #if defined( GLOWS_ENABLE ) && defined( GAME_DLL )
 		CBaseAnimating* pAnimating = dynamic_cast<CBaseAnimating*>(pObject);
 		if (pAnimating) {
-			pAnimating->SetGlowEffectColor(physgun_r.GetInt(), physgun_g.GetInt(), physgun_b.GetInt());
+			const char* physgun_r = engine->GetClientConVarValue( ENTINDEX( pOwner->edict() ), "physgun_r" );
+			const char* physgun_g = engine->GetClientConVarValue( ENTINDEX( pOwner->edict() ), "physgun_g" );
+			const char* physgun_b = engine->GetClientConVarValue( ENTINDEX( pOwner->edict() ), "physgun_b" );
+
+			pAnimating->SetGlowEffectColor(atoi(physgun_r), atoi(physgun_g), atoi(physgun_b));
 			pAnimating->AddGlowEffect();
 		}
 #endif

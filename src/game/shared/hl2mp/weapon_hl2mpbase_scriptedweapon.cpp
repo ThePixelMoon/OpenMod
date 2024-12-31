@@ -966,10 +966,6 @@ Activity CHL2MPScriptedWeapon::GetDrawActivity( void )
 	return BaseClass::GetDrawActivity();
 }
 
-#ifdef OMOD
-extern ConVar c_handmodel;
-#endif
-
 //-----------------------------------------------------------------------------
 // Purpose: 
 // Output : Returns true on success, false on failure.
@@ -980,7 +976,9 @@ bool CHL2MPScriptedWeapon::Holster( CBaseCombatWeapon *pSwitchingTo )
 	if ( !UseHands )
 	{
 #ifndef CLIENT_DLL
-		if (strcmp(c_handmodel.GetString(), "default") == 0) {
+		const char* c_handmodel = engine->GetClientConVarValue( ENTINDEX( edict() ), "c_handmodel" );
+
+		if (strcmp(c_handmodel, "default") == 0) {
 			if (ToHL2MPPlayer(GetOwner())->GetPlayerModelType() == PLAYER_SOUNDS_METROPOLICE || ToHL2MPPlayer(GetOwner())->GetPlayerModelType() == PLAYER_SOUNDS_COMBINESOLDIER)
 			{
 				ToHL2MPPlayer(GetOwner())->GetViewModel(1)->SetModel("models/weapons/c_arms_combine.mdl");
@@ -990,29 +988,37 @@ bool CHL2MPScriptedWeapon::Holster( CBaseCombatWeapon *pSwitchingTo )
 				ToHL2MPPlayer(GetOwner())->GetViewModel(1)->SetModel("models/weapons/c_arms_citizen.mdl");
 			}
 		}
-		else if (strcmp(c_handmodel.GetString(), "citizen") == 0)
+		else if (strcmp(c_handmodel, "citizen") == 0)
 		{
 			ToHL2MPPlayer(GetOwner())->GetViewModel(1)->SetModel("models/weapons/c_arms_citizen.mdl");
 		}
-		else if (strcmp(c_handmodel.GetString(), "combine") == 0)
+		else if (strcmp(c_handmodel, "combine") == 0)
 		{
 			ToHL2MPPlayer(GetOwner())->GetViewModel(1)->SetModel("models/weapons/c_arms_combine.mdl");
 		}
-		else if (strcmp(c_handmodel.GetString(), "refugee") == 0)
+		else if (strcmp(c_handmodel, "refugee") == 0)
 		{
 			ToHL2MPPlayer(GetOwner())->GetViewModel(1)->SetModel("models/weapons/c_arms_refugee.mdl");
 		}
-		else if (strcmp(c_handmodel.GetString(), "cstrike") == 0) // i actually have NO idea why isn't the materials working, it probably needs cs:s mounted
+		else if (strcmp(c_handmodel, "cstrike") == 0)
 		{
 			ToHL2MPPlayer(GetOwner())->GetViewModel(1)->SetModel("models/weapons/c_arms_cstrike.mdl");
 		}
-		else if (strcmp(c_handmodel.GetString(), "dod") == 0)
+		else if (strcmp(c_handmodel, "dod") == 0)
 		{
 			ToHL2MPPlayer(GetOwner())->GetViewModel(1)->SetModel("models/weapons/c_arms_dod.mdl");
 		}
 		else
 		{
-			ToHL2MPPlayer(GetOwner())->GetViewModel(1)->SetModel("models/weapons/c_arms_citizen.mdl");
+			// stick to the default
+			if (ToHL2MPPlayer(GetOwner())->GetPlayerModelType() == PLAYER_SOUNDS_METROPOLICE || ToHL2MPPlayer(GetOwner())->GetPlayerModelType() == PLAYER_SOUNDS_COMBINESOLDIER)
+			{
+				ToHL2MPPlayer(GetOwner())->GetViewModel(1)->SetModel("models/weapons/c_arms_combine.mdl");
+			}
+			else
+			{
+				ToHL2MPPlayer(GetOwner())->GetViewModel(1)->SetModel("models/weapons/c_arms_citizen.mdl");
+			}
 		}
 #endif
 	}
