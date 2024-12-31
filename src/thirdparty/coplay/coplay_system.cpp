@@ -16,6 +16,7 @@
 #include <steam/isteamgameserver.h>
 #include <vgui/ISystem.h>
 #include <tier3/tier3.h>
+#include <tier0/icommandline.h>
 
 std::string queuedcommand;
 static CCoplaySystem g_CoplaySystem;
@@ -34,7 +35,7 @@ CCoplaySystem::CCoplaySystem() : CAutoGameSystemPerFrame("CoplaySystem")
 {
 	m_oldConnectCallback = NULL;
 	s_instance = this;
-	m_role = eConnectionRole_INACTIVE;
+	SetRole(eConnectionRole_UNAVAILABLE);
 }
 
 CCoplaySystem* CCoplaySystem::GetInstance()
@@ -101,6 +102,13 @@ void CCoplaySystem::PostInit()
 		*(FnCommandCallback_t*)((intptr_t)(disconnectCommand)+0x18) = DisconnectOverride;
 	}
 
+    // Executing coplay_connect as soon as we can will probably fail since we're likely not connected to steam networking yet.
+	// Save it for later
+	int paramIndex = CommandLine()->FindParm("+coplay_connect");
+	if (paramIndex)
+	{
+		m_queuedCommand = CommandLine()->ParmValueByIndex(paramIndex);
+	}
 }
 
 void CCoplaySystem::Update(float frametime)
@@ -136,6 +144,16 @@ void CCoplaySystem::Update(float frametime)
         lastupdated = gpGlobals->realtime;
     }
 #endif
+
+    if (SteamNetworkingUtils()->GetRelayNetworkStatus(nullptr) == k_ESteamNetworkingAvailability_Current
+        && !m_queuedCommand.empty())
+    {
+        m_queuedCommand = "coplay_connect " + m_queuedCommand;
+        CCommand args;
+        args.Tokenize(m_queuedCommand.c_str());
+        CoplayConnect(args);
+        m_queuedCommand.clear();
+    }
 }
 
 void CCoplaySystem::LevelInitPostEntity()
@@ -153,9 +171,6 @@ void CCoplaySystem::LevelInitPostEntity()
 
 void CCoplaySystem::LevelShutdownPreEntity()
 {
-	if (!engine->IsConnected())
-		SetRole(eConnectionRole_INACTIVE);
-
 }
 
 void CCoplaySystem::SetRole(ConnectionRole role)
@@ -333,7 +348,7 @@ void CCoplaySystem::OnListLobbiesCmd(LobbyMatchList_t *pLobbyMatchList, bool IOF
 {
     ConColorMsg(COPLAY_MSG_COLOR, "Available Lobbies:\n");
     ConColorMsg(COPLAY_MSG_COLOR, "%-32s | %-16s | %-19s | Player Count\n", "Hostname", "Map", "ID");
-    for (int i = 0; i < pLobbyMatchList->m_nLobbiesMatching; i++)
+    for (uint32 i = 0; i < pLobbyMatchList->m_nLobbiesMatching; i++)
     {
         CSteamID lobby = SteamMatchmaking()->GetLobbyByIndex(i);
         ConColorMsg(COPLAY_MSG_COLOR, "%-32s | %-16s | %-19llu | %2i/%2i\n",

@@ -41,7 +41,7 @@ extern ConVar coplay_use_lobbies;
 #define COPLAY_MAX_PACKETS 8 // max packets proccessed in a single loop of running the connection.
 
 //YYYY-MM-DD-(a-z) if theres multiple in a day
-#define COPLAY_VERSION "2024-12-02-a"
+#define COPLAY_VERSION "1.3"
 
 #define COPLAY_NETMSG_NEEDPASS "NeedPasscode"
 #define COPLAY_NETMSG_OK "OK"
