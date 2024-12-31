@@ -298,7 +298,7 @@ static int surface_GetTextSize (lua_State *L) {
   int wide = 0;
   int tall = 0;
   int bufSize = (strlen( sz ) + 1 ) * sizeof(wchar_t);
-  wchar_t *wbuf = static_cast<wchar_t *>( _alloca( bufSize ) );
+  wchar_t *wbuf = static_cast<wchar_t *>( _malloca( bufSize ) );
   if ( wbuf )
   {
 	  surface()->GetTextSize(luaL_checkfont(L, 1), wbuf, wide, tall);

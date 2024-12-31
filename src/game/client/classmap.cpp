@@ -94,15 +94,17 @@ void CClassMap::Add( const char *mapname, const char *classname, int size, DISPA
 #endif
 {
 #if defined ( LUA_SDK )
-	for ( int i=m_ClassDict.First(); i != m_ClassDict.InvalidIndex(); i=m_ClassDict.Next( i ) )
+	int c = m_ClassDict.Count();
+	for (int index = 0; index < c; index++)
 	{
-		classentry_t *lookup = &m_ClassDict[ i ];
+		classentry_t *lookup = &m_ClassDict[ index ];
 		if ( !lookup )
 			continue;
 
 		if ( !Q_stricmp( lookup->GetMapName(), mapname ) )
 		{
-			m_ClassDict.RemoveAt( i );
+			m_ClassDict.RemoveAt( index );
+			break;
 		}
 	}
 #else
