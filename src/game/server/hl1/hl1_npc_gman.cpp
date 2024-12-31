@@ -145,7 +145,11 @@ void CNPC_GMan_HL1::Spawn()
 //=========================================================
 void CNPC_GMan_HL1::Precache()
 {
+#ifndef OMOD
 	PrecacheModel( "models/gman.mdl" );
+#else
+	PrecacheModel( "models/gman_hl1.mdl" );
+#endif
 }	
 
 

@@ -127,6 +127,8 @@ game_sounds_manifest
 	"precache_file"		"scripts/game_sounds_addendum_ep2.txt"
 	"precache_file"		"scripts/level_voices_episode_02.txt"
 	"precache_file"		"scripts/game_sounds_vehicles_ep2.txt"
+	"precache_file"		"scripts/npc_sounds_alyx_episodic2.txt"
+	"precache_file"		"scripts/npc_sounds_turret_episodic2.txt"
 
 	// HL1
 	"precache_file"  	"scripts/hl1_game_sounds.txt"

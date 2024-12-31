@@ -141,7 +141,11 @@ void CNPC_Barney_HL1::Precache()
 {
 	m_iAmmoType = GetAmmoDef()->Index("9mmRound");
 
+#ifndef OMOD
 	PrecacheModel("models/barney.mdl");
+#else
+	PrecacheModel("models/barney_hl1.mdl");
+#endif
 
 	PrecacheScriptSound( "Barney.FirePistol" );
 	PrecacheScriptSound( "Barney.Pain" );
