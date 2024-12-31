@@ -2140,6 +2140,49 @@ SpawnMenu
 		{
 			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_ragdoll model models/Humans/Charple04.mdl"
 		}
+		"Chell (Portal)"
+    		{
+			"#"    "prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_ragdoll model models/player/chell.mdl"
+   		}
+	}
+	"TF2"
+	{
+    		"Scout"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_ragdoll model models/player/scout.mdl"
+		}
+    		"Demoman"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_ragdoll model models/player/demo.mdl"
+		}
+    		"Pyro"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_ragdoll model models/player/pyro.mdl"
+		}
+    		"Soldier"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_ragdoll model models/player/soldier.mdl"
+		}
+    		"Medic"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_ragdoll model models/player/medic.mdl"
+		}
+    		"Heavy"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_ragdoll model models/player/heavy.mdl"
+		}
+    		"Spy"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_ragdoll model models/player/spy.mdl"
+		}
+    		"Engineer"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_ragdoll model models/player/engineer.mdl"
+		}
+    		"Sniper"
+		{
+			"#"	"prop_physics_create props_junk/wood_crate001a.mdl;ent_setname fixpos;wait;ent_remove fixpos;ent_create prop_ragdoll model models/player/sniper.mdl"
+		}
 	}
 	"CSS"
 	{
