@@ -106,6 +106,9 @@ $Project "Client (OpenMod)"
 				$File	"openmod\basemenu.h"
 			}
 			
+			$File	"openmod\dynamicsky.cpp"
+			$File	"openmod\dynamicsky.h"
+			
 			$File	"openmod\mountsteamcontent.cpp"
 			$File	"openmod\mountsteamcontent.h"
 			$File	"$SRCDIR\game\shared\openmod\mountaddons.cpp"

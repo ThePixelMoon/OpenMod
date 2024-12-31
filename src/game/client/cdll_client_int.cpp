@@ -175,6 +175,7 @@ extern vgui::IInputInternal *g_InputInternal;
 #ifndef _ANDROID
 #include "basemenu.h"
 #endif
+#include "dynamicsky.h"
 #include "mountsteamcontent.h"
 #include "mountaddons.h"
 #ifdef _WIN32
@@ -988,6 +989,14 @@ CHLClient::CHLClient()
 
 extern IGameSystem *ViewportClientSystem();
 
+#ifdef OMOD
+void SvSkyChangeCallback(IConVar* cvar, const char*, float)
+{
+	R_UnloadSkys();
+	R_LoadSkys();
+}
+#endif
+
 //-----------------------------------------------------------------------------
 ISourceVirtualReality *g_pSourceVR = NULL;
 
@@ -1265,6 +1274,12 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 #endif
 #ifndef _X360
 	HookHapticMessages(); // Always hook the messages
+#endif
+
+#ifdef OMOD
+	static ConVar* skyname = cvar->FindVar( "sv_skyname" );
+	if ( skyname )
+		skyname->InstallChangeCallback( SvSkyChangeCallback );
 #endif
 
 	return true;
@@ -1868,6 +1883,11 @@ void CHLClient::LevelInitPreEntity( char const* pMapName )
 	g_RagdollLVManager.SetLowViolence( pMapName );
 
 	gHUD.LevelInit();
+
+#ifdef OMOD
+	R_UnloadSkys();
+	R_LoadSkys();
+#endif
 
 #if defined( REPLAY_ENABLED )
 	// Initialize replay ragdoll recorder

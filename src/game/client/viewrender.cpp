@@ -79,6 +79,7 @@
 
 #ifdef OMOD
 #include "ShaderEditor/ShaderEditorSystem.h"
+#include "dynamicsky.h"
 #endif
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -113,7 +114,9 @@ ConVar r_entityclips( "r_entityclips", "1" ); //FIXME: Nvidia drivers before 81.
 static ConVar r_drawopaqueworld( "r_drawopaqueworld", "1", FCVAR_CHEAT );
 static ConVar r_drawtranslucentworld( "r_drawtranslucentworld", "1", FCVAR_CHEAT );
 static ConVar r_3dsky( "r_3dsky","1", 0, "Enable the rendering of 3d sky boxes" );
+#ifndef OMOD
 static ConVar r_skybox( "r_skybox","1", FCVAR_CHEAT, "Enable the rendering of sky boxes" );
+#endif
 #ifdef TF_CLIENT_DLL
 ConVar r_drawviewmodel( "r_drawviewmodel","1", FCVAR_ARCHIVE );
 #else
@@ -1357,7 +1360,11 @@ void CViewRender::ViewDrawScene( bool bDrew3dSkybox, SkyboxVisibility_t nSkyboxV
 		SetClearColorToFogColor( );
 	}
 
+#ifndef OMOD
 	bool drawSkybox = r_skybox.GetBool();
+#else
+	bool drawSkybox = false;
+#endif
 	if ( bDrew3dSkybox || ( nSkyboxVisible == SKYBOX_NOT_VISIBLE ) )
 	{
 		drawSkybox = false;
@@ -1996,6 +2003,10 @@ void CViewRender::RenderView( const CViewSetup &view, int nClearFlags, int whatT
 		bool bDrew3dSkybox = false;
 		SkyboxVisibility_t nSkyboxVisible = SKYBOX_NOT_VISIBLE;
 
+#ifdef OMOD
+		s_bCanAccessCurrentView = true;
+#endif
+
 		// if the 3d skybox world is drawn, then don't draw the normal skybox
 		CSkyboxView *pSkyView = new CSkyboxView( this );
 		if ( ( bDrew3dSkybox = pSkyView->Setup( view, &nClearFlags, &nSkyboxVisible ) ) != false )
@@ -2006,6 +2017,10 @@ void CViewRender::RenderView( const CViewSetup &view, int nClearFlags, int whatT
 #endif
 		}
 		SafeRelease( pSkyView );
+
+#ifdef OMOD
+		s_bCanAccessCurrentView = false;
+#endif
 
 		// Force it to clear the framebuffer if they're in solid space.
 		if ( ( nClearFlags & VIEW_CLEAR_COLOR ) == 0 )
@@ -4815,6 +4830,10 @@ void CSkyboxView::DrawInternal( view_id_t iSkyBoxViewID, bool bInvokePreAndPostR
 
 	g_pClientShadowMgr->ComputeShadowTextures( (*this), m_pWorldListInfo->m_LeafCount, m_pWorldListInfo->m_pLeafList );
 
+#ifdef OMOD
+	R_DrawSkyBox( view->GetZFar() );
+#endif
+
 	DrawWorld( 0.0f );
 
 	// Iterate over all leaves and render objects in those leaves
@@ -4861,6 +4880,9 @@ bool CSkyboxView::Setup( const CViewSetup &view, int *pClearFlags, SkyboxVisibil
 
 	if ( !m_pSky3dParams )
 	{
+#ifdef OMOD
+		R_DrawSkyBox( view.zFar );
+#endif
 		return false;
 	}
 
@@ -4871,10 +4893,12 @@ bool CSkyboxView::Setup( const CViewSetup &view, int *pClearFlags, SkyboxVisibil
 	*pClearFlags |= VIEW_CLEAR_DEPTH; // Need to clear depth after rednering the skybox
 
 	m_DrawFlags = DF_RENDER_UNDERWATER | DF_RENDER_ABOVEWATER | DF_RENDER_WATER;
+#ifndef OMOD
 	if( r_skybox.GetBool() )
 	{
 		m_DrawFlags |= DF_DRAWSKYBOX;
 	}
+#endif
 
 	return true;
 }
