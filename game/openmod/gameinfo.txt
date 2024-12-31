@@ -30,6 +30,8 @@
 			game+mod+mod_write+default_write_path		|gameinfo_path|.
 			gamebin				|gameinfo_path|bin
 
+			game+mod			|gameinfo_path|scenes.vpk
+
 			game_lv				hl2/hl2_lv.vpk
 			game+mod			hl2mp/hl2mp_english.vpk
 			game+mod			hl2mp/hl2mp_pak.vpk
