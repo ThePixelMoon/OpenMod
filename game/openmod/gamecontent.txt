@@ -9,6 +9,8 @@
 		"appid"		"360"
 		"appid"		"400"
 		"appid"		"320"
+		"appid"		"2158860"
+		"appid"		"1989070"
 		"appid"		"440"
 	}
 }

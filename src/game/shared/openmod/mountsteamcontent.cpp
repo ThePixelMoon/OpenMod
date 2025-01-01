@@ -42,7 +42,7 @@ typedef struct
 	int m_nAppId;
 } gamePaths_t;
 
-gamePaths_t g_GamePaths[8] =
+gamePaths_t g_GamePaths[10] =
 {
 	{ "hl2",		220    },
 	{ "cstrike",	240    },
@@ -51,6 +51,8 @@ gamePaths_t g_GamePaths[8] =
 	{ "hl1mp",		360    },
 	{ "portal",		400    },
 	{ "hl2mp",		320    },
+	{ "jbmod",		2158860},
+	{ "synergy",	1989070},
 	{ "tf",			440    }
 };
 static const int size = sizeof(g_GamePaths) / sizeof(g_GamePaths[0]); // because we can't do g_GamePaths.size()

@@ -19,6 +19,8 @@ local CContentSubGames = {
 	m_pHalfLifeDeathmatchCheckBox = INVALID_PANEL,
 	m_pPortalCheckBox = INVALID_PANEL,
 	m_pHalfLife2DeathmatchCheckBox = INVALID_PANEL,
+	m_pJBModCheckBox = INVALID_PANEL,
+	m_pSynergyCheckBox = INVALID_PANEL,
 	m_pTeamFortressCheckBox = INVALID_PANEL
 }
 
@@ -31,6 +33,8 @@ local g_GameCheckButtons =
 	{ "m_pHalfLifeDeathmatchCheckBox",	360 },
 	{ "m_pPortalCheckBox",				400 },
 	{ "m_pHalfLife2DeathmatchCheckBox",	320 },
+	{ "m_pJBModCheckBox",			2158860 },
+	{ "m_pSynergyCheckBox",			1989070 },
 	{ "m_pTeamFortressCheckBox",		440 }
 };
 
@@ -94,6 +98,20 @@ function CContentSubGames:Init(parent)
 		"Half-Life 2: Deathmatch" );
 	self.m_pHalfLife2DeathmatchCheckBox.OnCheckButtonChecked = OnCheckButtonChecked
 	self.m_pHalfLife2DeathmatchCheckBox:AddActionSignalTarget( self.m_pHalfLife2DeathmatchCheckBox )
+	
+	self.m_pJBModCheckBox = vgui.CheckButton( 
+		self, 
+		"JBMod", 
+		"JBMod" );
+	self.m_pJBModCheckBox.OnCheckButtonChecked = OnCheckButtonChecked
+	self.m_pJBModCheckBox:AddActionSignalTarget( self.m_pJBModCheckBox )
+	
+	self.m_pSynergyCheckBox = vgui.CheckButton( 
+		self, 
+		"Synergy", 
+		"Synergy" );
+	self.m_pSynergyCheckBox.OnCheckButtonChecked = OnCheckButtonChecked
+	self.m_pSynergyCheckBox:AddActionSignalTarget( self.m_pSynergyCheckBox )
 	
 	self.m_pTeamFortressCheckBox = vgui.CheckButton( 
 		self, 
