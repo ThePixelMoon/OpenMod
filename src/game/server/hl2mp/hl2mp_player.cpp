@@ -417,6 +417,7 @@ bool CHL2MP_Player::ValidatePlayerModel( const char *pModel )
 
 	return false;
 #else
+	PrecacheModel( pModel );
 	return true;
 #endif
 }

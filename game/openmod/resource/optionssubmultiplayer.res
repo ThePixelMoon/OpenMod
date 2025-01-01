@@ -118,7 +118,7 @@
 		"visible"		"1"
 		"enabled"		"1"
 		"tabPosition"		"9"
-		"labelText"		"#GameUI_PlayerModel"
+		"labelText"		"#GameUI_AdvancedNoEllipsis"
 		"textAlignment"		"west"
 		"dulltext"		"0"
 		"brighttext"		"0"

@@ -32,7 +32,7 @@
 
 
 // Half-Life User Info Configuration Layout Script (stores last settings chosen, too)
-// File generated:  Tue Dec 31 11:14:16 AM
+// File generated:  Wed Jan 01 14:32:23 AM
 //
 //
 // Cvar	-	Setting
@@ -73,21 +73,21 @@ DESCRIPTION INFO_OPTIONS
 	{
 		"#GameUI_PhysGunvalue_R"
 		{ SLIDER 0 255 }
-		{ "255" }
+		{ "9.02" }
 	}
 
 	"physgun_g"
 	{
 		"#GameUI_PhysGunvalue_G"
 		{ SLIDER 0 255 }
-		{ "255" }
+		{ "229" }
 	}
 
 	"physgun_b"
 	{
 		"#GameUI_PhysGunvalue_B"
 		{ SLIDER 0 255 }
-		{ "255" }
+		{ "238" }
 	}
 
 	"c_handmodel"
