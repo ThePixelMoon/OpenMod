@@ -56,8 +56,8 @@ CLIENTEFFECT_REGISTER_END()
 
 #ifdef CLIENT_DLL
 ConVar physgun_r("physgun_r", "0", FCVAR_USERINFO | FCVAR_ARCHIVE | FCVAR_CLIENTDLL );
-ConVar physgun_g("physgun_g", "255", FCVAR_USERINFO | FCVAR_ARCHIVE | FCVAR_CLIENTDLL );
-ConVar physgun_b("physgun_b", "0", FCVAR_USERINFO |  FCVAR_ARCHIVE | FCVAR_CLIENTDLL );
+ConVar physgun_g("physgun_g", "229", FCVAR_USERINFO | FCVAR_ARCHIVE | FCVAR_CLIENTDLL );
+ConVar physgun_b("physgun_b", "238", FCVAR_USERINFO |  FCVAR_ARCHIVE | FCVAR_CLIENTDLL );
 #endif
 
 IPhysicsObject* GetPhysObjFromPhysicsBone(CBaseEntity* pEntity, short physicsbone)
