@@ -1289,6 +1289,11 @@ public:
 
 	CNetworkColor32( m_clrRender );
 
+#ifdef OMOD
+	int								m_iViewHideFlags;
+	bool							m_bDisableFlashlight;
+#endif
+
 private:
 	
 	// Model for rendering

@@ -452,6 +452,10 @@ BEGIN_DATADESC( CBasePlayer )
 
 	DEFINE_FIELD( m_autoKickDisabled, FIELD_BOOLEAN ),
 
+#ifdef OMOD
+	DEFINE_FIELD( m_bDrawPlayerModelExternally, FIELD_BOOLEAN ),
+#endif
+
 	// Function Pointers
 	DEFINE_FUNCTION( PlayerDeathThink ),
 

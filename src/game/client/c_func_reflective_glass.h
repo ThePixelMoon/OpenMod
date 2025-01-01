@@ -21,7 +21,10 @@ class CViewSetup;
 //-----------------------------------------------------------------------------
 bool IsReflectiveGlassInView( const CViewSetup& view, cplane_t &plane );
 
+#ifdef OMOD
+C_BaseEntity *NextReflectiveGlass( C_BaseEntity *pStart, const CViewSetup& view, cplane_t &plane,
+	const Frustum_t &frustum, ITexture **pRenderTargets = NULL );
+#endif
+
 
 #endif // C_FUNC_REFLECTIVE_GLASS
-
-

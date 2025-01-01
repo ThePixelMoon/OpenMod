@@ -1106,6 +1106,10 @@ void CNPC_BaseZombie::DieChopped( const CTakeDamageInfo &info )
 	CBaseEntity *pLegGib = CreateRagGib( GetLegsModel(), GetAbsOrigin(), GetAbsAngles(), vecLegsForce, flFadeTime, ShouldIgniteZombieGib() );
 	if ( pLegGib )
 	{
+#ifdef OMOD
+		// Inherit some misc. properties
+		pLegGib->m_iViewHideFlags = m_iViewHideFlags;
+#endif
 		CopyRenderColorTo( pLegGib );
 	}
 

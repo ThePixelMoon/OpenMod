@@ -44,6 +44,9 @@
 #include "luamanager.h"
 #include "mathlib/lvector.h"
 #endif
+#ifdef OMOD
+#include "viewrender.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -455,6 +458,10 @@ BEGIN_RECV_TABLE_NOBASE(C_BaseEntity, DT_BaseEntity)
 	RecvPropInt(RECVINFO(m_nRenderMode)),
 	RecvPropInt(RECVINFO(m_nRenderFX)),
 	RecvPropInt(RECVINFO(m_clrRender)),
+#ifdef OMOD
+	RecvPropInt(RECVINFO(m_iViewHideFlags)),
+	RecvPropBool(RECVINFO(m_bDisableFlashlight)),
+#endif
 	RecvPropInt(RECVINFO(m_iTeamNum)),
 	RecvPropInt(RECVINFO(m_CollisionGroup)),
 	RecvPropFloat(RECVINFO(m_flElasticity)),
@@ -1983,6 +1990,17 @@ int C_BaseEntity::DrawModel( int flags )
 	{
 		return drawn;
 	}
+
+#ifdef OMOD
+	if (m_iViewHideFlags > 0)
+	{
+		// Hide this entity if it's not supposed to be drawn in this view.
+		if (m_iViewHideFlags & (1 << CurrentViewID()))
+		{
+			return 0;
+		}
+	}
+#endif
 
 	int modelType = modelinfo->GetModelType( model );
 	switch ( modelType )

@@ -1103,6 +1103,11 @@ public:
 	float					m_flSideMove;
 	int						m_nNumCrateHudHints;
 
+#ifdef OMOD
+	bool					GetDrawPlayerModelExternally( void ) { return m_bDrawPlayerModelExternally; }
+	void					SetDrawPlayerModelExternally( bool bToggle ) { m_bDrawPlayerModelExternally.Set( bToggle ); }
+#endif
+
 private:
 
 	// Used in test code to teleport the player to random locations in the map.
@@ -1151,6 +1156,10 @@ private:
 
 	// Player name
 	char					m_szNetname[MAX_PLAYER_NAME_LENGTH];
+
+#ifdef OMOD
+	CNetworkVar( bool, m_bDrawPlayerModelExternally );
+#endif
 
 protected:
 	// HACK FOR TF2 Prediction

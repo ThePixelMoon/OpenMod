@@ -132,6 +132,16 @@ void RecvProxy_LocalVelocityZ( const CRecvProxyData *pData, void *pStruct, void 
 void RecvProxy_ObserverTarget( const CRecvProxyData *pData, void *pStruct, void *pOut );
 void RecvProxy_ObserverMode  ( const CRecvProxyData *pData, void *pStruct, void *pOut );
 
+#ifdef OMOD
+// Needs to shift bits back
+void RecvProxy_ShiftPlayerSpawnflags(const CRecvProxyData* pData, void* pStruct, void* pOut)
+{
+	C_BasePlayer* pPlayer = (C_BasePlayer*)pStruct;
+
+	pPlayer->m_spawnflags = (pData->m_Value.m_Int) << 16;
+}
+#endif
+
 // -------------------------------------------------------------------------------- //
 // RecvTable for CPlayerState.
 // -------------------------------------------------------------------------------- //
@@ -249,6 +259,14 @@ END_RECV_TABLE()
 		RecvPropFloat		( RECVINFO( m_flConstraintRadius )),
 		RecvPropFloat		( RECVINFO( m_flConstraintWidth )),
 		RecvPropFloat		( RECVINFO( m_flConstraintSpeedFactor )),
+
+#ifdef OMOD
+		// Transmitted from the server for internal player spawnflags.
+		// See baseplayer_shared.h for more details.
+		RecvPropInt			( RECVINFO( m_spawnflags ), 0, RecvProxy_ShiftPlayerSpawnflags ),
+
+		RecvPropBool		( RECVINFO( m_bDrawPlayerModelExternally ) ),
+#endif
 
 		RecvPropFloat		( RECVINFO( m_flDeathTime )),
 
@@ -1441,7 +1459,7 @@ int C_BasePlayer::DrawModel( int flags )
 #ifndef PORTAL
 	// In Portal this check is already performed as part of
 	// C_Portal_Player::DrawModel()
-	if ( !ShouldDrawThisPlayer() )
+	if ( !ShouldDrawThisPlayer())
 	{
 		return 0;
 	}

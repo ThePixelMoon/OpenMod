@@ -279,6 +279,11 @@ IMPLEMENT_SERVERCLASS_ST_NOBASE( CBaseEntity, DT_BaseEntity )
 	SendPropInt		(SENDINFO(m_nRenderMode),	8, SPROP_UNSIGNED ),
 	SendPropInt		(SENDINFO(m_fEffects),		EF_MAX_BITS, SPROP_UNSIGNED),
 	SendPropInt		(SENDINFO(m_clrRender),	32, SPROP_UNSIGNED),
+#ifdef OMOD
+	// Keep consistent with VIEW_ID_COUNT in viewrender.h
+	SendPropInt		(SENDINFO(m_iViewHideFlags),	9, SPROP_UNSIGNED ),
+	SendPropBool	(SENDINFO(m_bDisableFlashlight) ),
+#endif
 	SendPropInt		(SENDINFO(m_iTeamNum),		TEAMNUM_NUM_BITS, 0),
 	SendPropInt		(SENDINFO(m_CollisionGroup), 5, SPROP_UNSIGNED),
 	SendPropFloat	(SENDINFO(m_flElasticity), 0, SPROP_COORD),

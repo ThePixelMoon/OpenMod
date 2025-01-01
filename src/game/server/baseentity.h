@@ -802,6 +802,19 @@ public:
 	// was pev->rendermode
 	CNetworkVar( unsigned char, m_nRenderMode );
 	CNetworkVar( short, m_nModelIndex );
+
+#ifdef OMOD
+	// Prevents this entity from drawing under certain view IDs. Each flag is (1 << the view ID to hide from).
+	// For example, hiding an entity from VIEW_MONITOR prevents it from showing up on RT camera monitors
+	// and hiding an entity from VIEW_MAIN just prevents it from showing up through the player's own "eyes".
+	// Doing this via flags allows for the entity to be hidden from multiple view IDs at the same time.
+	// 
+	// This was partly inspired by Underhell's keyvalue that allows entities to only render in mirrors and cameras.
+	CNetworkVar( int, m_iViewHideFlags );
+
+	// Disables receiving projected textures. Based on a keyvalue from later Source games.
+	CNetworkVar( bool, m_bDisableFlashlight );
+#endif
 	
 #ifdef TF_DLL
 	CNetworkArray( int, m_nModelIndexOverrides, MAX_VISION_MODES ); // used to override the base model index on the client if necessary

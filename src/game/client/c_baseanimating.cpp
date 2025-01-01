@@ -54,6 +54,9 @@
 #include "replay/replay_ragdoll.h"
 #include "studio_stats.h"
 #include "tier1/callqueue.h"
+#ifdef OMOD
+#include "viewrender.h"
+#endif
 
 #ifdef TF_CLIENT_DLL
 #include "c_tf_player.h"
@@ -3156,6 +3159,17 @@ int C_BaseAnimating::DrawModel( int flags )
 		return 0;
 
 	int drawn = 0;
+
+#ifdef OMOD
+	if (m_iViewHideFlags > 0)
+	{
+		// Hide this entity if it's not supposed to be drawn in this view.
+		if (m_iViewHideFlags & (1 << CurrentViewID()))
+		{
+			return 0;
+		}
+	}
+#endif
 
 #ifdef TF_CLIENT_DLL
 	ValidateModelIndex();

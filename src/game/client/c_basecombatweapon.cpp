@@ -16,6 +16,9 @@
 #include "tier1/KeyValues.h"
 #include "toolframework/itoolframework.h"
 #include "toolframework_client.h"
+#ifdef OMOD
+#include "viewrender.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -82,6 +85,24 @@ static inline bool ShouldDrawLocalPlayerViewModel( void )
 {
 #if defined( PORTAL )
 	return false;
+#elif OMOD
+	// We shouldn't draw the viewmodel externally.
+	C_BasePlayer *localplayer = C_BasePlayer::GetLocalPlayer();
+	if (localplayer)
+	{
+		if (localplayer->m_bDrawPlayerModelExternally)
+		{
+			// If this isn't the main view, draw the weapon.
+			view_id_t viewID = CurrentViewID();
+			if (viewID != VIEW_MAIN && viewID != VIEW_INTRO_CAMERA)
+				return false;
+		}
+
+		// Since we already have the local player, check its own ShouldDrawThisPlayer() to avoid extra checks
+		return !localplayer->ShouldDrawThisPlayer();
+	}
+	else
+		return false;
 #else
 	return !C_BasePlayer::ShouldDrawLocalPlayer();
 #endif
