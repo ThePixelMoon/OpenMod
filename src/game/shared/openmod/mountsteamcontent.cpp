@@ -18,6 +18,10 @@
 #include "vgui_controls/Label.h"
 #include "vgui/ISurface.h"
 
+#ifdef GAME_DLL // workaround for VarArgs
+#include "hl2mp_gamerules.h"
+#endif
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -195,8 +199,14 @@ void addSearchPathByAppId( int nAppId )
 
 void mountGames(void)
 {
-	KeyValues* pMainFile, * pFileSystemInfo;
+	KeyValues *pMainFile, *pFileSystemInfo;
+#ifdef CLIENT_DLL
 	const char* gamePath = engine->GetGameDirectory();
+#else
+	char gamePath[256];
+	engine->GetGameDir( gamePath, 256 );
+	Q_StripTrailingSlash( gamePath );
+#endif
 
 	pMainFile = new KeyValues("gamecontent.txt");
 	if (pMainFile->LoadFromFile(filesystem, VarArgs("%s/gamecontent.txt", gamePath), "MOD"))

@@ -136,6 +136,7 @@ extern ConVar tf_mm_servermode;
 
 #ifdef OMOD
 #include "mountaddons.h"
+#include "mountsteamcontent.h"
 #endif
 
 extern IToolFrameworkServer *g_pToolFrameworkServer;
@@ -612,6 +613,11 @@ bool CServerGameDLL::DLLInit( CreateInterfaceFn appSystemFactory,
 		return false;
 	if ( (filesystem = (IFileSystem *)fileSystemFactory(FILESYSTEM_INTERFACE_VERSION,NULL)) == NULL )
 		return false;
+#ifdef OMOD
+	// mounting..
+	mountGames();
+	MountAddons();
+#endif
 	if ( (gameeventmanager = (IGameEventManager2 *)appSystemFactory(INTERFACEVERSION_GAMEEVENTSMANAGER2,NULL)) == NULL )
 		return false;
 	if ( (datacache = (IDataCache*)appSystemFactory(DATACACHE_INTERFACE_VERSION, NULL )) == NULL )

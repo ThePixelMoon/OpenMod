@@ -79,6 +79,10 @@ public:
 	Vector m_vCrouchTraceMax;	
 };
 
+#ifdef GAME_DLL
+char* VarArgs(const char* format, ...);
+#endif
+
 class CHL2MPRules : public CTeamplayRules
 {
 public:

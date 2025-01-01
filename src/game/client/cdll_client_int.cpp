@@ -1070,6 +1070,11 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 		return false;
 	if ( (filesystem = (IFileSystem *)appSystemFactory(FILESYSTEM_INTERFACE_VERSION, NULL)) == NULL )
 		return false;
+#ifdef OMOD
+	// mounting..
+	mountGames();
+	MountAddons();
+#endif
 	if ( (random = (IUniformRandomStream *)appSystemFactory(VENGINE_CLIENT_RANDOM_INTERFACE_VERSION, NULL)) == NULL )
 		return false;
 	if ( (gameuifuncs = (IGameUIFuncs * )appSystemFactory( VENGINE_GAMEUIFUNCS_VERSION, NULL )) == NULL )
@@ -1130,12 +1135,6 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 
 	// init client SPURS jobs
 	g_pBuildRenderablesJob->Init();
-#endif
-
-#ifdef OMOD
-	// mounting..
-	mountGames();
-	MountAddons();
 #endif
 
 #if defined( ALLOW_TEXT_MODE )

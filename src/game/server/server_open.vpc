@@ -249,6 +249,9 @@ $Project "Server (OpenMod)"
 			$File	"vehicle_choreo_generic.cpp"
 			$File	"hl2\vehicle_jeep.cpp"
 			
+			$File	"$SRCDIR\game\shared\openmod\mountsteamcontent.cpp"
+			$File	"$SRCDIR\game\shared\openmod\mountsteamcontent.h"
+			
 			$File	"$SRCDIR\game\shared\openmod\weapon_toolgun.cpp"
 			$File	"$SRCDIR\game\shared\openmod\weapon_toolgun.h"
 			
