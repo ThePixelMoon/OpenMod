@@ -49,9 +49,9 @@ private:
 	bool	m_bJustThrown;
 };
 
-LINK_ENTITY_TO_CLASS( weapon_snark_hl1, CWeaponSnark );
+LINK_ENTITY_TO_CLASS( weapon_snark, CWeaponSnark );
 
-PRECACHE_WEAPON_REGISTER( weapon_snark_hl1 );
+PRECACHE_WEAPON_REGISTER( weapon_snark );
 
 IMPLEMENT_SERVERCLASS_ST( CWeaponSnark, DT_WeaponSnark )
 END_SEND_TABLE()

@@ -76,7 +76,11 @@ void CNPC_Headcrab::Spawn( void )
 
 	SetRenderColor( 255, 255, 255, 255 );
 
+#ifdef OMOD
+	SetModel( "models/headcrab_hl1.mdl" );
+#else
 	SetModel( "models/headcrab.mdl" );
+#endif
 	m_iHealth = sk_headcrab_health.GetFloat();
 
 	SetHullType(HULL_TINY);
@@ -105,7 +109,11 @@ void CNPC_Headcrab::Spawn( void )
 //-----------------------------------------------------------------------------
 void CNPC_Headcrab::Precache( void )
 {
+#ifdef OMOD
+	PrecacheModel( "models/headcrab_hl1.mdl" );
+#else
 	PrecacheModel( "models/headcrab.mdl" );
+#endif
 //	PrecacheModel( "models/hc_squashed01.mdl" );
 //	PrecacheModel( "models/gibs/hc_gibs.mdl" );
 

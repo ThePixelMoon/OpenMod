@@ -54,9 +54,9 @@ private:
 	int		m_iPickedUpIndex;
 };
 
-LINK_ENTITY_TO_CLASS( weapon_tripmine_hl1, CWeaponTripMine_HL1 );
+LINK_ENTITY_TO_CLASS( weapon_tripmine, CWeaponTripMine_HL1 );
 
-PRECACHE_WEAPON_REGISTER( weapon_tripmine_hl1 );
+PRECACHE_WEAPON_REGISTER( weapon_tripmine );
 
 IMPLEMENT_SERVERCLASS_ST( CWeaponTripMine_HL1, DT_WeaponTripMine_HL1 )
 END_SEND_TABLE()

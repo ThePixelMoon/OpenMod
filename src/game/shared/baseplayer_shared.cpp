@@ -247,6 +247,27 @@ void CBasePlayer::ItemPostFrame()
 	// Put viewmodels into basically correct place based on new player origin
 	CalcViewModelView( EyePosition(), EyeAngles() );
 
+#ifdef OMOD
+	if (GetActiveWeapon())
+	{
+		ConVarRef v_viewmodel_fov("viewmodel_fov");
+		char szWeap[64];
+		Q_snprintf(szWeap, sizeof(szWeap), "%s", this->GetActiveWeapon()->GetClassname());
+		if (FStrEq("weapon_rpg_hl1", szWeap) || FStrEq("weapon_satchel_hl1", szWeap) || FStrEq("weapon_shotgun_hl1", szWeap) ||
+			FStrEq("weapon_357_hl1", szWeap) || FStrEq("weapon_crossbow_hl1", szWeap) || FStrEq("weapon_egon_hl1", szWeap) ||
+			FStrEq("weapon_gauss_hl1", szWeap) || FStrEq("weapon_glock_hl1", szWeap) ||
+			FStrEq("weapon_hornetgun_hl1", szWeap) || FStrEq("weapon_mp5_hl1", szWeap) || FStrEq("weapon_crowbar_hl1", szWeap) ||
+			FStrEq("weapon_handgrenade_hl1", szWeap) || FStrEq("weapon_tripmine", szWeap) || FStrEq("weapon_snark", szWeap))
+		{
+			v_viewmodel_fov.SetValue("84");
+		}
+		else
+		{
+			v_viewmodel_fov.SetValue("54");
+		}
+	}
+#endif
+
 	// Don't process items while in a vehicle.
 	if ( GetVehicle() )
 	{

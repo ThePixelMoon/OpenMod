@@ -103,7 +103,11 @@ void CNPC_Barnacle_HL1::Spawn()
 {
 	Precache( );
 
+#ifndef OMOD
 	SetModel( "models/barnacle.mdl" );
+#else
+	SetModel( "models/barnacle_hl1.mdl" );
+#endif
 	UTIL_SetSize( this, Vector(-16, -16, -32), Vector(16, 16, 0) );
 
 	SetSolid( SOLID_BBOX );
@@ -446,7 +450,11 @@ void CNPC_Barnacle_HL1::WaitTillDead ( void )
 //=========================================================
 void CNPC_Barnacle_HL1::Precache()
 {
+#ifdef OMOD
+	PrecacheModel("models/barnacle_h11.mdl");
+#else
 	PrecacheModel("models/barnacle.mdl");
+#endif
 
 	PrecacheScriptSound( "Barnacle.Bite" );
 	PrecacheScriptSound( "Barnacle.Chew" );

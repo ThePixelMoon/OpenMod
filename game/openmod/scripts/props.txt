@@ -3653,8 +3653,147 @@ SpawnMenu
 		{
 			"#"	"npc_create_equipment weapon_citizenpackage"
 		}
+		"Alien Grunt (HL1)"
+		{
+			"#"    "npc_create monster_alien_grunt"
+		}
+		"Alien Slave (HL1)"
+		{
+			"#"    "npc_create monster_alien_slave"
+		}
+		"Apache (HL1)"
+		{
+			"#"    "npc_create monster_apache"
+		}
+		"Babycrab (HL1)"
+		{
+			"#"    "npc_create monster_babycrab"
+		}
+		"Barnacle (HL1)"
+		{
+			"#"    "npc_create monster_barnacle"
+		}
+		"Barney (HL1)"
+		{
+			"#"    "npc_create monster_barney"
+		}
+		"Big Momma (HL1)"
+		{
+			"#"    "npc_create monster_bigmomma"
+		}
+		"Bloater (HL1)"
+		{
+			"#"    "npc_create monster_bloater"
+		}
+		"Bullchicken (HL1)"
+		{
+			"#"    "npc_create monster_bullchicken"
+		}
+		"Cockroach (HL1)"
+		{
+			"#"    "npc_create monster_cockroach"
+		}
+		"Flyer (HL1)"
+		{
+			"#"    "npc_create monster_flyer"
+		}
+		"Flyer Flock (HL1)"
+		{
+			"#"    "npc_create monster_flyer_flock"
+		}
+		"Furniture (HL1)"
+		{
+			"#"    "npc_create monster_furniture"
+		}
+		"Gargantua (HL1)"
+		{
+			"#"    "npc_create monster_gargantua"
+		}
+		"Generic (HL1)"
+		{
+			"#"    "npc_create monster_generic"
+		}
+		"G-Man (HL1)"
+		{
+			"#"    "npc_create monster_gman"
+		}
+		"Grunt Repel (HL1)"
+		{
+			"#"    "npc_create monster_grunt_repel"
+		}
+		"Headcrab (HL1)"
+		{
+			"#"    "npc_create monster_headcrab"
+		}
+		"Houndeye (HL1)"
+		{
+			"#"    "npc_create monster_houndeye"
+		}
+		"Human Assassin (HL1)"
+		{
+			"#"    "npc_create monster_human_assassin"
+		}
+		"Human Grunt (HL1)"
+		{
+			"#"    "npc_create monster_human_grunt"
+		}
+		"Ichthyosaur (HL1)"
+		{
+			"#"    "npc_create monster_ichthyosaur"
+		}
+		"Leech (HL1)"
+		{
+			"#"    "npc_create monster_leech"
+		}
+		"Miniturret (HL1)"
+		{
+			"#"    "npc_create monster_miniturret"
+		}
+		"Mortar (HL1)"
+		{
+			"#"    "npc_create monster_mortar"
+		}
+		"Nihilanth (HL1)"
+		{
+			"#"    "npc_create monster_nihilanth"
+		}
+		"Ospery (HL1)"
+		{
+			"#"    "npc_create monster_osprey"
+		}
+		"Satchel (HL1)"
+		{
+			"#"    "npc_create monster_satchel"
+		}
+		"Scientist (HL1)"
+		{
+			"#"    "npc_create monster_scientist"
+		}
+		"Sentry (HL1)"
+		{
+			"#"    "npc_create monster_sentry"
+		}
+		"Snark (HL1)"
+		{
+			"#"    "npc_create monster_snark"
+		}
+		"Tentacle (HL1)"
+		{
+			"#"    "npc_create monster_tentacle"
+		}
+		"Tripmine (HL1)"
+		{
+			"#"    "npc_create monster_tripmine"
+		}
+		"Turret (HL1)"
+		{
+			"#"    "npc_create monster_turret"
+		}
+		"Zombie (HL1)"
+		{
+			"#"    "npc_create monster_zombie"
+		}
 	}
-	
 	"Weapons"
 	{
 		"Physics Gun"
@@ -3717,6 +3856,10 @@ SpawnMenu
 		{
 			"#" "give weapon_flechettegun; use weapon_flechettegun"
 		}
+		"Crowbar (HL1)"
+		{
+			"#" "give weapon_crowbar_hl1; use weapon_crowbar_hl1"
+		}
 		"MP5 (HL1)"
 		{
 			"#" "give weapon_mp5_hl1; use weapon_mp5_hl1"
@@ -3739,11 +3882,11 @@ SpawnMenu
 		}
 		"Snark (HL1)"
 		{
-			"#" "give weapon_snark_hl1; use weapon_snark_hl1"
+			"#" "give weapon_snark; use weapon_snark"
 		}
 		"Tripmine (HL1)"
 		{
-			"#" "give weapon_tripmine_hl1; use weapon_tripmine_hl1"
+			"#" "give weapon_tripmine; use weapon_tripmine"
 		}
 		"Satchel Charge (HL1)"
 		{
