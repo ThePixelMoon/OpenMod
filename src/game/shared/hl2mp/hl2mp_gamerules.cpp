@@ -1283,7 +1283,7 @@ void CHL2MPRules::Precache( void )
 
 bool CHL2MPRules::ShouldCollide( int collisionGroup0, int collisionGroup1 )
 {
-#if defined ( LUA_SDK )
+#if 0 // breaks nav_generate
 	BEGIN_LUA_CALL_HOOK("ShouldCollide");
 	lua_pushinteger(L, collisionGroup0);
 	lua_pushinteger(L, collisionGroup1);
