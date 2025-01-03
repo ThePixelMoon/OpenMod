@@ -1093,6 +1093,7 @@ void UTIL_ScreenFadeWrite( const ScreenFade_t &fade, CBaseEntity *pEntity )
 
 void UTIL_ScreenFadeAll( const color32 &color, float fadeTime, float fadeHold, int flags )
 {
+#ifndef OMOD
 	int			i;
 	ScreenFade_t	fade;
 
@@ -1105,15 +1106,18 @@ void UTIL_ScreenFadeAll( const color32 &color, float fadeTime, float fadeHold, i
 	
 		UTIL_ScreenFadeWrite( fade, pPlayer );
 	}
+#endif
 }
 
 
 void UTIL_ScreenFade( CBaseEntity *pEntity, const color32 &color, float fadeTime, float fadeHold, int flags )
 {
+#ifndef OMOD
 	ScreenFade_t	fade;
 
 	UTIL_ScreenFadeBuild( fade, color, fadeTime, fadeHold, flags );
 	UTIL_ScreenFadeWrite( fade, pEntity );
+#endif
 }
 
 
