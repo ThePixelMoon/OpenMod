@@ -438,7 +438,7 @@ void CCoplaySystem::InvitePlayer(const CCommand& args)
 
 void CCoplaySystem::PrintStatus(const CCommand& args)
 {
-    char *role;
+    const char *role;
     int count;
     if (m_role == eConnectionRole_CLIENT)
     {
