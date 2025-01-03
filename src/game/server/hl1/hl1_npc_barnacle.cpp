@@ -451,7 +451,7 @@ void CNPC_Barnacle_HL1::WaitTillDead ( void )
 void CNPC_Barnacle_HL1::Precache()
 {
 #ifdef OMOD
-	PrecacheModel("models/barnacle_h11.mdl");
+	PrecacheModel("models/barnacle_hl1.mdl");
 #else
 	PrecacheModel("models/barnacle.mdl");
 #endif
