@@ -34,7 +34,7 @@ void ChangeLobbyType(IConVar* var, const char* pOldValue, float flOldValue)
 }
 
 extern ConVar coplay_timeoutduration;
-ConVar coplay_joinfilter("coplay_joinfilter", "-1", FCVAR_ARCHIVE, "Whos allowed to connect to our Game? Will also call coplay_opensocket on server start if set above -1.\n"
+ConVar coplay_joinfilter("coplay_joinfilter", "2", FCVAR_ARCHIVE, "Whos allowed to connect to our Game? Will also call coplay_opensocket on server start if set above -1.\n"
                        "-1 : Off\n"
                        "0  : Controlled\n"
                        "1  : Friends Only\n"
