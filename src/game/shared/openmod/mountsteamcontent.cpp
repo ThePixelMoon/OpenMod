@@ -52,7 +52,7 @@ gamePaths_t g_GamePaths[10] =
 	{ "portal",		400    },
 	{ "hl2mp",		320    },
 	{ "jbmod",		2158860},
-	{ "synergy",	1989070},
+	{ "synergy",	17520  },
 	{ "tf",			440    }
 };
 static const int size = sizeof(g_GamePaths) / sizeof(g_GamePaths[0]); // because we can't do g_GamePaths.size()

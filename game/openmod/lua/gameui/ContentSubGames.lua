@@ -34,7 +34,7 @@ local g_GameCheckButtons =
 	{ "m_pPortalCheckBox",				400 },
 	{ "m_pHalfLife2DeathmatchCheckBox",	320 },
 	{ "m_pJBModCheckBox",			2158860 },
-	{ "m_pSynergyCheckBox",			1989070 },
+	{ "m_pSynergyCheckBox",			  17520 },
 	{ "m_pTeamFortressCheckBox",		440 }
 };
 
