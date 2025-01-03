@@ -193,6 +193,9 @@ void luasrc_init_gameui (void) {
 
   luasrc_setmodulepaths(LGameUI);
 
+#ifdef OMOD
+  luaopen_sm(LGameUI);
+#endif
   luaopen_ConCommand(LGameUI);
   luaopen_dbg(LGameUI);
   luaopen_engine(LGameUI);

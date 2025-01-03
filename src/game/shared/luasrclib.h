@@ -175,6 +175,11 @@ LUALIB_API int (luaopen_SURF) (lua_State *L);
 #define LUA_SURFACELIBNAME				"surface"
 LUALIB_API int (luaopen_surface) (lua_State *L);
 
+#if defined( OMOD ) && defined( CLIENT_DLL )
+#define LUA_SPAWNMENULIBNAME			"spawnmenu"
+LUALIB_API int (luaopen_sm)( lua_State* L );
+#endif
+
 #define LUA_UTILLIBNAME					"UTIL"
 LUALIB_API int (luaopen_UTIL) (lua_State *L);
 LUALIB_API int (luaopen_UTIL_shared) (lua_State *L);

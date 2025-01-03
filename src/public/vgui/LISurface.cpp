@@ -13,13 +13,21 @@
 #include "luasrclib.h"
 #include "vgui/LVGUI.h"
 #include "vgui_controls/lPanel.h"
+#ifdef OMOD
+#include "spawnmenu.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
 using namespace vgui;
 
-
+#ifdef OMOD
+static int sm_CreateButton( lua_State* L ) {
+    CSMLMenu::CreateButton( luaL_checkstring( L, 1 ), luaL_checkstring( L, 2 ), luaL_checkstring( L, 3 ) );
+    return 1;
+}
+#endif
 
 static int surface_AddBitmapFontFile (lua_State *L) {
   lua_pushboolean(L, surface()->AddBitmapFontFile(luaL_checkstring(L, 1)));
@@ -484,6 +492,20 @@ static int surface_UnlockCursor (lua_State *L) {
   return 0;
 }
 
+#ifdef OMOD
+static const luaL_Reg smlib[] = {
+    { "CreateButton", sm_CreateButton },
+    { NULL, NULL }
+};
+
+/*
+** Open spawnmenu library
+*/
+LUALIB_API int luaopen_sm( lua_State* L ) {
+    luaL_register( L, LUA_SPAWNMENULIBNAME, smlib );
+    return 1;
+}
+#endif
 
 static const luaL_Reg surfacelib[] = {
   {"AddBitmapFontFile",   surface_AddBitmapFontFile},

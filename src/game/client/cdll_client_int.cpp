@@ -1175,13 +1175,6 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 
 	vgui::VGui_InitMatSysInterfacesList( "ClientDLL", &appSystemFactory, 1 );
 
-#if defined ( LUA_SDK )
-	// Initialize the GameUI state
-	luasrc_init_gameui();
-
-	luasrc_dofolder(LGameUI, LUA_PATH_GAMEUI);
-#endif
-
 	// Add the client systems.	
 	
 	// Client Leaf System has to be initialized first, since DetailObjectSystem uses it
@@ -1241,6 +1234,13 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 	input->Init_All();
 
 	VGui_CreateGlobalPanels();
+
+#if defined ( LUA_SDK )
+	// Initialize the GameUI state
+	luasrc_init_gameui();
+
+	luasrc_dofolder( LGameUI, LUA_PATH_GAMEUI );
+#endif
 
 	InitSmokeFogOverlay();
 
