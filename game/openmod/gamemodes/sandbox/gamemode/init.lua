@@ -15,6 +15,7 @@ local tSpawnPointClassnames = {
   "info_player_axis",
   "info_player_allies",
   "info_player_teamspawn",
+  "info_player_coop", -- Synergy
   "info_player_start"
 }
 
