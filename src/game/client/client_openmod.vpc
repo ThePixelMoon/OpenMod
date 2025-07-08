@@ -40,6 +40,19 @@ $Project "Client (OpenMod)"
 			$File	"NextBot\C_NextBot.h"
 		}
 
+		$Folder "OpenMod"
+		{
+			$Folder "Lua"
+			{
+				$File	"$SRCDIR\game\shared\openmod\lua\luamanager.cpp"
+				$File	"$SRCDIR\game\shared\openmod\lua\luamanager.h"
+				$File	"$SRCDIR\game\shared\openmod\lua\bindings.h"
+				$File	"$SRCDIR\game\shared\openmod\lua\scolor.cpp"
+				$File	"$SRCDIR\game\shared\openmod\lua\sdbg.cpp"
+				$File	"$SRCDIR\game\shared\openmod\lua\svector.cpp"
+			}
+		}
+
 		$Folder	"HL2 DLL"
 		{
  			$File	"episodic\c_vort_charge_token.cpp"
@@ -176,4 +189,9 @@ $Project "Client (OpenMod)"
 			}
 		}
 	}
+
+	$Folder	"Link Libraries"
+	{
+		$Libexternal lua5.1
+ 	}
 }

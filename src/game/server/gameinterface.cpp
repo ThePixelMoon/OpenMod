@@ -90,6 +90,9 @@
 #include "serverbenchmark_base.h"
 #include "querycache.h"
 #include "player_voice_listener.h"
+#ifdef OPENMOD
+#include "lua/luamanager.h"
+#endif
 
 #ifdef TF_DLL
 #include "gc_clientsystem.h"
@@ -1053,6 +1056,10 @@ bool CServerGameDLL::LevelInit( const char *pMapName, char const *pMapEntities, 
 		// Now call the mod specific parse
 		LevelInit_ParseAllEntities( pMapEntities );
 	}
+
+#ifdef OPENMOD
+	g_LuaManager.Initialize();
+#endif
 
 	// Check low violence settings for this map
 	g_RagdollLVManager.SetLowViolence( pMapName );

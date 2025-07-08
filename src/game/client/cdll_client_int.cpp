@@ -127,6 +127,9 @@
 #include "mumble.h"
 #include "steamshare.h"
 #include "vgui_controls/BuildGroup.h"
+#ifdef OPENMOD
+#include "lua/luamanager.h"
+#endif
 
 #include "secure_command_line.h"
 
@@ -1182,6 +1185,10 @@ void CHLClient::PostInit()
 			g_pFullFileSystem->AddSearchPath( szPath, "GAME" );
 		}
 	}
+#endif
+
+#ifdef OPENMOD
+	g_LuaManager.Initialize();
 #endif
 
 	if ( !r_lightmap_bicubic_set.GetBool() && materials )

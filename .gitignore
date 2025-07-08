@@ -510,3 +510,9 @@ openmod_win64.exe
 .ninja_log
 compile_commands.json
 .vscode/
+steam_appid.txt
+glshaders.cfg
+stats.txt
+videoconfig_linux.cfg
+voice_ban.dt
+server_blacklist.txt

@@ -59,6 +59,8 @@ $Configuration
 		$AdditionalIncludeDirectories	"$BASE;/usr/include/SDL2" [$POSIX]
 
 		$Create/UsePCHThroughFile	"stdafx.h"
+
+		$GCC_ExtraCompilerFlags "$BASE -std=c++17"
 	}
 	
 	$Linker [!$IS_LIB_PROJECT]
