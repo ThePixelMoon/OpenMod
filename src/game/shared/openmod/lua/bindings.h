@@ -15,5 +15,6 @@
 bool bindDbg(sol::state& state);
 bool bindColor(sol::state& state);
 bool bindVector(sol::state& state);
+bool bindBaseEntity(sol::state& state);
 
 #endif

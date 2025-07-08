@@ -50,6 +50,7 @@ $Project "Client (OpenMod)"
 				$File	"$SRCDIR\game\shared\openmod\lua\scolor.cpp"
 				$File	"$SRCDIR\game\shared\openmod\lua\sdbg.cpp"
 				$File	"$SRCDIR\game\shared\openmod\lua\svector.cpp"
+				$File	"$SRCDIR\game\shared\openmod\lua\sbaseentity.cpp"
 			}
 		}
 

@@ -35,6 +35,7 @@ bool LuaManager::Initialize()
 	bindDbg(mState);
 	bindColor(mState);
 	bindVector(mState);
+	bindBaseEntity(mState);
 
 	return true;
 }
