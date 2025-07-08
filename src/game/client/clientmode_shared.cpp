@@ -519,6 +519,16 @@ void ClientModeShared::OverrideMouseInput( float *x, float *y )
 	}
 }
 
+bool ClientModeShared::OverrideViewAngles(void)
+{
+	C_BaseCombatWeapon* pWeapon = GetActiveWeapon();
+	if (pWeapon)
+	{
+		return pWeapon->OverrideViewAngles();
+	}
+	return false;
+}
+
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------

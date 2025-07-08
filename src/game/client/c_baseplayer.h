@@ -440,6 +440,8 @@ public:
 
 	CUserCmd		*m_pCurrentCommand;
 
+	QAngle		m_vecUseAngles;
+
 	// Movement constraints
 	EHANDLE			m_hConstraintEntity;
 	Vector			m_vecConstraintCenter;
