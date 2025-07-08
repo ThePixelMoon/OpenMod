@@ -519,6 +519,8 @@ void ClientModeShared::OverrideMouseInput( float *x, float *y )
 	}
 }
 
+#ifdef OPENMOD
+
 bool ClientModeShared::OverrideViewAngles(void)
 {
 	C_BaseCombatWeapon* pWeapon = GetActiveWeapon();
@@ -528,6 +530,9 @@ bool ClientModeShared::OverrideViewAngles(void)
 	}
 	return false;
 }
+
+#endif // OPENMOD
+
 
 //-----------------------------------------------------------------------------
 // Purpose: 

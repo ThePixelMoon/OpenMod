@@ -173,7 +173,9 @@ public:
 public:
 
 	int							m_iKeyBits;
+#ifdef OPENMOD
 	bool						m_bSkipClear;
+#endif // OPENMOD
 #ifndef _XBOX
 	float						m_flMouseSensitivity;
 	float						m_flMouseSensitivityFactor;

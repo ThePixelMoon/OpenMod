@@ -388,7 +388,10 @@ CHud::CHud()
 
 	m_flScreenShotTime = -1;
 
+#ifdef OPENMOD
 	m_bSkipClear = false;
+#endif // OPENMOD
+
 }
 
 //-----------------------------------------------------------------------------
