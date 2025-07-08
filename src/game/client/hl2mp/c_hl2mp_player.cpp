@@ -14,6 +14,7 @@
 #include "iviewrender_beams.h"			// flashlight beam
 #include "r_efx.h"
 #include "dlight.h"
+#include "iclientmode.h"
 
 // Don't alias here
 #if defined( CHL2MP_Player )

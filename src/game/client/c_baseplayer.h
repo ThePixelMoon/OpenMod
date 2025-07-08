@@ -440,6 +440,9 @@ public:
 
 	CUserCmd		*m_pCurrentCommand;
 
+#if defined OPENMOD
+	QAngle		m_vecUseAngles;
+#endif
 	// Movement constraints
 	EHANDLE			m_hConstraintEntity;
 	Vector			m_vecConstraintCenter;

@@ -740,8 +740,17 @@ void CInput::MouseMove( CUserCmd *cmd )
 		ResetMouse();
 	}
 
-	// Store out the new viewangles.
-	engine->SetViewAngles( viewangles );
+#if defined(OPENMOD)
+	// adnan
+	// only set the new viewangles if we're not supposed to override them
+	if (!(g_pClientMode->OverrideViewAngles()))
+	{
+
+		// Store out the new viewangles.
+		engine->SetViewAngles(viewangles);
+	}
+	// end adnan
+#endif
 }
 
 //-----------------------------------------------------------------------------
