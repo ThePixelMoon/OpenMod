@@ -24,6 +24,7 @@ $Group "game"
 	"server"
 	"tier1"
 	"vgui_controls"
+	"game_shader_generic_std"
 }
 
 $Group "shaders"
@@ -60,11 +61,11 @@ $Group "everything"
 	"vvis_dll"
 	"vvis_launcher"
 
-	"game_shader_generic_example"
+	//"game_shader_generic_example"
 
 	// You probably don't want to override all shaders by default.
 	// This is just an example mainly! Pick and choose what you want from this project. :D
-	//"game_shader_generic_std"
+	"game_shader_generic_std"
 }
 
 $Group "dedicated"

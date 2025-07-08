@@ -24,13 +24,13 @@ fi
 solution_out="_vpc_/ninja/sdk_everything_$VPC_NINJA_BUILD_MODE"
 
 if [[ ! -e "$solution_out.ninja" ]]; then
-    devtools/bin/vpc /hl2mp /tf /linux64 /ninja /define:SOURCESDK +everything /mksln "$solution_out"
+    devtools/bin/vpc /openmod /linux64 /ninja /define:SOURCESDK +everything /mksln "$solution_out"
 
     # Generate compile commands.
     ninja -f "$solution_out.ninja" -t compdb > compile_commands.json
     # Remove some unsupported clang commands.
     sed -i 's/-fpredictive-commoning//g; s/-fvar-tracking-assignments//g' compile_commands.json
-    sed -i 's|/my_mod/src|.|g' compile_commands.json
+    sed -i 's|/omod/src|.|g' compile_commands.json
 fi
 
 ninja -f "$solution_out.ninja" -j$(nproc)

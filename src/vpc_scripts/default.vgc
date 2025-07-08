@@ -21,6 +21,7 @@ $Games
 	"PORTAL"
 	"SDK"
 	"TF"
+	"OPENMOD"
 }
 
 $Include "vpc_scripts\projects.vgc"
