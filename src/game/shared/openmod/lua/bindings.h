@@ -1,4 +1,4 @@
-//========= Copyleft Openmod, All rights reserved. ============================//
+//========= Copyleft OpenMod, All rights reserved. ============================//
 //
 // Purpose:
 //
@@ -16,5 +16,6 @@ bool bindDbg(sol::state& state);
 bool bindColor(sol::state& state);
 bool bindVector(sol::state& state);
 bool bindBaseEntity(sol::state& state);
+bool bindCVar(sol::state& state);
 
 #endif

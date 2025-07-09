@@ -1,4 +1,4 @@
-//========= Copyleft Openmod, All rights reserved. ============================//
+//========= Copyleft OpenMod, All rights reserved. ============================//
 //
 // Purpose:
 //
@@ -7,9 +7,37 @@
 #include "cbase.h"
 #include "bindings.h"
 #include "baseentity_shared.h"
+#ifdef CLIENT_DLL
+#include "cdll_client_int.h"
+#else
+#include "gameinterface.h"
+#endif
+
+class LModel
+{
+public:
+    LModel(const model_t* model) : m_model(model) {}
+
+    std::string GetName() const
+    {
+        return modelinfo->GetModelName(m_model);
+    }
+
+    const void* GetPointer() const { return m_model; }
+
+private:
+    const model_t* m_model;
+};
+
 
 bool bindBaseEntity(sol::state& state)
 {
+	state.new_usertype<LModel>("model_t",
+        sol::constructors<LModel(const model_t*)>(),
+        "GetName",    &LModel::GetName,
+        "GetPointer", &LModel::GetPointer
+    );
+
     state.new_usertype<CBaseEntity>("CBaseEntity",
         sol::constructors<CBaseEntity()>(),
 
@@ -24,7 +52,9 @@ bool bindBaseEntity(sol::state& state)
         "GetAbsAngles", &CBaseEntity::GetAbsAngles, 
         "SetAbsAngles", &CBaseEntity::SetAbsAngles,
 
-        //"GetModel", &CBaseEntity::GetModel,
+		"GetModel", [](CBaseEntity* ent) {
+			return LModel(ent->GetModel());
+		},
         "SetModel", &CBaseEntity::SetModel,
         "GetModelIndex", &CBaseEntity::GetModelIndex,
         "SetModelIndex", &CBaseEntity::SetModelIndex,
@@ -39,6 +69,9 @@ bool bindBaseEntity(sol::state& state)
         "GetHealth", &CBaseEntity::GetHealth,
         "SetHealth", &CBaseEntity::SetHealth,
         "GetMaxHealth", &CBaseEntity::GetMaxHealth,
+#ifndef CLIENT_DLL
+		"SetMaxHealth", &CBaseEntity::SetMaxHealth,
+#endif
 
         "GetCollisionGroup", &CBaseEntity::GetCollisionGroup,
         "SetCollisionGroup", &CBaseEntity::SetCollisionGroup,

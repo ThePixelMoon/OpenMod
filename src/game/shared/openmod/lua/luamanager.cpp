@@ -1,4 +1,4 @@
-//========= Copyleft Openmod, All rights reserved. ============================//
+//========= Copyleft OpenMod, All rights reserved. ============================//
 //
 // Purpose:
 //
@@ -36,6 +36,7 @@ bool LuaManager::Initialize()
 	bindColor(mState);
 	bindVector(mState);
 	bindBaseEntity(mState);
+	bindCVar(mState);
 
 	return true;
 }

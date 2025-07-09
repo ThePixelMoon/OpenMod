@@ -1,4 +1,4 @@
-//========= Copyleft Openmod, All rights reserved. ============================//
+//========= Copyleft OpenMod, All rights reserved. ============================//
 //
 // Purpose:
 //
