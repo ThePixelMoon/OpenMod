@@ -1150,6 +1150,9 @@ private:
 
 	EHANDLE					m_hViewEntity;
 
+#if defined(OPENMOD)
+	CNetworkQAngle(m_vecUseAngles);
+#endif
 	// Movement constraints
 	CNetworkHandle( CBaseEntity, m_hConstraintEntity );
 	CNetworkVector( m_vecConstraintCenter );

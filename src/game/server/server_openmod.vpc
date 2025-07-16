@@ -129,6 +129,8 @@ $Project "Server (OpenMod)"
 
 		$Folder "OpenMod"
 		{
+
+			$File "..\shared\openmod\weapon_physgun.cpp"
 			$Folder "Lua"
 			{
 				$File	"$SRCDIR\game\shared\openmod\lua\luamanager.cpp"

@@ -425,7 +425,9 @@ BEGIN_DATADESC( CBasePlayer )
 	DEFINE_FIELD( m_flOldPlayerViewOffsetZ, FIELD_FLOAT ),
 	DEFINE_FIELD( m_bPlayerUnderwater, FIELD_BOOLEAN ),
 	DEFINE_FIELD( m_hViewEntity, FIELD_EHANDLE ),
-
+#if defined(OPENMOD)
+	DEFINE_FIELD(m_vecUseAngles, FIELD_VECTOR),
+#endif
 	DEFINE_FIELD( m_hConstraintEntity, FIELD_EHANDLE ),
 	DEFINE_FIELD( m_vecConstraintCenter, FIELD_VECTOR ),
 	DEFINE_FIELD( m_flConstraintRadius, FIELD_FLOAT ),
@@ -8143,6 +8145,9 @@ void CMovementSpeedMod::InputSpeedMod(inputdata_t &data)
 
 		SendPropVector		( SENDINFO( m_vecBaseVelocity ), 32, SPROP_NOSCALE ),
 
+#if defined(OPENMOD)
+		SendPropVector(SENDINFO(m_vecUseAngles), 0, SPROP_NOSCALE),
+#endif
 		SendPropEHandle		( SENDINFO( m_hConstraintEntity)),
 		SendPropVector		( SENDINFO( m_vecConstraintCenter), 0, SPROP_NOSCALE ),
 		SendPropFloat		( SENDINFO( m_flConstraintRadius ), 0, SPROP_NOSCALE ),
